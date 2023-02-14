@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React, { ReactNode } from "react";
 import {
   HeaderNavigation,
   ALIGN,
@@ -23,7 +23,10 @@ const options = {
   placeholder: 'Search colors',
   maxDropdownHeight: '300px',
 };
-const Navigation: React.FC<Props> = (props) => (
+
+type Props = {};
+
+const Navigation: React.FC<Props> = () => (
     <HeaderNavigation>
       <NavigationList $align={ALIGN.left}>
         <NavigationItem>Uber</NavigationItem>
