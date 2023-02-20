@@ -23,6 +23,7 @@ const options = {
   placeholder: 'Search colors',
   maxDropdownHeight: '300px',
 };
+import { WalletMultiButton } from '@solana/wallet-adapter-react-ui'
 
 type Props = {};
 
@@ -51,6 +52,7 @@ const Navigation: React.FC<Props> = () => (
           />
         </NavigationItem>
       </NavigationList>
+      <WalletMultiButton/>
     </HeaderNavigation>
   );
 
