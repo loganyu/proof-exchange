@@ -52,7 +52,7 @@ const Navigation: React.FC<Props> = () => (
           />
         </NavigationItem>
       </NavigationList>
-      <WalletMultiButton/>
+      <WalletMultiButton />
     </HeaderNavigation>
   );
 
