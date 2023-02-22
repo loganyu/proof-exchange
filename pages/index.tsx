@@ -84,7 +84,7 @@ const Exchange: React.FC<Props> = (props) => {
               <Tag>this is a tag</Tag>
             </StyledAction>
           </Card>
-          <Card title="Tags" overrides={{Root: {style: {marginTop: '10px'}}}}>
+          <Card title="DeFi" overrides={{Root: {style: {marginTop: '10px'}}}}>
             <StyledBody>
               Proin ut dui sed metus pharetra hend rerit vel non
               mi. Nulla ornare faucibus ex, non facilisis nisl.

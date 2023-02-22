@@ -1,8 +1,9 @@
 import React from 'react';
+import Main from "../components/layout/Main";
 
 const Tags: React.FC = () => {
     return (
-        <div>Tags</div>
+        <Main>Tags</Main>
     )
 }
 

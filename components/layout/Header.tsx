@@ -19,6 +19,7 @@ import DiscordLogo from './discord-logo';
 // import VersionSelector from './version-selector.js';
 import Bulb from './bulb';
 import { Button, KIND, SIZE, SHAPE } from 'baseui/button';
+import Search from './Search';
 
 // Breakpoint for un-wrapping the search bar from under the links and toggles.
 const WRAP_SEARCH = 715;
@@ -72,8 +73,8 @@ const Nav: React.FC<Props> = () => {
         {/* Logo & Links  */}
         <div
           className={css({
-            marginLeft: theme.direction === 'rtl' ? 'auto' : 'none',
-            marginRight: theme.direction === 'rtl' ? 'none' : 'auto',
+            marginLeft: 'none',
+            marginRight: 'auto',
             display: 'flex',
             alignItems: 'center',
             order: 1,
@@ -85,8 +86,8 @@ const Nav: React.FC<Props> = () => {
             <a
               className={css({
                 display: 'flex',
-                marginLeft: theme.direction === 'rtl' ? theme.sizing.scale400 : 'none',
-                marginRight: theme.direction === 'rtl' ? 'none' : theme.sizing.scale400,
+                marginLeft: 'none',
+                marginRight: theme.sizing.scale400,
                 ':focus': {
                   outline: `3px solid ${theme.colors.accent}`,
                   outlineOffset: '5px',
@@ -163,14 +164,16 @@ const Nav: React.FC<Props> = () => {
             order: 3,
             marginTop: theme.sizing.scale400,
             [mq(WRAP_SEARCH)]: {
+              minWidth: '500px',
               flexBasis: 'auto',
               order: 2,
               marginTop: '0',
-              marginLeft: theme.direction === 'rtl' ? theme.sizing.scale400 : 'none',
-              marginRight: theme.direction === 'rtl' ? 'none' : theme.sizing.scale400,
+              marginLeft: 'none',
+              marginRight: theme.sizing.scale400,
             },
           })}
         >
+          <Search />
         </div>
 
         {/* Toggles & Links */}
@@ -296,6 +299,25 @@ const Nav: React.FC<Props> = () => {
             <Menu size={24} color={theme.colors.contentPrimary} />
           </Button>
           <WalletMultiButton />
+          <Link href="/profile" passHref>
+            <Button
+              $as="a"
+              size={SIZE.compact}
+              kind={KIND.tertiary}
+              overrides={{
+                BaseButton: {
+                  style: {
+                    display: 'none',
+                    [mq(1000)]: {
+                      display: 'block',
+                    },
+                  },
+                },
+              }}
+            >
+              Profile
+            </Button>
+          </Link>
         </div>
       </header>
     </Block>
