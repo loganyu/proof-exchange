@@ -14,7 +14,7 @@ const UberLogo = () => (
   </svg>
 );
 
-const StyledFooter = themedStyled<{}>(
+const StyledFooter = themedStyled(
   'footer',
   ({ $theme: { typography, sizing, colors, name } }) => ({
     ...typography.font300,
