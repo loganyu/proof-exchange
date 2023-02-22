@@ -2,10 +2,11 @@ import React from "react"
 import { GetStaticProps } from "next"
 import Layout from "../components/Layout"
 import Post, { PostProps } from "../components/Post"
+import Main from "../components/layout/Main";
 import prisma from '../lib/prisma';
 
 // components
-import Navigation from "../components/Navigation"
+import Header from "../components/layout/Header"
 
 // baseweb
 import { Table } from "baseui/table";
@@ -48,10 +49,7 @@ type Props = {
 
 const Exchange: React.FC<Props> = (props) => {
   return (
-    <div>
-      <Navigation></Navigation>
-      <Grid behavior={BEHAVIOR.fixed}>
-        <Cell span={12}>
+    <Main>
           <Card title="NFTs" overrides={{Root: {style: {marginTop: '10px'}}}}>
             <StyledBody>
               Proin ut dui sed metus pharetra hend rerit vel non
@@ -63,9 +61,7 @@ const Exchange: React.FC<Props> = (props) => {
               <Tag>this is a tag</Tag>
             </StyledAction>
           </Card>
-        </Cell>
         
-        <Cell span={12}>
           <Card title="Tech" overrides={{Root: {style: {marginTop: '10px'}}}}>
             <StyledBody>
               Proin ut dui sed metus pharetra hend rerit vel non
@@ -77,8 +73,6 @@ const Exchange: React.FC<Props> = (props) => {
               <Tag>this is a tag</Tag>
             </StyledAction>
           </Card>
-        </Cell>
-        <Cell span={12}>
           <Card title="Trading" overrides={{Root: {style: {marginTop: '10px'}}}}>
             <StyledBody>
               Proin ut dui sed metus pharetra hend rerit vel non
@@ -90,8 +84,6 @@ const Exchange: React.FC<Props> = (props) => {
               <Tag>this is a tag</Tag>
             </StyledAction>
           </Card>
-        </Cell>
-        <Cell span={12}>
           <Card title="Tags" overrides={{Root: {style: {marginTop: '10px'}}}}>
             <StyledBody>
               Proin ut dui sed metus pharetra hend rerit vel non
@@ -103,9 +95,7 @@ const Exchange: React.FC<Props> = (props) => {
               <Tag>this is a tag</Tag>
             </StyledAction>
           </Card>
-        </Cell>
-      </Grid>
-    </div>
+    </Main>
   )
 }
 

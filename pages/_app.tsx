@@ -7,42 +7,77 @@ import {
   PhantomWalletAdapter
 } from "@solana/wallet-adapter-wallets";
 import { clusterApiUrl } from "@solana/web3.js";
-
+import { Block } from 'baseui/block';
 import { AppProps } from "next/app";
 import { Session } from "next-auth";
 import { SessionProvider } from 'next-auth/react';
 import {Provider as StyletronProvider} from 'styletron-react';
-import {DarkTheme, BaseProvider, styled} from 'baseui';
 import {styletron} from '../styletron';
 import '../styles.css'
 import WalletContextProvider from '../components/WalletContextProvider'
+import {
+  createThemedStyled,
+  createThemedUseStyletron,
+  styled,
+  createThemedWithStyle,
+  BaseProvider,
+  DarkTheme,
+  DarkThemeMove,
+  LightTheme,
+  LightThemeMove,
+} from 'baseui';
+import type { Breakpoints, Theme } from 'baseui/styles/types';
+
+const breakpoints: Breakpoints = {
+  small: 670,
+  medium: 920,
+  large: 1280,
+};
+
+const ResponsiveTheme = Object.keys(breakpoints).reduce(
+  (acc, key) => {
+    acc.mediaQuery[key] = `@media screen and (min-width: ${breakpoints[key]}px)`;
+    return acc;
+  },
+  {
+    breakpoints,
+    mediaQuery: {},
+  }
+);
+
+const themes = {
+  LightTheme: { ...LightTheme, ...ResponsiveTheme },
+  LightThemeMove: { ...LightThemeMove, ...ResponsiveTheme },
+  DarkTheme: { ...DarkTheme, ...ResponsiveTheme },
+  DarkThemeMove: { ...DarkThemeMove, ...ResponsiveTheme },
+};
+
+export const themedStyled = createThemedStyled<Theme>();
+export const themedWithStyle = createThemedWithStyle<Theme>();
+export const themedUseStyletron = createThemedUseStyletron<Theme>();
+
+const DARK_MEDIA_QUERY = '(prefers-color-scheme: dark)';
+const LIGHT_MEDIA_QUERY = '(prefers-color-scheme: light)';
+
+const blockProps = {
+  color: 'contentPrimary',
+  backgroundColor: 'backgroundPrimary',
+  maxWidth: '100vw',
+  minHeight: '100vh',
+  overflow: 'hidden',
+};
 
 const App = ({ Component, pageProps }: AppProps<{session: Session;}>) => {
-  // Can be set to 'devnet', 'testnet', or 'mainnet-beta'
-  const network = WalletAdapterNetwork.Devnet;
-
-  // You can provide a custom RPC endpoint here
-  const endpoint = useMemo(() => clusterApiUrl(network), [network]);
-
-  // @solana/wallet-adapter-wallets includes all the adapters but supports tree shaking and lazy loading --
-  // Only the wallets you configure here will be compiled into your application, and only the dependencies
-  // of wallets that your users connect to will be loaded
-  const wallets = useMemo(
-    () => [
-      new PhantomWalletAdapter(),
-      new GlowWalletAdapter()
-    ],
-    [network]
-  );
-
   return (
     <StyletronProvider value={styletron}>
       <BaseProvider theme={DarkTheme}>
-        <SessionProvider session={pageProps.session}>
-          <WalletContextProvider>
-            <Component {...pageProps} />
-          </WalletContextProvider>
-        </SessionProvider>
+        <Block overrides={{Block: {style: blockProps}}}>
+          <SessionProvider session={pageProps.session}>
+            <WalletContextProvider>
+              <Component {...pageProps} />
+            </WalletContextProvider>
+          </SessionProvider>
+        </Block>
       </BaseProvider>
     </StyletronProvider>
   );

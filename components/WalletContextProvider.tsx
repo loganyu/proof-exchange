@@ -11,12 +11,12 @@ const WalletContextProvider: FC<{ children: ReactNode }> = ({ children }) => {
 
 	return (
 		<ConnectionProvider endpoint={endpoint}>
-	    <WalletProvider wallets={wallets}>
-	      <WalletModalProvider>
-	        { children }
-        </WalletModalProvider>
-      </WalletProvider>
-    </ConnectionProvider>
+		    <WalletProvider wallets={wallets}>
+				<WalletModalProvider>
+	    		    { children }
+        		</WalletModalProvider>
+      		</WalletProvider>
+    	</ConnectionProvider>
 	)
 }
 
