@@ -295,6 +295,7 @@ const Nav: React.FC<Props> = () => {
           >
             <Menu size={24} color={theme.colors.contentPrimary} />
           </Button>
+          <WalletMultiButton />
         </div>
       </header>
     </Block>
