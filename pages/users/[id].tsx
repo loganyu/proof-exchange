@@ -41,6 +41,7 @@ import {ParagraphSmall} from 'baseui/typography';
 import {FlexGrid, FlexGridItem} from 'baseui/flex-grid';
 import {BlockProps} from 'baseui/block';
 import {ProgressBar} from 'baseui/progress-bar';
+import {StyledDivider, SIZE as STYLE_SIZE} from 'baseui/divider';
 
 const User: React.FC<{userId: string}> = (props) => {
     const blockStyles = {
@@ -143,6 +144,7 @@ const User: React.FC<{userId: string}> = (props) => {
             </Grid>
             <Block>
               <ParagraphSmall>walletaddress</ParagraphSmall>
+              <StyledDivider $size={STYLE_SIZE.section} />
               <HeadingMedium>About (NAME)</HeadingMedium>
               <ParagraphSmall>
                 Proin ut dui sed metus pharetra hend rerit vel non

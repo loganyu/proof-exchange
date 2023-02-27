@@ -50,6 +50,7 @@ type Props = {
 const Exchange: React.FC<Props> = (props) => {
   return (
     <Main>
+      <Cell span={10}>
           <Card title="NFTs" overrides={{Root: {style: {marginTop: '10px'}}}}>
             <StyledBody>
               Proin ut dui sed metus pharetra hend rerit vel non
@@ -95,6 +96,7 @@ const Exchange: React.FC<Props> = (props) => {
               <Tag>this is a tag</Tag>
             </StyledAction>
           </Card>
+        </Cell>
     </Main>
   )
 }
