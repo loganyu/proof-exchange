@@ -30,12 +30,12 @@ import {
 import {ListItem, ListItemLabel} from 'baseui/list';
 import {useStyletron} from 'baseui';
 
-const Question: React.FC<{ question }> = ({ question }) => {
+const QuestionItem: React.FC<{ question }> = ({ question }) => {
   return (
-    <Block backgroundColor={"gray"}>
+    <Block backgroundColor={"gray"} marginBottom={'30px'}>
         <Grid>
             <Cell span={2}>
-                <Block display={'flex'} flexDirection={'column'} justifyContent={'space-around'}>
+                <Block display={'flex'} flexDirection={'column'} justifyContent={'space-evenly'} height={"100%"}>
                     <LabelSmall>0 votes</LabelSmall>
                     <LabelSmall>0 answers</LabelSmall>
                     <LabelSmall>0 comments</LabelSmall>
@@ -74,4 +74,4 @@ const Question: React.FC<{ question }> = ({ question }) => {
   );
 };
 
-export default Question;
+export default QuestionItem;
