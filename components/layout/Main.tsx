@@ -22,15 +22,11 @@ const Main: React.FC = ({children}) => {
                 paddingBottom="scale1200"
                 minHeight="700px"
             >
-                <Grid behavior={BEHAVIOR.fixed}>
+                <Grid gridMaxWidth={1600} behavior={BEHAVIOR.fixed}>
                     <Cell span={2}>
                         <Sidebar></Sidebar>
                     </Cell>
-                    <Cell span={8}>
-                        {children}
-                    </Cell>
-                    <Cell span={2}>
-                    </Cell>
+                    {children}
                 </Grid>
             </Block>
             <Footer />
