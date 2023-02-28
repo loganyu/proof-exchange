@@ -4,19 +4,19 @@ import { Navigation } from "baseui/side-navigation";
 import Router from 'next/router';
 
 async function navigate(path: string): Promise<void> {
-    await Router.replace(path);
+    await Router.push(path);
   }
 
 const Sidebar: React.FC = () => {
   const [activeItemId, setActiveItemId] = React.useState(
-    "#home"
+    ""
   );
   return (
     <Navigation
       items={[
         {
           title: "Home",
-          itemId: " ",
+          itemId: "",
           
         },
         {
@@ -33,7 +33,8 @@ const Sidebar: React.FC = () => {
         }
       ]}
       activeItemId={activeItemId}
-      onChange={({ item }) => {
+      onChange={({ event, item }) => {
+        event.preventDefault();
         setActiveItemId(item.itemId)
         navigate('/' + item.itemId)
       }}
