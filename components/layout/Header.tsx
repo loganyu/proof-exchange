@@ -299,7 +299,7 @@ const Nav: React.FC<Props> = () => {
             <Menu size={24} color={theme.colors.contentPrimary} />
           </Button>
           <WalletMultiButton />
-          <Link href="/profile" passHref>
+          <Link href="/users/1" passHref>
             <Button
               $as="a"
               size={SIZE.compact}

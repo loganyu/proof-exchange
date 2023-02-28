@@ -13,11 +13,11 @@ const QuestionIndex: React.FC = (props) => {
         <Main>
             <Cell span={8}>
                 <QuestionBanner></QuestionBanner>
-                <QuestionItem question='hi'></QuestionItem>
-                <QuestionItem question='hi'></QuestionItem>
-                <QuestionItem question='hi'></QuestionItem>
-                <QuestionItem question='hi'></QuestionItem>
-                <QuestionItem question='hi'></QuestionItem>
+                <QuestionItem item={{}}></QuestionItem>
+                <QuestionItem item={{}}></QuestionItem>
+                <QuestionItem item={{}}></QuestionItem>
+                <QuestionItem item={{}}></QuestionItem>
+                <QuestionItem item={{}}></QuestionItem>
                 <Block display={"flex"} justifyContent={"center"}>
                     <Pagination
                         numPages={20}

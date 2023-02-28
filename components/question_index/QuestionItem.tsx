@@ -1,7 +1,11 @@
 import React from "react";
 import Router from "next/router";
 import ReactMarkdown from "react-markdown";
+
 import { GetServerSideProps } from 'next';
+import Link from 'next/link'
+
+
 import {Grid, Cell, BEHAVIOR} from 'baseui/layout-grid';
 import {Block} from 'baseui/block';
 import { ButtonGroup } from "baseui/button-group";
@@ -27,12 +31,36 @@ import {
   MonoDisplayXSmall,
   ParagraphSmall
 } from 'baseui/typography';
+import { StyledLink } from "baseui/link";
 import {ListItem, ListItemLabel} from 'baseui/list';
 import {useStyletron} from 'baseui';
 
-const QuestionItem: React.FC<{ question }> = ({ question }) => {
+const QuestionItem: React.FC<{ item }> = ({ item }) => {
+    const blockStyles = {
+        borderLeftStyle: 'solid',
+        borderRightStyle:'solid',
+        borderTopStyle: 'solid',
+        borderBottomStyle: 'solid',
+        borderLeftWidth: '2px',
+        borderTopWidth: '2px',
+        borderRightWidth: '2px',
+        borderBottomWidth: '2px',
+        borderLeftColor: `grey`,
+        borderTopColor: `grey`,
+        borderRightColor: `grey`,
+        borderBottomColor: `grey`,
+        padding: '0px',
+        width: '100%'
+      }
+
   return (
-    <Block backgroundColor={"gray"} marginBottom={'30px'}>
+    <Block overrides={{
+        Block: {
+          style: {
+            ...blockStyles
+          },
+        },
+      }} marginBottom={'30px'}>
         <Grid>
             <Cell span={2}>
                 <Block display={'flex'} flexDirection={'column'} justifyContent={'space-evenly'} height={"100%"}>
@@ -44,7 +72,9 @@ const QuestionItem: React.FC<{ question }> = ({ question }) => {
                 </Block>
             </Cell>
             <Cell span={10}>
-                <HeadingSmall>Question</HeadingSmall>
+                <StyledLink href="/questions/1" style={{textDecoration: 'none'}}>
+                    <HeadingSmall>Uncaught error: invalid instruction; RangeError: Trying to access beyond buffer length</HeadingSmall>
+                </StyledLink>
                 <ParagraphSmall>
                     Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor 
                     incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud 

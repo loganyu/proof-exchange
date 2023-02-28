@@ -4,7 +4,7 @@ import { Navigation } from "baseui/side-navigation";
 import Router from 'next/router';
 
 async function navigate(path: string): Promise<void> {
-    await Router.push(path);
+    await Router.replace(path);
   }
 
 const Sidebar: React.FC = () => {
@@ -16,7 +16,7 @@ const Sidebar: React.FC = () => {
       items={[
         {
           title: "Home",
-          itemId: "#=home",
+          itemId: " ",
           
         },
         {

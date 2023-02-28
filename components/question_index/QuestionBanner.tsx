@@ -70,14 +70,16 @@ const QuestionBanner: React.FC = () => {
                         />
                     )}
                     >
-                    <Button endEnhancer={() => <ChevronDown size={24} />}>
-                        {label}
-                    </Button>
+                    <Block height="100%" display={"flex"} flexDirection={"column"} justifyContent={"center"}>
+                        <Button endEnhancer={() => <ChevronDown size={24} />}>
+                            {label}
+                        </Button>
+                    </Block>
                 </StatefulPopover>
             </Cell>
             <Cell span={10}>
                 {tags.map(tag =>
-                    <Tag closeable={false} kind="neutral">
+                    <Tag key={tag} closeable={false} kind="neutral">
                         {tag}
                     </Tag>
                 )}
