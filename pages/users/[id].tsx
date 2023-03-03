@@ -253,7 +253,8 @@ const User: React.FC<{userId: string}> = (props) => {
                   borderRightColor: `grey`,
                   borderBottomColor: `grey`,
                   padding: '10px',
-                  margin: '30px 0'
+                  margin: '30px 0',
+                  borderRadius: '15px'
                 }
               )} >
                 <HeadingSmall overrides={{Block:{style: {padding: '0', margin: '0 0 5px 0'}}}}>Top Tags</HeadingSmall>
@@ -532,7 +533,8 @@ const User: React.FC<{userId: string}> = (props) => {
                   borderRightColor: `grey`,
                   borderBottomColor: `grey`,
                   padding: '10px',
-                  margin: '30px 0'
+                  margin: '30px 0',
+                  borderRadius: '15px'
                 }
               )} >
                 <HeadingSmall overrides={{Block:{style: {padding: '0', margin: '0 0 5px 0'}}}}>Top Posts</HeadingSmall>
