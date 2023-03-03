@@ -2,6 +2,7 @@ import React from 'react';
 import Main from "../../components/layout/Main";
 import QuestionShowItem from "../../components/question_show/QuestionShowItem";
 import QuestionShowBanner from "../../components/question_show/QuestionShowBanner";
+import BigNotesStats from "../../components/big_notes_show/BigNotesStatsBanner";
 import AnswerInput from "../../components/question_show/AnswerInput";
 import {Grid, Cell, BEHAVIOR} from 'baseui/layout-grid';
 import { Pagination } from "baseui/pagination";
@@ -27,22 +28,13 @@ export async function getServerSideProps(context) {
     }
 }
 
-const Question: React.FC<{questionId: string}> = (props) => {
-    return (
-        <Main>
-            <div>Question {props.questionId}</div>
-        </Main>
-    )
-}
-
-
 const QuestionShow: React.FC = (props) => {
     const [currentPage, setCurrentPage] = React.useState(2);
 
     return (
         <Main>
             <Cell span={8}>
-                <QuestionShowBanner></QuestionShowBanner>
+                <BigNotesStats></BigNotesStats>
                 <StyledDivider $size={SIZE.cell} />
                 <QuestionShowItem item={{type: 'question'}}></QuestionShowItem>
                 <HeadingSmall>2 Answers</HeadingSmall>

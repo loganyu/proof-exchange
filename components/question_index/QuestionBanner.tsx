@@ -32,6 +32,7 @@ import {useStyletron} from 'baseui';
 import {ChevronDown} from 'baseui/icon';
 import {StatefulPopover, PLACEMENT} from 'baseui/popover';
 import {StatefulMenu} from 'baseui/menu';
+import {Select, TYPE, Value} from 'baseui/select';
 
 const ITEMS = [
     {label: 'NFTs'},
@@ -46,6 +47,8 @@ const tags = [
 
 const QuestionBanner: React.FC = () => {
     const [label, setLabel] = React.useState<string>('NFTs');
+    const [value, setValue] = React.useState<Value>([]);
+    
     function setButtonLabel(label: string) {
         setLabel(label)
     }
@@ -77,12 +80,31 @@ const QuestionBanner: React.FC = () => {
                     </Block>
                 </StatefulPopover>
             </Cell>
-            <Cell span={10}>
+            <Cell span={8}>
                 {tags.map(tag =>
                     <Tag key={tag} closeable={false} kind="neutral">
                         {tag}
                     </Tag>
                 )}
+            </Cell>
+            <Cell span={2}>
+            <Select
+                options={[
+                    {id: 'AliceBlue', color: '#F0F8FF'},
+                    {id: 'AntiqueWhite', color: '#FAEBD7'},
+                    {id: 'Aqua', color: '#00FFFF'},
+                    {id: 'Aquamarine', color: '#7FFFD4'},
+                    {id: 'Azure', color: '#F0FFFF'},
+                    {id: 'Beige', color: '#F5F5DC'},
+                ]}
+                labelKey="id"
+                valueKey="color"
+                placeholder="Choose a color"
+                maxDropdownHeight="300px"
+                type={TYPE.search}
+                onChange={({value}) => setValue(value)}
+                value={value}
+                />
             </Cell>
         </Grid>
     </Block>

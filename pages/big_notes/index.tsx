@@ -9,7 +9,7 @@ import { ButtonGroup } from "baseui/button-group";
 import { Button } from "baseui/button";
 import {Select, TYPE, Value} from 'baseui/select';
 
-const QuestionIndex: React.FC = (props) => {
+const BigNotesIndex: React.FC = (props) => {
     const [currentPage, setCurrentPage] = React.useState(2);
 
     return (
@@ -26,25 +26,9 @@ const QuestionIndex: React.FC = (props) => {
                         <Button>Awarded</Button>
                     </ButtonGroup>
                 </Block>
-                <QuestionItem item={{}}></QuestionItem>
-                <QuestionItem item={{}}></QuestionItem>
-                <QuestionItem item={{}}></QuestionItem>
-                <QuestionItem item={{}}></QuestionItem>
-                <QuestionItem item={{}}></QuestionItem>
-                <Block display={"flex"} justifyContent={"center"}>
-                    <Pagination
-                        numPages={20}
-                        currentPage={currentPage}
-                        onPageChange={({ nextPage }) => {
-                            setCurrentPage(
-                            Math.min(Math.max(nextPage, 1), 20)
-                            );
-                        }}
-                    />
-                </Block>
             </Cell>
         </Main>
     )
 }
 
-export default QuestionIndex;
+export default BigNotesIndex;
