@@ -182,10 +182,6 @@ const User: React.FC<{userId: string}> = (props) => {
               <HeadingLarge>BIO</HeadingLarge>
               <ProgressBar
                 value={25}
-                showLabel
-                getProgressLabel={value =>
-                  `${100-value}% to next level`
-                }
                 overrides={{
                   BarProgress: {
                     style: ({$theme, $value}) => {
@@ -193,6 +189,7 @@ const User: React.FC<{userId: string}> = (props) => {
                         ...$theme.typography.font350,
                         backgroundColor: $theme.colors.positive,
                         color: $theme.colors.mono200,
+                        padding: 0,
                         position: 'relative',
                         ':after': {
                           position: 'absolute',
@@ -209,35 +206,11 @@ const User: React.FC<{userId: string}> = (props) => {
                   },
                 }}
               />
-              <ProgressBar
-                value={50}
-                showLabel
-                getProgressLabel={value =>
-                  `${value}% bounties earned`
-                }
-                overrides={{
-                  BarProgress: {
-                    style: ({$theme, $value}) => {
-                      return {
-                        ...$theme.typography.font350,
-                        backgroundColor: $theme.colors.negative,
-                        color: $theme.colors.mono200,
-                        position: 'relative',
-                        ':after': {
-                          position: 'absolute',
-                          content: $value > 5 ? `"${$value}%"` : '',
-                          right: '10px',
-                        },
-                      };
-                    },
-                  },
-                  Bar: {
-                    style: ({$theme}) => ({
-                      height: $theme.sizing.scale800,
-                    }),
-                  },
-                }}
-              />
+              <Block display={'flex'} padding={'0 12px'} justifyContent={'space-between'}>
+                <LabelSmall>Level 1</LabelSmall>
+                <LabelSmall>Level 2</LabelSmall>
+              </Block>
+
               <Block className={css(
                 {
                   borderLeftStyle: 'solid',
