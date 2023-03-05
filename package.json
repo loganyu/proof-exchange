@@ -20,7 +20,7 @@
     "@solana/wallet-adapter-react-ui": "^0.9.27",
     "@solana/wallet-adapter-wallets": "^0.19.11",
     "@solana/web3.js": "^1.73.3",
-    "@SolCharms/DeEdIT": "file:./DeEdIT_SDK",
+    "@SolCharms/DeEdIT": "file:DeEdIT_SDK",
     "baseui": "^12.2.0",
     "next": "^12.0.10",
     "next-auth": "^4.19.2",
