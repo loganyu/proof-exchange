@@ -1,9 +1,17 @@
-import React from "react"
+import React, { useEffect } from 'react';
 import { GetStaticProps } from "next"
 import Layout from "../components/Layout"
 import Post, { PostProps } from "../components/Post"
 import Main from "../components/layout/Main";
 import prisma from '../lib/prisma';
+import { WalletNotConnectedError } from '@solana/wallet-adapter-base';
+import { useConnection, useAnchorWallet } from '@solana/wallet-adapter-react';
+import { Connection, SystemProgram, Transaction, Keypair, PublicKey } from "@solana/web3.js";
+
+// forum sdk
+import { ForumClient } from '@SolCharms/DeEdIT/src/forum';
+import { IDL as ForumIDL } from '@SolCharms/DeEdIT/src/cli/forum-cli';
+import { FORUM_PROG_ID } from '@SolCharms/DeEdIT/src/index';
 
 // components
 import Header from "../components/layout/Header"
@@ -48,9 +56,69 @@ type Props = {
 }
 
 const Exchange: React.FC<Props> = (props) => {
+  const { connection } = useConnection();
+  const wallet = useAnchorWallet();
+  const [forumClient, setForumClient] = React.useState(null);
+
+  /*
+   * When our component first mounts, let's check to see if we have a connected
+   * Phantom Wallet
+   */
+  useEffect(() => {
+    console.log('wallet', wallet)
+    const onLoad = async () => {
+      await checkIfWalletIsConnected();
+    };
+    window.addEventListener('load', onLoad);
+
+    return () => window.removeEventListener('load', onLoad);
+  }, [connection, wallet]);
+
+  /*
+   * This function holds the logic for deciding if a Phantom Wallet is
+   * connected or not
+   */
+  const checkIfWalletIsConnected = async () => {
+    // We're using optional chaining (question mark) to check if the object is null
+    console.log('check wallet')
+      if (window?.solana?.isPhantom) {
+        console.log('Phantom wallet found!');
+      } else {
+        alert('Solana object not found! Get a Phantom Wallet 👻');
+      }
+    };
+
+  async function createBio() {
+    console.log('create bio');
+    if (wallet && connection) {
+      let forumClient = new ForumClient(
+          connection,
+          wallet,
+          ForumIDL,
+          FORUM_PROG_ID,
+      );
+      const aboutMeConfig  =
+        {
+            forum: new PublicKey("5FN8oZPWyaqV79cSTRVVFkQGiq6WBjGgvhePaHw1pfMp"),
+            content: "Yo yo yo yo, it's your boy Charms, the most underrated developer on all of Solana. AKA the Command Line Captain. \n" +
+                "Founder of PROOF PROTOCOL, inventor of DeEdITs, veteran of the blockchain."
+        }
+      
+        const aboutMeInstance = await forumClient.createAboutMe(
+          aboutMeConfig.forum,
+          wallet.payer,
+          aboutMeConfig.content
+      );
+      console.log(aboutMeInstance);
+      console.log('wallet', wallet)
+    }
+  }
+
+  
   return (
     <Main>
       <Cell span={10}>
+          <button onClick={createBio}>click me</button>
           <Card title="NFTs" overrides={{Root: {style: {marginTop: '10px'}}}}>
             <StyledBody>
               Proin ut dui sed metus pharetra hend rerit vel non

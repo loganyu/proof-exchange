@@ -20,6 +20,11 @@ import DiscordLogo from './discord-logo';
 import Bulb from './bulb';
 import { Button, KIND, SIZE, SHAPE } from 'baseui/button';
 import Search from './Search';
+import {
+  WalletModalProvider,
+  WalletDisconnectButton,
+  WalletMultiButton
+} from '@solana/wallet-adapter-react-ui';
 
 // Breakpoint for un-wrapping the search bar from under the links and toggles.
 const WRAP_SEARCH = 715;
@@ -42,7 +47,6 @@ const options = {
   placeholder: 'Search colors',
   maxDropdownHeight: '300px',
 };
-import { WalletMultiButton } from '@solana/wallet-adapter-react-ui'
 
 type Props = {};
 
