@@ -9,9 +9,9 @@ import { useConnection, useAnchorWallet } from '@solana/wallet-adapter-react';
 import { Connection, SystemProgram, Transaction, Keypair, PublicKey } from "@solana/web3.js";
 
 // forum sdk
-import { ForumClient } from '@SolCharms/DeEdIT/src/forum';
-import { IDL as ForumIDL } from '@SolCharms/DeEdIT/src/cli/forum-cli';
-import { FORUM_PROG_ID } from '@SolCharms/DeEdIT/src/index';
+import { ForumClient } from '../DeEdIT_SDK/src/forum';
+import { IDL as ForumIDL } from '../DeEdIT_SDK/src/cli/forum-cli';
+import { FORUM_PROG_ID } from '../DeEdIT_SDK/src/index';
 
 // components
 import Header from "../components/layout/Header"
