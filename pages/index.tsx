@@ -8,11 +8,6 @@ import { WalletNotConnectedError } from '@solana/wallet-adapter-base';
 import { useConnection, useAnchorWallet } from '@solana/wallet-adapter-react';
 import { Connection, SystemProgram, Transaction, Keypair, PublicKey } from "@solana/web3.js";
 
-// forum sdk
-import { ForumClient } from '../DeEdIT_SDK/src/forum';
-import { IDL as ForumIDL } from '../DeEdIT_SDK/src/cli/forum-cli';
-import { FORUM_PROG_ID } from '../DeEdIT_SDK/src/index';
-
 // components
 import Header from "../components/layout/Header"
 
@@ -88,37 +83,9 @@ const Exchange: React.FC<Props> = (props) => {
       }
     };
 
-  async function createBio() {
-    console.log('create bio');
-    if (wallet && connection) {
-      let forumClient = new ForumClient(
-          connection,
-          wallet,
-          ForumIDL,
-          FORUM_PROG_ID,
-      );
-      const aboutMeConfig  =
-        {
-            forum: new PublicKey("5FN8oZPWyaqV79cSTRVVFkQGiq6WBjGgvhePaHw1pfMp"),
-            content: "Yo yo yo yo, it's your boy Charms, the most underrated developer on all of Solana. AKA the Command Line Captain. \n" +
-                "Founder of PROOF PROTOCOL, inventor of DeEdITs, veteran of the blockchain."
-        }
-      
-        const aboutMeInstance = await forumClient.createAboutMe(
-          aboutMeConfig.forum,
-          wallet.payer,
-          aboutMeConfig.content
-      );
-      console.log(aboutMeInstance);
-      console.log('wallet', wallet)
-    }
-  }
-
-  
   return (
     <Main>
       <Cell span={10}>
-          <button onClick={createBio}>click me</button>
           <Card title="NFTs" overrides={{Root: {style: {marginTop: '10px'}}}}>
             <StyledBody>
               Proin ut dui sed metus pharetra hend rerit vel non
