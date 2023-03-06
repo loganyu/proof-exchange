@@ -1,19 +1,78 @@
-import { NextApiHandler } from 'next';
-import NextAuth from 'next-auth';
-import { PrismaAdapter } from '@next-auth/prisma-adapter';
-import GitHubProvider from 'next-auth/providers/github';
-import prisma from '../../../lib/prisma';
+import { NextApiRequest, NextApiResponse } from "next";
+import NextAuth, { NextAuthOptions } from "next-auth";
+import CredentialsProvider from "next-auth/providers/credentials";
+import { getCsrfToken } from "next-auth/react";
+import { SigninMessage } from "../../../utils/SignInMessage";
 
-const authHandler: NextApiHandler = (req, res) => NextAuth(req, res, options);
-export default authHandler;
+export default async function auth(req: NextApiRequest, res: NextApiResponse) {
+  const providers = [
+    CredentialsProvider({
+      name: "Solana",
+      credentials: {
+        message: {
+          label: "Message",
+          type: "text",
+        },
+        signature: {
+          label: "Signature",
+          type: "text",
+        },
+      },
+      async authorize(credentials) {
+        try {
+          const signinMessage = new SigninMessage(
+            JSON.parse(credentials?.message || "{}")
+          );
+          const nextAuthUrl = new URL(process.env.NEXTAUTH_URL);
+          if (signinMessage.domain !== nextAuthUrl.host) {
+            return null;
+          }
 
-const options = {
-  providers: [
-    GitHubProvider({
-      clientId: process.env.GITHUB_ID,
-      clientSecret: process.env.GITHUB_SECRET,
+          if (signinMessage.nonce !== (await getCsrfToken({ req }))) {
+            return null;
+          }
+
+          const validationResult = await signinMessage.validate(
+            credentials?.signature || ""
+          );
+
+          if (!validationResult)
+            throw new Error("Could not validate the signed message");
+
+          return {
+            id: signinMessage.publicKey,
+          };
+        } catch (e) {
+          return null;
+        }
+      },
     }),
-  ],
-  adapter: PrismaAdapter(prisma),
-  secret: process.env.SECRET,
-};
+  ];
+
+  const isDefaultSigninPage =
+    req.method === "GET" && req.query.nextauth?.includes("signin");
+
+  // Hides Sign-In with Solana from the default sign page
+  if (isDefaultSigninPage) {
+    providers.pop();
+  }
+
+  return await NextAuth(req, res, {
+    providers,
+    session: {
+      strategy: "jwt",
+    },
+    secret: process.env.NEXTAUTH_SECRET,
+    callbacks: {
+      async session({ session, token }) {
+        // @ts-ignore
+        session.publicKey = token.sub;
+        if (session.user) {
+          session.user.name = token.sub;
+          session.user.image = `https://ui-avatars.com/api/?name=${token.sub}&background=random`;
+        }
+        return session;
+      },
+    },
+  });
+}

@@ -1,20 +1,24 @@
 import React, { useMemo } from "react";
 import { WalletAdapterNetwork } from "@solana/wallet-adapter-base";
-import { WalletModalProvider } from "@solana/wallet-adapter-react-ui";
 import { ConnectionProvider, WalletProvider } from "@solana/wallet-adapter-react";
 import {
   GlowWalletAdapter,
   PhantomWalletAdapter
 } from "@solana/wallet-adapter-wallets";
-import { clusterApiUrl } from "@solana/web3.js";
 import { Block } from 'baseui/block';
-import { AppProps } from "next/app";
 import { Session } from "next-auth";
-import { SessionProvider } from 'next-auth/react';
 import {Provider as StyletronProvider} from 'styletron-react';
 import {styletron} from '../styletron';
 import '../styles.css'
 import WalletContextProvider from '../components/WalletContextProvider'
+import { SessionProvider } from "next-auth/react";
+import { WalletModalProvider } from "@solana/wallet-adapter-react-ui";
+import { clusterApiUrl } from "@solana/web3.js";
+import type { AppProps } from "next/app";
+
+require("@solana/wallet-adapter-react-ui/styles.css");
+
+// baseweb
 import {
   createThemedStyled,
   createThemedUseStyletron,
@@ -74,7 +78,9 @@ const App = ({ Component, pageProps }: AppProps<{session: Session;}>) => {
         <Block overrides={{Block: {style: blockProps}}}>
           <SessionProvider session={pageProps.session}>
             <WalletContextProvider>
-              <Component {...pageProps} />
+              <SessionProvider session={pageProps.session} refetchInterval={0}>
+                <Component {...pageProps} />
+              </SessionProvider>
             </WalletContextProvider>
           </SessionProvider>
         </Block>
