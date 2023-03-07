@@ -13,6 +13,15 @@ import bs58 from "bs58";
 import { getCsrfToken, signIn, signOut, useSession } from "next-auth/react";
 import { SigninMessage } from "../utils/SignInMessage";
 
+import { ForumClient } from "../forum/src/forum/forum.client"
+import { IDL as ForumIDL } from '../forum/src/types/forum'
+import { FORUM_PROG_ID } from '../forum/src/index';
+import { findForumAuthorityPDA } from '../forum/src/forum/forum.pda';
+import { ForumFees, ReputationMatrix } from '../forum/src/forum/forum.client';
+import { forumConfig } from "../forum/src/cli/config_devnet/forumConfig-devnet";
+import { stringifyPKsAndBNs } from '../forum/src/prog-common';
+
+
 // components
 import Header from "../components/layout/Header"
 
@@ -109,9 +118,26 @@ const Exchange: React.FC<Props> = (props) => {
     )
   }
 
+  async function work(){
+    console.log('work')
+    const forumClient = new ForumClient(connection, wallet, ForumIDL, FORUM_PROG_ID)
+    console.log('client', forumClient)
+    const forum = Keypair.generate();
+                 const forumFees: ForumFees = forumConfig.forumFees;
+                 const reputationMatrix: ReputationMatrix = forumConfig.reputationMatrix;
+    const forumInstance = await forumClient.initForum(
+      forum,
+      wallet.publicKey,
+      forumFees,
+      reputationMatrix,
+    );
+    console.log(stringifyPKsAndBNs(forumInstance));
+  }
+
   return (
     <Main>
       <Cell span={10}>
+          <button onClick={work}>button</button>
           <Card title="NFTs" overrides={{Root: {style: {marginTop: '10px'}}}}>
             <StyledBody>
               Proin ut dui sed metus pharetra hend rerit vel non

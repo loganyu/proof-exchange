@@ -25,6 +25,7 @@ model Question {
   title     String
   content   String
   published Boolean   @default(false)
+  bountyAwarded Boolean @default(false)
   author    User?     @relation(fields: [authorId], references: [id])
   authorId  String?
   comments  Comment[]
