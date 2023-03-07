@@ -110,7 +110,8 @@ const Exchange: React.FC<Props> = (props) => {
     }
   }, [wallet.connected, status]);
 
-  if (!wallet.connected || status === 'unauthenticated') {
+  // if (!wallet.connected || status === 'unauthenticated') {
+  if (!wallet.connected) {
     return (
       <Main>
         <AccessDenied />
