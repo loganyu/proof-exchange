@@ -119,27 +119,9 @@ const Exchange: React.FC<Props> = (props) => {
     )
   }
 
-  async function work(){
-    console.log('work')
-    // @ts-ignore
-    const forumClient = new ForumClient(connection, wallet, ForumIDL, FORUM_PROG_ID)
-    console.log('client', forumClient)
-    const forum = Keypair.generate();
-                 const forumFees: ForumFees = forumConfig.forumFees;
-                 const reputationMatrix: ReputationMatrix = forumConfig.reputationMatrix;
-    const forumInstance = await forumClient.initForum(
-      forum,
-      wallet.publicKey,
-      forumFees,
-      reputationMatrix,
-    );
-    console.log(stringifyPKsAndBNs(forumInstance));
-  }
-
   return (
     <Main>
       <Cell span={10}>
-          <button onClick={work}>button</button>
           <Card title="NFTs" overrides={{Root: {style: {marginTop: '10px'}}}}>
             <StyledBody>
               Proin ut dui sed metus pharetra hend rerit vel non
@@ -239,4 +221,4 @@ const Blog: React.FC<Props> = (props) => {
   )
 }
 
-export default Exchange
+export default Exchange;

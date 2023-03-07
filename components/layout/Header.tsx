@@ -59,7 +59,6 @@ type Props = {};
 const Nav: React.FC<Props> = () => {
   const { connection } = useConnection();
   const wallet = useWallet();
-  console.log('header wallet', wallet)
 
   const [css, theme] = useStyletron();
   
@@ -314,6 +313,27 @@ const Nav: React.FC<Props> = () => {
             <Menu size={24} color={theme.colors.contentPrimary} />
           </Button>
           <WalletMultiButton />
+          {wallet.connected && 
+            <Link href="/admin-console/" passHref>
+              <Button
+                $as="a"
+                size={SIZE.compact}
+                kind={KIND.tertiary}
+                overrides={{
+                  BaseButton: {
+                    style: {
+                      display: 'none',
+                      [mq(1000)]: {
+                        display: 'block',
+                      },
+                    },
+                  },
+                }}
+              >
+                Admin Console
+              </Button>
+            </Link>
+        }
           {wallet.connected && 
             <Link href="/users/1" passHref>
               <Button
