@@ -120,6 +120,7 @@ const Exchange: React.FC<Props> = (props) => {
 
   async function work(){
     console.log('work')
+    // @ts-ignore
     const forumClient = new ForumClient(connection, wallet, ForumIDL, FORUM_PROG_ID)
     console.log('client', forumClient)
     const forum = Keypair.generate();
