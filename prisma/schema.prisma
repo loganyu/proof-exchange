@@ -20,6 +20,73 @@ model Post {
   authorId  String?
 }
 
+model Question {
+  id        String    @id @default(cuid())
+  title     String
+  content   String
+  published Boolean   @default(false)
+  author    User?     @relation(fields: [authorId], references: [id])
+  authorId  String?
+  comments  Comment[]
+  votes     Vote[]
+  Tag       Tag[]
+}
+
+model Answer {
+  id        String    @id @default(cuid())
+  title     String
+  content   String
+  published Boolean   @default(false)
+  author    User?     @relation(fields: [authorId], references: [id])
+  authorId  String?
+  comments  Comment[]
+  votes     Vote[]
+}
+
+model Comment {
+  id         String    @id @default(cuid())
+  content    String
+  author     User?     @relation(fields: [authorId], references: [id])
+  authorId   String?
+  question   Question? @relation(fields: [questionId], references: [id])
+  questionId String?
+  answer     Answer?   @relation(fields: [answerId], references: [id])
+  answerId   String?
+  votes      Vote[]
+}
+
+model Vote {
+  id         String    @id @default(cuid())
+  user       User      @relation(fields: [userId], references: [id])
+  question   Question? @relation(fields: [questionId], references: [id])
+  comment    Comment?  @relation(fields: [commentId], references: [id])
+  answer     Answer?   @relation(fields: [answerId], references: [id])
+  userId     String
+  questionId String?
+  commentId  String?
+  answerId   String?
+}
+
+model Tag {
+  id         String    @id @default(cuid())
+  name       String
+  author     User?     @relation(fields: [authorId], references: [id])
+  authorId   String?
+  category   Category
+  question   Question? @relation(fields: [questionId], references: [id])
+  questionId String?
+
+  @@unique([name, category])
+}
+
+enum Category {
+  NFTS
+  TECH
+  TRADING
+  DEFI
+  OTHER
+}
+
 model Account {
   id                 String  @id @default(cuid())
   userId             String  @map("user_id")
@@ -39,6 +106,7 @@ model Account {
   user User @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@unique([provider, providerAccountId])
+  @@map(name: "accounts")
 }
 
 model Session {
@@ -47,17 +115,27 @@ model Session {
   userId       String   @map("user_id")
   expires      DateTime
   user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map(name: "sessions")
 }
 
 model User {
-  id            String    @id @default(cuid())
+  id            String     @id @default(cuid())
+  address       String?    @unique
   name          String?
-  email         String?   @unique
+  email         String?    @unique
   emailVerified DateTime?
   image         String?
   posts         Post[]
-  accounts      Account[]
   sessions      Session[]
+  questions     Question[]
+  answers       Answer[]
+  comments      Comment[]
+  votes         Vote[]
+  Account       Account[]
+  Tag           Tag[]
+
+  @@map(name: "users")
 }
 
 model VerificationToken {
