@@ -63,9 +63,9 @@ const BigNotesTopPostsSection: React.FC<any> = (props) => {
                 <HeadingMedium padding={'10px 20px'}>Top (Current Big Notes Pg) Posts </HeadingMedium>
                 <ButtonGroup>
                     <Button>Hot</Button>
-                    <Button>Day</Button>
-                    <Button>Week</Button>
-                    <Button>Month</Button>
+                    <Button>D</Button>
+                    <Button>W</Button>
+                    <Button>M</Button>
                     <Button>Bountied</Button>
                     <Button>Awarded</Button>
                 </ButtonGroup>

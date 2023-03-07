@@ -19,9 +19,9 @@ const BigNotesIndex: React.FC = (props) => {
                 <Block display={'flex'} justifyContent='end' padding={'10px 0'}>
                     <ButtonGroup>
                         <Button>Hot</Button>
-                        <Button>Day</Button>
-                        <Button>Week</Button>
-                        <Button>Month</Button>
+                        <Button>D</Button>
+                        <Button>W</Button>
+                        <Button>M</Button>
                         <Button>Bountied</Button>
                         <Button>Awarded</Button>
                     </ButtonGroup>

@@ -106,7 +106,7 @@ const Exchange: React.FC<Props> = (props) => {
   useEffect(() => {
     console.log('wallet.connected', wallet.connected, 'status', status)
     if (!wallet.connected || status === "unauthenticated") {
-      handleSignIn();
+      // handleSignIn();
     }
   }, [wallet.connected, status]);
 

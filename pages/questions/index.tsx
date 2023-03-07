@@ -8,20 +8,62 @@ import {Block} from 'baseui/block';
 import { ButtonGroup } from "baseui/button-group";
 import { Button } from "baseui/button";
 import {Select, TYPE, Value} from 'baseui/select';
+import { useState, useEffect } from "react"
+import { useSession } from "next-auth/react"
+
+
+import { useWallet } from "@solana/wallet-adapter-react";
+import { useWalletModal } from "@solana/wallet-adapter-react-ui";
+
+import { Navigation } from "baseui/side-navigation";
+import Router from 'next/router';
 
 const QuestionIndex: React.FC = (props) => {
+    const { data: session } = useSession()
+    const [content, setContent] = useState()
+    const wallet = useWallet()
+    const walletModal = useWalletModal();
+
+  
+    // // Fetch content from protected route
+    // useEffect(() => {
+    //   const fetchData = async () => {
+    //     const res = await fetch("/api/examples/protected")
+    //     const json = await res.json()
+    //     if (json.content) {
+    //       setContent(json.content)
+    //     }
+    //   }
+    //   fetchData()
+    // }, [session])
+
     const [currentPage, setCurrentPage] = React.useState(2);
+
+    async function navigate(path: string): Promise<void> {
+        await Router.push(path);
+    }
+    
+    async function handleClick() {
+        if (!wallet.connected) {
+            walletModal.setVisible(true);
+        } else {
+            Router.push('/questions/ask')
+        }
+    }
 
     return (
         <Main>
             <Cell span={8}>
+                <Block display={'flex'} paddingBottom={'10px'} justifyContent='flex-end'>
+                    <Button onClick={handleClick}>Ask Question</Button>
+                </Block>
                 <QuestionBanner></QuestionBanner>
                 <Block display={'flex'} justifyContent='end' padding={'10px 0'}>
                     <ButtonGroup>
                         <Button>Hot</Button>
-                        <Button>Day</Button>
-                        <Button>Week</Button>
-                        <Button>Month</Button>
+                        <Button>D</Button>
+                        <Button>W</Button>
+                        <Button>M</Button>
                         <Button>Bountied</Button>
                         <Button>Awarded</Button>
                     </ButtonGroup>

@@ -26,6 +26,12 @@ import {
   WalletMultiButton
 } from '@solana/wallet-adapter-react-ui';
 
+
+import { useConnection } from '@solana/wallet-adapter-react';
+import { useWallet } from "@solana/wallet-adapter-react";
+import { Connection, SystemProgram, Transaction, Keypair, PublicKey } from "@solana/web3.js";
+import { useWalletModal } from "@solana/wallet-adapter-react-ui";
+
 // Breakpoint for un-wrapping the search bar from under the links and toggles.
 const WRAP_SEARCH = 715;
 
@@ -51,6 +57,10 @@ const options = {
 type Props = {};
 
 const Nav: React.FC<Props> = () => {
+  const { connection } = useConnection();
+  const wallet = useWallet();
+  console.log('header wallet', wallet)
+
   const [css, theme] = useStyletron();
   
   return (
@@ -304,25 +314,27 @@ const Nav: React.FC<Props> = () => {
             <Menu size={24} color={theme.colors.contentPrimary} />
           </Button>
           <WalletMultiButton />
-          <Link href="/users/1" passHref>
-            <Button
-              $as="a"
-              size={SIZE.compact}
-              kind={KIND.tertiary}
-              overrides={{
-                BaseButton: {
-                  style: {
-                    display: 'none',
-                    [mq(1000)]: {
-                      display: 'block',
+          {wallet.connected && 
+            <Link href="/users/1" passHref>
+              <Button
+                $as="a"
+                size={SIZE.compact}
+                kind={KIND.tertiary}
+                overrides={{
+                  BaseButton: {
+                    style: {
+                      display: 'none',
+                      [mq(1000)]: {
+                        display: 'block',
+                      },
                     },
                   },
-                },
-              }}
-            >
-              Profile
-            </Button>
-          </Link>
+                }}
+              >
+                Profile
+              </Button>
+            </Link>
+        }
         </div>
       </header>
     </Block>
