@@ -1,5 +1,7 @@
 // This is an example of how to access a session from an API route
 import { getServerSession } from "next-auth"
+
+// @ts-ignore
 import { authOptions } from "./auth/[...nextauth]"
 
 import type { NextApiRequest, NextApiResponse } from "next"
