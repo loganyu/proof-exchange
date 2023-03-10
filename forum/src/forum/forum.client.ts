@@ -529,7 +529,6 @@ export class ForumClient extends AccountUtils {
     async editAboutMe(
         profileOwner: PublicKey | Keypair,
         new_content: string,
-        connection: Connection
     ) {
         const profileOwnerKey = isKp(profileOwner) ? (<Keypair>profileOwner).publicKey : <PublicKey>profileOwner;
 
@@ -559,10 +558,10 @@ export class ForumClient extends AccountUtils {
             .signers([])
             .transaction();
         tx.feePayer = this.wallet.publicKey
-        tx.recentBlockhash = (await connection.getLatestBlockhash()).blockhash
+        tx.recentBlockhash = (await this.conn.getLatestBlockhash()).blockhash
         const signedTx = await this.wallet.signTransaction(tx)
-        const txSig = await connection.sendRawTransaction(signedTx.serialize())
-        await connection.confirmTransaction(txSig, "singleGossip")
+        const txSig = await this.conn.sendRawTransaction(signedTx.serialize())
+        await this.conn.confirmTransaction(txSig, "singleGossip")
 
         return {
             userProfile,

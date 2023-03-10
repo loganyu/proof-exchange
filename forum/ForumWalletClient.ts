@@ -9,19 +9,12 @@ import { ForumFees, ReputationMatrix } from '../forum/src/forum/forum.client';
 import * as anchor from '@coral-xyz/anchor';
 
 export class ForumWalletClient {
-    wallet!: WalletContextState;
-    connection!: Connection;
     forumClient: ForumClient 
     forumPubkey: PublicKey
 
     constructor(
-        connection: Connection,
-        wallet: WalletContextState,
         forumPubkey: PublicKey = new PublicKey('BbtyjiTGn2p3pKBrs6PuYQEfLk5sMyq1WreFZw9oJezY')
     ) {
-        console.log('connection', connection)
-        this.wallet = wallet;
-        this.connection = connection;
         this.forumPubkey = forumPubkey;
         // @ts-ignore
         this.forumClient = new ForumClient(connection, wallet, ForumIDL, FORUM_PROG_ID)
@@ -35,7 +28,7 @@ export class ForumWalletClient {
         const reputationMatrix: ReputationMatrix = forumConfig.reputationMatrix;
         const forumInstance = await this.forumClient.initForum(
           forum,
-          this.wallet.publicKey,
+          this.forumClient.wallet.publicKey,
           forumFees,
           reputationMatrix,
         );
@@ -51,7 +44,7 @@ export class ForumWalletClient {
     
         const updateForumParamsInstance = await this.forumClient.updateForumParams(
           forumKey,
-          this.wallet.publicKey,
+          this.forumClient.wallet.publicKey,
           forumFees,
           reputationMatrix,
         );
@@ -72,7 +65,7 @@ export class ForumWalletClient {
     
         const payoutInstance = await this.forumClient.payoutFromTreasury(
             forumKey,
-            this.wallet.publicKey,
+            this.forumClient.wallet.publicKey,
             receiverKey,
             minimumBalanceForRentExemption
         );
@@ -82,11 +75,11 @@ export class ForumWalletClient {
       async closeForum(receiverPubkey) {
         console.log('closeForum')
         const forumKey = new PublicKey(this.forumPubkey);
-        const receiverKey: PublicKey = receiverPubkey? new PublicKey(receiverPubkey) : this.wallet.publicKey;
+        const receiverKey: PublicKey = receiverPubkey? new PublicKey(receiverPubkey) : this.forumClient.wallet.publicKey;
     
         const closeForumInstance = await this.forumClient.closeForum(
           forumKey,
-          this.wallet.publicKey,
+          this.forumClient.wallet.publicKey,
           receiverKey,
         );
         console.log(stringifyPKsAndBNs(closeForumInstance));
@@ -98,7 +91,7 @@ export class ForumWalletClient {
     
         const profileInstance = await this.forumClient.createUserProfile(
           forum,
-          this.wallet.publicKey,
+          this.forumClient.wallet.publicKey,
         );
         
         
@@ -111,7 +104,7 @@ export class ForumWalletClient {
         const tokenMintKey = new PublicKey(tokenMint);
     
         const editInstance = await this.forumClient.editUserProfile(
-          this.wallet.publicKey,
+          this.forumClient.wallet.publicKey,
           tokenMintKey
         );
         console.log(stringifyPKsAndBNs(editInstance));
@@ -121,12 +114,12 @@ export class ForumWalletClient {
       async deleteProfile(receiverPubkey= ''){
         console.log('deleteProfile')
         const forumKey: PublicKey = new PublicKey(this.forumPubkey);
-        const receiverKey: PublicKey = receiverPubkey ? new PublicKey(receiverPubkey) : this.wallet.publicKey;
+        const receiverKey: PublicKey = receiverPubkey ? new PublicKey(receiverPubkey) : this.forumClient.wallet.publicKey;
     
     
         const deleteInstance = await this.forumClient.deleteUserProfile(
           forumKey,
-          this.wallet.publicKey,
+          this.forumClient.wallet.publicKey,
           receiverKey,
         );
         console.log(stringifyPKsAndBNs(deleteInstance));
@@ -138,7 +131,7 @@ export class ForumWalletClient {
     
         const aboutMeInstance = await this.forumClient.createAboutMe(
           this.forumPubkey,
-          this.wallet.publicKey,
+          this.forumClient.wallet.publicKey,
           content,
         );
         console.log(stringifyPKsAndBNs(aboutMeInstance));
@@ -147,10 +140,10 @@ export class ForumWalletClient {
       async deleteAboutMe(receiverPubkey = ''){
         console.log('deleteAboutMe')
     
-        const receiverKey: PublicKey = receiverPubkey ? new PublicKey(receiverPubkey) : this.wallet.publicKey;
+        const receiverKey: PublicKey = receiverPubkey ? new PublicKey(receiverPubkey) : this.forumClient.wallet.publicKey;
     
         const deleteAboutMeInstance = await this.forumClient.deleteAboutMe(
-          this.wallet.publicKey,
+          this.forumClient.wallet.publicKey,
           receiverKey,
       );
         console.log(stringifyPKsAndBNs(deleteAboutMeInstance));
@@ -160,9 +153,8 @@ export class ForumWalletClient {
         console.log('editAboutMe')
 
         const editAboutMeInstance = await this.forumClient.editAboutMe(
-            this.wallet.publicKey,
-            new_content,
-            this.connection
+            this.forumClient.wallet.publicKey,
+            new_content
         );
         console.log(stringifyPKsAndBNs(editAboutMeInstance));
       }
