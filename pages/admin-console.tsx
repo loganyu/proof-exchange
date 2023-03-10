@@ -30,6 +30,14 @@ import {
   findAboutMePDA,
 } from '../forum/src/forum/forum.pda';
 import { aboutMeConfig } from "../forum/src//cli/config_devnet/aboutMeConfig-devnet";
+import { Textarea } from "baseui/textarea";
+import {
+  Modal,
+  ModalHeader,
+  ModalBody,
+  ModalFooter,
+  ModalButton,
+} from 'baseui/modal';
 
 // components
 import Header from "../components/layout/Header"
@@ -48,7 +56,7 @@ import {
   StyledNavigationItem
 } from "baseui/header-navigation";
 import { StyledLink } from "baseui/link";
-import { Button } from "baseui/button";
+import { Button, SIZE } from "baseui/button";
 import { MessageCard } from "baseui/message-card";
 import {
   Card,
@@ -59,6 +67,7 @@ import { Tag } from "baseui/tag";
 import AccessDenied from '../components/access-denied';
 import {Block} from 'baseui/block';
 import { ForumWalletClient } from '../forum/ForumWalletClient';
+import { Label } from 'baseui/form-control/styled-components';
 
 
 
@@ -94,8 +103,8 @@ const blockStyles = {
   borderTopColor: `grey`,
   borderRightColor: `grey`,
   borderBottomColor: `grey`,
-  padding: '20px',
-  margin: '20px',
+  padding: '10px',
+  margin: '10px',
   width: '100%'
 }
 
@@ -109,9 +118,15 @@ const AdminConsole: React.FC<Props> = (props) => {
   const anchorWallet = useAnchorWallet();
   const walletModal = useWalletModal();
   const [forumWalletClient, setForumWalletClient] = React.useState<ForumWalletClient>(null)
+  const [output, setOutput] = React.useState<string>('')
   const [forumPubkey, setForumPubKey] = React.useState(new PublicKey('BbtyjiTGn2p3pKBrs6PuYQEfLk5sMyq1WreFZw9oJezY'))
   const [receiverPubkey, setReceiverPubkey] = React.useState(null)
   const [userProfilePubkey, setUserProfilePubKey] = React.useState(null)
+  const [isOpen, setIsOpen] = React.useState(false);
+
+  function close() {
+    setIsOpen(false);
+  }
 
   const handleSignIn = async () => {
     try {
@@ -144,13 +159,12 @@ const AdminConsole: React.FC<Props> = (props) => {
   };
   
   useEffect(() => {
-    if (!wallet.connected || status === "unauthenticated") {
-      // handleSignIn();
-    } else if (!forumWalletClient) {
-      // @ts-ignore
-     setForumWalletClient(new ForumWalletClient(connection, wallet))
+    if (wallet.connected) {
+     setForumWalletClient(new ForumWalletClient(connection, wallet, forumPubkey))
+    } else {
+      setForumWalletClient(null)
     }
-  }, [wallet.connected, status]);
+  }, [wallet.connected, status, forumPubkey]);
 
   // if (!wallet.connected || status === 'unauthenticated') {
   if (!wallet.connected) {
@@ -164,17 +178,36 @@ const AdminConsole: React.FC<Props> = (props) => {
   return (
     <Main>
       <Cell span={10}>
+      <Modal onClose={close} isOpen={isOpen}
+      overrides={{
+        Dialog: {
+          style: {
+            width: '80vw',
+            height: '80vh',
+            display: 'flex',
+            flexDirection: 'column',
+            overflowWrap: 'anywhere'
+          },
+        },
+      }}>
+        <ModalHeader>Output</ModalHeader>
+        <ModalBody style={{flex: '1 1 0'}}>
+            {output}
+        </ModalBody>
+        <ModalFooter>
+          <ModalButton onClick={close}>Okay</ModalButton>
+        </ModalFooter>
+      </Modal>
         <HeadingLarge>Admin Panel</HeadingLarge>
         <Block overrides={{Block: {style: {...blockStyles}}}}>
           <ParagraphMedium>Wallet Public Key: {wallet.publicKey?.toBase58()}</ParagraphMedium>
           <ParagraphMedium>Forum Pub Key: {forumPubkey ? forumPubkey.toBase58() : '------------------'}</ParagraphMedium>
-          <ParagraphMedium>Receiver Pub Key: {receiverPubkey || '------------------'}</ParagraphMedium>
-          <ParagraphMedium>User Profile Pub Key: {userProfilePubkey || '------------------'}</ParagraphMedium>
-        </Block>
-
-        <Block overrides={{Block: {style: {...blockStyles}}}}>
-          <HeadingSmall>Set Receiver Pub Key</HeadingSmall>
-          <Input onChange={e => setReceiverPubkey(e.target.value)}></Input>
+          <Block>
+            <form onSubmit={async (e) => {e.preventDefault(); setForumPubKey(new PublicKey(e.target.input.value))}}>
+              <Input placeholder='forumPubKey' name="input"></Input>
+              <Button size={SIZE.mini} type="submit">set-forum-pub-key</Button>
+            </form>
+          </Block>
         </Block>
 
         {/* <Block overrides={{Block: {style: {...blockStyles}}}}>
@@ -203,43 +236,63 @@ const AdminConsole: React.FC<Props> = (props) => {
         </Block> */}
         
         <Block overrides={{Block: {style: {...blockStyles}}}}>
-          <HeadingSmall>Create User Profile</HeadingSmall>
-          <Button onClick={() => forumWalletClient.createUserProfile()}>create-user-profile</Button>
+          <LabelSmall>Create User Profile</LabelSmall>
+          <Button size={SIZE.mini} onClick={async (e) => {e.preventDefault(); setOutput(await forumWalletClient.createUserProfile()); setIsOpen(true)}}>create-user-profile</Button>
         </Block>
 
         <Block overrides={{Block: {style: {...blockStyles}}}}>
-          <HeadingSmall>Edit Profile</HeadingSmall>
-          <Button onClick={() => forumWalletClient.editProfile()}>edit-profile</Button>
+          <LabelSmall>Edit Profile</LabelSmall>
+          <form onSubmit={async (e) => {e.preventDefault(); setOutput(await forumWalletClient.editProfile(e.target.input.value)); setIsOpen(true)}}>
+            <Input placeholder='tokenMint' name="input"></Input>
+            <Button size={SIZE.mini} type="submit">edit-profile</Button>
+          </form>
         </Block>
 
         <Block overrides={{Block: {style: {...blockStyles}}}}>
-          <HeadingSmall>Delete Profile</HeadingSmall>
-          <Button onClick={() => forumWalletClient.deleteProfile()}>delete-profile</Button>
+          <form onSubmit={async (e) => {e.preventDefault(); setOutput(await forumWalletClient.deleteProfile(e.target.input.value)); setIsOpen(true)}}>
+            <Input placeholder='receiverKey (optional)' name="input"></Input>
+            <Button size={SIZE.mini} type="submit">delete-profile</Button>
+          </form>
         </Block>
 
         <Block overrides={{Block: {style: {...blockStyles}}}}>
-          <HeadingSmall>Create About Me</HeadingSmall>
-          <Button onClick={() => forumWalletClient.createAboutMe('a')}>create-about-me</Button>
+          <LabelSmall>Create About Me</LabelSmall>
+          <form onSubmit={async (e) => {e.preventDefault(); setOutput(await forumWalletClient.createAboutMe(e.target.input.value)); setIsOpen(true)}}>
+            <Input placeholder='content' name="input"></Input>
+            <Button size={SIZE.mini} type="submit">create-about-me</Button>
+          </form>
         </Block>
 
         <Block overrides={{Block: {style: {...blockStyles}}}}>
-          <HeadingSmall>Delete About Me</HeadingSmall>
-          <Button onClick={() => forumWalletClient.deleteAboutMe()}>delete-about-me</Button>
+          <LabelSmall>Delete About Me</LabelSmall>
+          <form onSubmit={async (e) => {e.preventDefault(); setOutput(await forumWalletClient.deleteAboutMe(e.target.input.value)); setIsOpen(true)}}>
+            <Input placeholder='receiverKey (optional)' name="input"></Input>
+            <Button size={SIZE.mini} type="submit">delete-about-me</Button>
+          </form>
         </Block>
 
         <Block overrides={{Block: {style: {...blockStyles}}}}>
-          <HeadingSmall>Edit About Me</HeadingSmall>
-          <Button onClick={async () => await forumWalletClient.editAboutMe('editing about me')}>edit-about-me</Button>
+          <LabelSmall>Edit About Me</LabelSmall>
+          <form onSubmit={async (e) => {e.preventDefault(); setOutput(await forumWalletClient.editAboutMe(e.target.input.value)); setIsOpen(true)}}>
+            <Input placeholder='content' name="input"></Input>
+            <Button size={SIZE.mini} type="submit">edit-about-me</Button>
+          </form>
         </Block>
 
         <Block overrides={{Block: {style: {...blockStyles}}}}>
-          <HeadingSmall>Fetch user about me PDA account info by pubkey</HeadingSmall>
-          <Button onClick={() => forumWalletClient.fetchAboutMeForProfile('a')}>fetch-about-me-by-profile</Button>
+          <LabelSmall>Fetch user about me PDA account info by pubkey</LabelSmall>
+          <form onSubmit={async (e) => {e.preventDefault(); setOutput(await forumWalletClient.fetchAboutMeForProfile(e.target.input.value)); setIsOpen(true)}}>
+            <Input placeholder='userProfilePubkey' name="input"></Input>
+            <Button size={SIZE.mini} type="submit">fetch-about-me-by-profile</Button>
+          </form>
         </Block>
 
         <Block overrides={{Block: {style: {...blockStyles}}}}>
-          <HeadingSmall>Fetch All Questions</HeadingSmall>
-          <Button onClick={() => forumWalletClient.fetchAllQuestions('a')}>fetch-all-questions</Button>
+          <LabelSmall>Fetch All Questions</LabelSmall>
+          <form onSubmit={async (e) => {e.preventDefault(); setOutput(await forumWalletClient.fetchAllQuestions(e.target.input.value)); setIsOpen(true)}}>
+            <Input placeholder='userProfilePubkey' name="input"></Input>
+            <Button size={SIZE.mini} type="submit">fetch-all-questions</Button>
+          </form>
         </Block>
       </Cell>
     </Main>
