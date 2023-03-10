@@ -61,20 +61,20 @@ import {Block} from 'baseui/block';
 
 
 
-export const getStaticProps: GetStaticProps = async () => {
-  const feed = await prisma.post.findMany({
-    where: { published: true },
-    include: {
-      author: {
-        select: { name: true },
-      },
-    },
-  });
-  return { 
-    props: { feed }, 
-    revalidate: 10 
-  }
-}
+// export const getStaticProps: GetStaticProps = async () => {
+//   const feed = await prisma.post.findMany({
+//     where: { published: true },
+//     include: {
+//       author: {
+//         select: { name: true },
+//       },
+//     },
+//   });
+//   return { 
+//     props: { feed }, 
+//     revalidate: 10 
+//   }
+// }
 
 type Props = {
   feed: PostProps[]
@@ -105,11 +105,12 @@ const AdminConsole: React.FC<Props> = (props) => {
 
   const { connection } = useConnection();
   const wallet = useWallet();
+  const anchorWallet = useAnchorWallet();
   const walletModal = useWalletModal();
   const [forumClient, setForumClient] = React.useState(null)
-  const [forumPubkey, setForumPubKey] = React.useState(null)
+  const [forumPubkey, setForumPubKey] = React.useState(new PublicKey('BbtyjiTGn2p3pKBrs6PuYQEfLk5sMyq1WreFZw9oJezY'))
   const [receiverPubkey, setReceiverPubkey] = React.useState(null)
-  const [userProfileKey, setUserProfileKey] = React.useState(null)
+  const [userProfilePubkey, setUserProfilePubKey] = React.useState(null)
 
   const handleSignIn = async () => {
     try {
@@ -227,10 +228,14 @@ const AdminConsole: React.FC<Props> = (props) => {
   async function createUserProfile(){
     console.log('createUserProfile')
     const forum = new PublicKey(forumPubkey);
+    console.log('anchorWallet', anchorWallet)
+    console.log('wallet', wallet)
 
     const profileInstance = await forumClient.createUserProfile(
       forum,
-      wallet.publicKey
+      anchorWallet.publicKey,
+      anchorWallet,
+      connection
     );
     
     
@@ -258,8 +263,10 @@ const AdminConsole: React.FC<Props> = (props) => {
 
     const deleteInstance = await forumClient.deleteUserProfile(
       forumKey,
-      wallet.publicKey,
-      receiverKey
+      anchorWallet.publicKey,
+      receiverKey,
+      anchorWallet,
+      connection
     );
     console.log(stringifyPKsAndBNs(deleteInstance));
   }
@@ -273,13 +280,46 @@ const AdminConsole: React.FC<Props> = (props) => {
     const aboutMeInstance = await forumClient.createAboutMe(
       forum,
       wallet.publicKey,
-      content
+      content,
+      wallet,
+      connection
     );
     console.log(stringifyPKsAndBNs(aboutMeInstance));
   }
 
+  async function deleteAboutMe(){
+    console.log('deleteAboutMe')
+
+    const receiverKey: PublicKey = receiverPubkey ? new PublicKey(receiverPubkey) : wallet.publicKey;
+
+    const deleteAboutMeInstance = await forumClient.deleteAboutMe(
+      wallet.publicKey,
+      receiverKey,
+      anchorWallet,
+      connection,
+  );
+    console.log(stringifyPKsAndBNs(deleteAboutMeInstance));
+  }
+
+  async function fetchAboutMeForProfile(){
+    console.log('fetchAboutMeForProfile')
+
+    const userProfileKey: PublicKey = new PublicKey(userProfilePubkey);
+
+    console.log('Fetching about me PDA for user profile with pubkey: ', userProfileKey.toBase58());
+    const aboutMePDAs = await forumClient.fetchAboutMeForProfile(userProfileKey);
+
+    // Loop over all PDAs and display account info
+    for (let num = 1; num <= aboutMePDAs.length; num++) {
+        console.log('About me account', num, ':');
+        console.dir(stringifyPKsAndBNs(aboutMePDAs[num - 1]), {depth: null});
+    }
+  }
+
   async function fetchAllQuestions(){
     console.log('fetchAllQuestions')
+
+    const userProfileKey: PublicKey = new PublicKey(userProfilePubkey);
     console.log('Fetching all question PDAs for user profile with pubkey: ', userProfileKey.toBase58());
 
     const questionPDAs = await forumClient.fetchAllQuestionPDAs(userProfileKey);
@@ -299,7 +339,7 @@ const AdminConsole: React.FC<Props> = (props) => {
           <ParagraphMedium>Wallet Public Key: {wallet.publicKey?.toBase58()}</ParagraphMedium>
           <ParagraphMedium>Forum Pub Key: {forumPubkey ? forumPubkey.toBase58() : '------------------'}</ParagraphMedium>
           <ParagraphMedium>Receiver Pub Key: {receiverPubkey || '------------------'}</ParagraphMedium>
-          <ParagraphMedium>User Profile Pub Key: {userProfileKey || '------------------'}</ParagraphMedium>
+          <ParagraphMedium>User Profile Pub Key: {userProfilePubkey || '------------------'}</ParagraphMedium>
         </Block>
 
         <Block overrides={{Block: {style: {...blockStyles}}}}>
@@ -309,7 +349,7 @@ const AdminConsole: React.FC<Props> = (props) => {
 
         <Block overrides={{Block: {style: {...blockStyles}}}}>
           <HeadingSmall>Set User Profile Pub Key</HeadingSmall>
-          <Input onChange={e => setUserProfileKey(e.target.value)}></Input>
+          <Input onChange={e => setUserProfilePubKey(e.target.value)}></Input>
         </Block>
 
         <Block overrides={{Block: {style: {...blockStyles}}}}>
@@ -351,6 +391,16 @@ const AdminConsole: React.FC<Props> = (props) => {
         <Block overrides={{Block: {style: {...blockStyles}}}}>
           <HeadingSmall>Create About Me</HeadingSmall>
           <Button onClick={createAboutMe}>create-about-me</Button>
+        </Block>
+
+        <Block overrides={{Block: {style: {...blockStyles}}}}>
+          <HeadingSmall>Delete About Me</HeadingSmall>
+          <Button onClick={deleteAboutMe}>delete-about-me</Button>
+        </Block>
+
+        <Block overrides={{Block: {style: {...blockStyles}}}}>
+          <HeadingSmall>Fetch user about me PDA account info by pubkey</HeadingSmall>
+          <Button onClick={fetchAboutMeForProfile}>fetch-about-me-by-profile</Button>
         </Block>
 
         <Block overrides={{Block: {style: {...blockStyles}}}}>

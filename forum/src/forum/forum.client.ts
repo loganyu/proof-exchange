@@ -1,6 +1,6 @@
 import * as anchor from '@coral-xyz/anchor';
 import { AnchorProvider, BN, Idl, Program } from '@coral-xyz/anchor';
-import { Connection, Keypair, PublicKey, SystemProgram } from '@solana/web3.js';
+import { Connection, Keypair, PublicKey, SystemProgram, sendAndConfirmTransaction } from '@solana/web3.js';
 import * as SPLToken from "@solana/spl-token";
 import { TOKEN_PROGRAM_ID } from '@solana/spl-token';
 import { AccountUtils, isKp, stringifyPKsAndBNs } from '../prog-common';
@@ -342,7 +342,9 @@ export class ForumClient extends AccountUtils {
 
     async createUserProfile(
         forum: PublicKey,
-        profileOwner: PublicKey | Keypair
+        profileOwner: PublicKey | Keypair,
+        wallet: anchor.Wallet,
+        connection: Connection
     ) {
         const profileOwnerKey = isKp(profileOwner) ? (<Keypair>profileOwner).publicKey : <PublicKey>profileOwner;
 
@@ -358,7 +360,7 @@ export class ForumClient extends AccountUtils {
         console.log('creating user profile account with pubkey: ', userProfile.toBase58());
 
         // Transaction
-        const txSig = await this.forumProgram.methods
+        const tx = await this.forumProgram.methods
             .createUserProfile(
                 forumAuthBump,
                 forumTreasuryBump,
@@ -371,8 +373,14 @@ export class ForumClient extends AccountUtils {
                 userProfile: userProfile,
                 systemProgram: SystemProgram.programId,
             })
-            .signers(signers)
-            .rpc();
+            .signers([])
+            .transaction();
+        tx.feePayer = wallet.publicKey
+        tx.recentBlockhash = (await connection.getLatestBlockhash()).blockhash
+        const signedTx = await wallet.signTransaction(tx)
+        const txSig = await connection.sendRawTransaction(signedTx.serialize())
+        await connection.confirmTransaction(txSig, "singleGossip")
+
 
         return {
             forumAuthority,
@@ -425,11 +433,14 @@ export class ForumClient extends AccountUtils {
         forum: PublicKey,
         profileOwner: PublicKey | Keypair,
         receiver: PublicKey,
+        wallet: anchor.Wallet,
+        connection: Connection
     ) {
         const profileOwnerKey = isKp(profileOwner) ? (<Keypair>profileOwner).publicKey : <PublicKey>profileOwner;
 
         // Derive PDAs
         const [userProfile, userProfileBump] = await findUserProfilePDA(profileOwnerKey);
+        console.log('receiver', receiver.toBase58())
 
         // Create Signers Array
         const signers = [];
@@ -438,7 +449,7 @@ export class ForumClient extends AccountUtils {
         console.log('deleting user profile account with pubkey: ', userProfile.toBase58());
 
         // Transaction
-        const txSig = await this.forumProgram.methods
+        const tx = await this.forumProgram.methods
             .deleteUserProfile(
                 userProfileBump
             )
@@ -449,8 +460,15 @@ export class ForumClient extends AccountUtils {
                 receiver: receiver,
                 systemProgram: SystemProgram.programId,
             })
-            .signers(signers)
-            .rpc();
+            .signers([])
+            // .rpc();
+            .transaction();
+        
+        tx.feePayer = wallet.publicKey
+        tx.recentBlockhash = (await connection.getLatestBlockhash()).blockhash
+        const signedTx = await wallet.signTransaction(tx)
+        const txSig = await connection.sendRawTransaction(signedTx.serialize())
+        await connection.confirmTransaction(txSig, "singleGossip")
 
         return {
             userProfile,
@@ -462,13 +480,17 @@ export class ForumClient extends AccountUtils {
     async createAboutMe(
         forum: PublicKey,
         profileOwner: PublicKey | Keypair,
-        content: string
+        content: string,
+        wallet: anchor.Wallet,
+        connection: Connection
     ) {
         const profileOwnerKey = isKp(profileOwner) ? (<Keypair>profileOwner).publicKey : <PublicKey>profileOwner;
 
         // Derive PDAs
         const [userProfile, userProfileBump] = await findUserProfilePDA(profileOwnerKey);
         const [aboutMe, aboutMeBump] = await findAboutMePDA(userProfile);
+        console.log('userProfile', userProfile.toBase58())
+        console.log('aboutMe', aboutMe.toBase58())
 
         // Create Signers Array
         const signers = [];
@@ -477,7 +499,7 @@ export class ForumClient extends AccountUtils {
         console.log('creating user about me account with pubkey: ', userProfile.toBase58());
 
         // Transaction
-        const txSig = await this.forumProgram.methods
+        const tx = await this.forumProgram.methods
             .createAboutMe(
                 userProfileBump,
                 content
@@ -489,8 +511,17 @@ export class ForumClient extends AccountUtils {
                 aboutMe: aboutMe,
                 systemProgram: SystemProgram.programId,
             })
-            .signers(signers)
-            .rpc();
+            .signers([])
+            // .rpc();
+            .transaction();
+
+        tx.feePayer = wallet.publicKey
+        tx.recentBlockhash = (await connection.getLatestBlockhash()).blockhash
+        const signedTx = await wallet.signTransaction(tx)
+        const txSig = await connection.sendRawTransaction(signedTx.serialize())
+        await connection.confirmTransaction(txSig, "singleGossip")
+        
+            
 
         return {
             userProfile,
@@ -544,7 +575,9 @@ export class ForumClient extends AccountUtils {
 
     async deleteAboutMe(
         profileOwner: PublicKey | Keypair,
-        receiver: PublicKey
+        receiver: PublicKey,
+        wallet: anchor.Wallet,
+        connection: Connection
     ) {
         const profileOwnerKey = isKp(profileOwner) ? (<Keypair>profileOwner).publicKey : <PublicKey>profileOwner;
 
@@ -559,7 +592,7 @@ export class ForumClient extends AccountUtils {
         console.log('deleting user about me account with pubkey: ', userProfile.toBase58());
 
         // Transaction
-        const txSig = await this.forumProgram.methods
+        const tx = await this.forumProgram.methods
             .deleteAboutMe(
                 userProfileBump,
                 aboutMeBump,
@@ -571,8 +604,15 @@ export class ForumClient extends AccountUtils {
                 receiver: receiver,
                 systemProgram: SystemProgram.programId,
             })
-            .signers(signers)
-            .rpc();
+            .signers([])
+            // .rpc();
+            .transaction();
+        
+        tx.feePayer = wallet.publicKey
+        tx.recentBlockhash = (await connection.getLatestBlockhash()).blockhash
+        const signedTx = await wallet.signTransaction(tx)
+        const txSig = await connection.sendRawTransaction(signedTx.serialize())
+        await connection.confirmTransaction(txSig, "singleGossip")
 
         return {
             userProfile,
