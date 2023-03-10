@@ -9,15 +9,11 @@ type ForumConfig = {
 export const forumConfig: ForumConfig =
     {
         forumFees: {
-            // forumProfileFee: new BN(2_500_000_000), // 2.5 Sol
-            forumProfileFee: new BN(1_000_000), // 2.5 Sol
+            forumProfileFee: new BN(2_500_000_000), // 2.5 Sol
             forumQuestionFee: new BN(1_000_000), // 0.001 Sol
-            // forumBigNotesFee: new BN(100_000_000), // 0.1 Sol
-            forumBigNotesFee: new BN(1_000_000), // 0.1 Sol
-            // forumQuestionBountyMinimum: new BN(100_000_000), // 0.1 Sol
-            forumQuestionBountyMinimum: new BN(1_000_000), // 0.1 Sol
-            // forumBigNotesBountyMinimum: new BN(2_000_000_000), // 2 Sol
-            forumBigNotesBountyMinimum: new BN(1_000_000), // 2 Sol
+            forumBigNotesFee: new BN(100_000_000), // 0.1 Sol
+            forumQuestionBountyMinimum: new BN(100_000_000), // 0.1 Sol
+            forumBigNotesBountyMinimum: new BN(2_000_000_000), // 2 Sol
             extraSpace: new Array(64).fill(0),
         },
         reputationMatrix: {

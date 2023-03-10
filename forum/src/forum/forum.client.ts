@@ -342,9 +342,7 @@ export class ForumClient extends AccountUtils {
 
     async createUserProfile(
         forum: PublicKey,
-        profileOwner: PublicKey | Keypair,
-        wallet: anchor.Wallet,
-        connection: Connection
+        profileOwner: PublicKey | Keypair
     ) {
         const profileOwnerKey = isKp(profileOwner) ? (<Keypair>profileOwner).publicKey : <PublicKey>profileOwner;
 
@@ -375,11 +373,11 @@ export class ForumClient extends AccountUtils {
             })
             .signers([])
             .transaction();
-        tx.feePayer = wallet.publicKey
-        tx.recentBlockhash = (await connection.getLatestBlockhash()).blockhash
-        const signedTx = await wallet.signTransaction(tx)
-        const txSig = await connection.sendRawTransaction(signedTx.serialize())
-        await connection.confirmTransaction(txSig, "singleGossip")
+        tx.feePayer = this.wallet.publicKey
+        tx.recentBlockhash = (await this.conn.getLatestBlockhash()).blockhash
+        const signedTx = await this.wallet.signTransaction(tx)
+        const txSig = await this.conn.sendRawTransaction(signedTx.serialize())
+        await this.conn.confirmTransaction(txSig, "singleGossip")
 
 
         return {
@@ -409,7 +407,7 @@ export class ForumClient extends AccountUtils {
         console.log('editing user profile account with pubkey: ', userProfile.toBase58());
 
         // Transaction
-        const txSig = await this.forumProgram.methods
+        const tx = await this.forumProgram.methods
             .editUserProfile(
                 userProfileBump
             )
@@ -419,8 +417,15 @@ export class ForumClient extends AccountUtils {
                 nftPfpTokenMint: nft_token_mint,
                 systemProgram: SystemProgram.programId,
             })
-            .signers(signers)
-            .rpc();
+            // .signers(signers)
+            // .rpc();
+            .signers([])
+            .transaction();
+        tx.feePayer = this.wallet.publicKey
+        tx.recentBlockhash = (await this.conn.getLatestBlockhash()).blockhash
+        const signedTx = await this.wallet.signTransaction(tx)
+        const txSig = await this.conn.sendRawTransaction(signedTx.serialize())
+        await this.conn.confirmTransaction(txSig, "singleGossip")
 
         return {
             userProfile,
@@ -432,9 +437,7 @@ export class ForumClient extends AccountUtils {
     async deleteUserProfile(
         forum: PublicKey,
         profileOwner: PublicKey | Keypair,
-        receiver: PublicKey,
-        wallet: anchor.Wallet,
-        connection: Connection
+        receiver: PublicKey
     ) {
         const profileOwnerKey = isKp(profileOwner) ? (<Keypair>profileOwner).publicKey : <PublicKey>profileOwner;
 
@@ -460,15 +463,14 @@ export class ForumClient extends AccountUtils {
                 receiver: receiver,
                 systemProgram: SystemProgram.programId,
             })
-            .signers([])
             // .rpc();
+            .signers([])
             .transaction();
-        
-        tx.feePayer = wallet.publicKey
-        tx.recentBlockhash = (await connection.getLatestBlockhash()).blockhash
-        const signedTx = await wallet.signTransaction(tx)
-        const txSig = await connection.sendRawTransaction(signedTx.serialize())
-        await connection.confirmTransaction(txSig, "singleGossip")
+        tx.feePayer = this.wallet.publicKey
+        tx.recentBlockhash = (await this.conn.getLatestBlockhash()).blockhash
+        const signedTx = await this.wallet.signTransaction(tx)
+        const txSig = await this.conn.sendRawTransaction(signedTx.serialize())
+        await this.conn.confirmTransaction(txSig, "singleGossip")
 
         return {
             userProfile,
@@ -480,17 +482,13 @@ export class ForumClient extends AccountUtils {
     async createAboutMe(
         forum: PublicKey,
         profileOwner: PublicKey | Keypair,
-        content: string,
-        wallet: anchor.Wallet,
-        connection: Connection
+        content: string
     ) {
         const profileOwnerKey = isKp(profileOwner) ? (<Keypair>profileOwner).publicKey : <PublicKey>profileOwner;
 
         // Derive PDAs
         const [userProfile, userProfileBump] = await findUserProfilePDA(profileOwnerKey);
         const [aboutMe, aboutMeBump] = await findAboutMePDA(userProfile);
-        console.log('userProfile', userProfile.toBase58())
-        console.log('aboutMe', aboutMe.toBase58())
 
         // Create Signers Array
         const signers = [];
@@ -512,16 +510,12 @@ export class ForumClient extends AccountUtils {
                 systemProgram: SystemProgram.programId,
             })
             .signers([])
-            // .rpc();
             .transaction();
-
-        tx.feePayer = wallet.publicKey
-        tx.recentBlockhash = (await connection.getLatestBlockhash()).blockhash
-        const signedTx = await wallet.signTransaction(tx)
-        const txSig = await connection.sendRawTransaction(signedTx.serialize())
-        await connection.confirmTransaction(txSig, "singleGossip")
-        
-            
+        tx.feePayer = this.wallet.publicKey
+        tx.recentBlockhash = (await this.conn.getLatestBlockhash()).blockhash
+        const signedTx = await this.wallet.signTransaction(tx)
+        const txSig = await this.conn.sendRawTransaction(signedTx.serialize())
+        await this.conn.confirmTransaction(txSig, "singleGossip")
 
         return {
             userProfile,
@@ -534,7 +528,8 @@ export class ForumClient extends AccountUtils {
 
     async editAboutMe(
         profileOwner: PublicKey | Keypair,
-        new_content: string
+        new_content: string,
+        connection: Connection
     ) {
         const profileOwnerKey = isKp(profileOwner) ? (<Keypair>profileOwner).publicKey : <PublicKey>profileOwner;
 
@@ -549,7 +544,7 @@ export class ForumClient extends AccountUtils {
         console.log('editing user about me account with pubkey: ', userProfile.toBase58());
 
         // Transaction
-        const txSig = await this.forumProgram.methods
+        const tx = await this.forumProgram.methods
             .editAboutMe(
                 userProfileBump,
                 aboutMeBump,
@@ -561,8 +556,13 @@ export class ForumClient extends AccountUtils {
                 aboutMe: aboutMe,
                 systemProgram: SystemProgram.programId,
             })
-            .signers(signers)
-            .rpc();
+            .signers([])
+            .transaction();
+        tx.feePayer = this.wallet.publicKey
+        tx.recentBlockhash = (await connection.getLatestBlockhash()).blockhash
+        const signedTx = await this.wallet.signTransaction(tx)
+        const txSig = await connection.sendRawTransaction(signedTx.serialize())
+        await connection.confirmTransaction(txSig, "singleGossip")
 
         return {
             userProfile,
@@ -576,8 +576,6 @@ export class ForumClient extends AccountUtils {
     async deleteAboutMe(
         profileOwner: PublicKey | Keypair,
         receiver: PublicKey,
-        wallet: anchor.Wallet,
-        connection: Connection
     ) {
         const profileOwnerKey = isKp(profileOwner) ? (<Keypair>profileOwner).publicKey : <PublicKey>profileOwner;
 
@@ -605,15 +603,13 @@ export class ForumClient extends AccountUtils {
                 systemProgram: SystemProgram.programId,
             })
             .signers([])
-            // .rpc();
             .transaction();
+        tx.feePayer = this.wallet.publicKey
+        tx.recentBlockhash = (await this.conn.getLatestBlockhash()).blockhash
+        const signedTx = await this.wallet.signTransaction(tx)
+        const txSig = await this.conn.sendRawTransaction(signedTx.serialize())
+        await this.conn.confirmTransaction(txSig, "singleGossip")
         
-        tx.feePayer = wallet.publicKey
-        tx.recentBlockhash = (await connection.getLatestBlockhash()).blockhash
-        const signedTx = await wallet.signTransaction(tx)
-        const txSig = await connection.sendRawTransaction(signedTx.serialize())
-        await connection.confirmTransaction(txSig, "singleGossip")
-
         return {
             userProfile,
             userProfileBump,
@@ -638,7 +634,7 @@ export class ForumClient extends AccountUtils {
         console.log('adding moderator status to account with pubkey: ', userProfile.toBase58());
 
         // Transaction
-        const txSig = await this.forumProgram.methods
+        const tx = await this.forumProgram.methods
             .addModerator(
                 userProfileBump,
             )
@@ -649,8 +645,13 @@ export class ForumClient extends AccountUtils {
                 userProfile: userProfile,
                 systemProgram: SystemProgram.programId,
             })
-            .signers(signers)
-            .rpc();
+            .signers([])
+            .transaction();
+        tx.feePayer = this.wallet.publicKey
+        tx.recentBlockhash = (await this.conn.getLatestBlockhash()).blockhash
+        const signedTx = await this.wallet.signTransaction(tx)
+        const txSig = await this.conn.sendRawTransaction(signedTx.serialize())
+        await this.conn.confirmTransaction(txSig, "singleGossip")
 
         return {
             userProfile,
@@ -674,7 +675,7 @@ export class ForumClient extends AccountUtils {
         console.log('removing moderator status from account with pubkey: ', userProfile.toBase58());
 
         // Transaction
-        const txSig = await this.forumProgram.methods
+        const tx = await this.forumProgram.methods
             .removeModerator(
                 userProfileBump,
             )
@@ -685,8 +686,13 @@ export class ForumClient extends AccountUtils {
                 userProfile: userProfile,
                 systemProgram: SystemProgram.programId,
             })
-            .signers(signers)
-            .rpc();
+            .signers([])
+            .transaction();
+        tx.feePayer = this.wallet.publicKey
+        tx.recentBlockhash = (await this.conn.getLatestBlockhash()).blockhash
+        const signedTx = await this.wallet.signTransaction(tx)
+        const txSig = await this.conn.sendRawTransaction(signedTx.serialize())
+        await this.conn.confirmTransaction(txSig, "singleGossip")
 
         return {
             userProfile,
@@ -721,7 +727,7 @@ export class ForumClient extends AccountUtils {
         console.log('creating question with pubkey: ', question.toBase58());
 
         // Transaction
-        const txSig = await this.forumProgram.methods
+        const tx = await this.forumProgram.methods
             .askQuestion(
                 forumTreasuryBump,
                 userProfileBump,
@@ -740,8 +746,13 @@ export class ForumClient extends AccountUtils {
                 bountyPda: bountyPda,
                 systemProgram: SystemProgram.programId,
             })
-            .signers(signers)
-            .rpc();
+            .signers([])
+            .transaction();
+        tx.feePayer = this.wallet.publicKey
+        tx.recentBlockhash = (await this.conn.getLatestBlockhash()).blockhash
+        const signedTx = await this.wallet.signTransaction(tx)
+        const txSig = await this.conn.sendRawTransaction(signedTx.serialize())
+        await this.conn.confirmTransaction(txSig, "singleGossip")
 
         return {
             forumTreasury,
@@ -776,7 +787,7 @@ export class ForumClient extends AccountUtils {
         console.log('editing question with pubkey: ', question.toBase58());
 
         // Transaction
-        const txSig = await this.forumProgram.methods
+        const tx = await this.forumProgram.methods
             .addContentToQuestion(
                 userProfileBump,
                 questionBump,
@@ -790,8 +801,13 @@ export class ForumClient extends AccountUtils {
                 questionSeed: questionSeed,
                 systemProgram: SystemProgram.programId,
             })
-            .signers(signers)
-            .rpc();
+            .signers([])
+            .transaction();
+        tx.feePayer = this.wallet.publicKey
+        tx.recentBlockhash = (await this.conn.getLatestBlockhash()).blockhash
+        const signedTx = await this.wallet.signTransaction(tx)
+        const txSig = await this.conn.sendRawTransaction(signedTx.serialize())
+        await this.conn.confirmTransaction(txSig, "singleGossip")
 
         return {
             userProfile,
@@ -824,7 +840,7 @@ export class ForumClient extends AccountUtils {
         console.log('editing question with pubkey: ', question.toBase58());
 
         // Transaction
-        const txSig = await this.forumProgram.methods
+        const tx = await this.forumProgram.methods
             .editQuestion(
                 userProfileBump,
                 questionBump,
@@ -840,8 +856,13 @@ export class ForumClient extends AccountUtils {
                 questionSeed: questionSeed,
                 systemProgram: SystemProgram.programId,
             })
-            .signers(signers)
-            .rpc();
+            .signers([])
+            .transaction();
+        tx.feePayer = this.wallet.publicKey
+        tx.recentBlockhash = (await this.conn.getLatestBlockhash()).blockhash
+        const signedTx = await this.wallet.signTransaction(tx)
+        const txSig = await this.conn.sendRawTransaction(signedTx.serialize())
+        await this.conn.confirmTransaction(txSig, "singleGossip")
 
         return {
             userProfile,
@@ -873,7 +894,7 @@ export class ForumClient extends AccountUtils {
         console.log('deleting question with pubkey: ', question.toBase58());
 
         // Transaction
-        const txSig = await this.forumProgram.methods
+        const tx = await this.forumProgram.methods
             .deleteQuestion(
                 moderatorProfileBump,
                 userProfileBump,
@@ -890,8 +911,13 @@ export class ForumClient extends AccountUtils {
                 receiver: receiver,
                 systemProgram: SystemProgram.programId,
             })
-            .signers(signers)
-            .rpc();
+            .signers([])
+            .transaction();
+        tx.feePayer = this.wallet.publicKey
+        tx.recentBlockhash = (await this.conn.getLatestBlockhash()).blockhash
+        const signedTx = await this.wallet.signTransaction(tx)
+        const txSig = await this.conn.sendRawTransaction(signedTx.serialize())
+        await this.conn.confirmTransaction(txSig, "singleGossip")
 
         return {
             userProfile,
@@ -901,13 +927,4 @@ export class ForumClient extends AccountUtils {
             txSig
         }
     }
-
-
-
-
-
-
-
-
-
 }

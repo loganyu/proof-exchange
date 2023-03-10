@@ -58,6 +58,7 @@ import {
 import { Tag } from "baseui/tag";
 import AccessDenied from '../components/access-denied';
 import {Block} from 'baseui/block';
+import { ForumWalletClient } from '../forum/ForumWalletClient';
 
 
 
@@ -107,7 +108,7 @@ const AdminConsole: React.FC<Props> = (props) => {
   const wallet = useWallet();
   const anchorWallet = useAnchorWallet();
   const walletModal = useWalletModal();
-  const [forumClient, setForumClient] = React.useState(null)
+  const [forumWalletClient, setForumWalletClient] = React.useState<ForumWalletClient>(null)
   const [forumPubkey, setForumPubKey] = React.useState(new PublicKey('BbtyjiTGn2p3pKBrs6PuYQEfLk5sMyq1WreFZw9oJezY'))
   const [receiverPubkey, setReceiverPubkey] = React.useState(null)
   const [userProfilePubkey, setUserProfilePubKey] = React.useState(null)
@@ -145,9 +146,9 @@ const AdminConsole: React.FC<Props> = (props) => {
   useEffect(() => {
     if (!wallet.connected || status === "unauthenticated") {
       // handleSignIn();
-    } else if (!forumClient) {
+    } else if (!forumWalletClient) {
       // @ts-ignore
-     setForumClient(new ForumClient(connection, wallet, ForumIDL, FORUM_PROG_ID))
+     setForumWalletClient(new ForumWalletClient(connection, wallet))
     }
   }, [wallet.connected, status]);
 
@@ -158,177 +159,6 @@ const AdminConsole: React.FC<Props> = (props) => {
         <AccessDenied />
       </Main>
     )
-  }
-
-  async function initForum(){
-    console.log('initForum')
-    const forum = Keypair.generate();
-    setForumPubKey(forum.publicKey)
-    const forumFees: ForumFees = forumConfig.forumFees;
-    const reputationMatrix: ReputationMatrix = forumConfig.reputationMatrix;
-    const forumInstance = await forumClient.initForum(
-      forum,
-      wallet.publicKey,
-      forumFees,
-      reputationMatrix,
-    );
-    
-    console.log(stringifyPKsAndBNs(forumInstance));
-  }
-
-  async function updateForumParams(){
-    console.log('updateForumParams')
-    const forumKey = new PublicKey(forumPubkey);
-    const forumFees: ForumFees = forumConfig.forumFees;
-    const reputationMatrix: ReputationMatrix = forumConfig.reputationMatrix;
-
-    const updateForumParamsInstance = await forumClient.updateForumParams(
-      forumKey,
-      wallet.publicKey,
-      forumFees,
-      reputationMatrix,
-    );
-    console.log(stringifyPKsAndBNs(updateForumParamsInstance));
-  }
-
-  async function payoutFromTreasury() {
-    console.log('payoutFromTreasury')
-
-    const rentBytes: number = 16;
-
-    const forumKey = new PublicKey(forumPubkey);
-    const receiverKey: PublicKey = receiverPubkey? new PublicKey(receiverPubkey) : wallet.publicKey;
-    const minimumBalanceForRentExemption: anchor.BN = new anchor.BN(await connection.getMinimumBalanceForRentExemption(rentBytes));
-
-    console.log('Minimum balance for rent exemption for a data size of', rentBytes,
-                'bytes is: ', stringifyPKsAndBNs(minimumBalanceForRentExemption));
-
-    const payoutInstance = await forumClient.payoutFromTreasury(
-        forumKey,
-        wallet.publicKey,
-        receiverKey,
-        minimumBalanceForRentExemption
-    );
-    console.log(stringifyPKsAndBNs(payoutInstance));
-  }
-
-  async function closeForum() {
-    console.log('closeForum')
-    const forumKey = new PublicKey(forumPubkey);
-    const receiverKey: PublicKey = receiverPubkey? new PublicKey(receiverPubkey) : wallet.publicKey;
-
-    const closeForumInstance = await forumClient.closeForum(
-      forumKey,
-      wallet.publicKey,
-      receiverKey,
-    );
-    console.log(stringifyPKsAndBNs(closeForumInstance));
-  }
-
-  async function createUserProfile(){
-    console.log('createUserProfile')
-    const forum = new PublicKey(forumPubkey);
-    console.log('anchorWallet', anchorWallet)
-    console.log('wallet', wallet)
-
-    const profileInstance = await forumClient.createUserProfile(
-      forum,
-      anchorWallet.publicKey,
-      anchorWallet,
-      connection
-    );
-    
-    
-    console.log(stringifyPKsAndBNs(profileInstance));
-  }
-
-  async function editProfile(){
-    console.log('editProfile')
-    const tokenMint = ''
-    const tokenMintKey = new PublicKey(tokenMint);
-
-    const editInstance = await forumClient.editUserProfile(
-      wallet.publicKey,
-      tokenMintKey
-    );
-    console.log(stringifyPKsAndBNs(editInstance));
-  }
-
-
-  async function deleteProfile(){
-    console.log('deleteProfile')
-    const forumKey: PublicKey = new PublicKey(forumPubkey);
-    const receiverKey: PublicKey = receiverPubkey ? new PublicKey(receiverPubkey) : wallet.publicKey;
-
-
-    const deleteInstance = await forumClient.deleteUserProfile(
-      forumKey,
-      anchorWallet.publicKey,
-      receiverKey,
-      anchorWallet,
-      connection
-    );
-    console.log(stringifyPKsAndBNs(deleteInstance));
-  }
-
-  async function createAboutMe(){
-    console.log('createAboutMe')
-    const forum = aboutMeConfig.forum;
-    const content = aboutMeConfig.content;
-
-
-    const aboutMeInstance = await forumClient.createAboutMe(
-      forum,
-      wallet.publicKey,
-      content,
-      wallet,
-      connection
-    );
-    console.log(stringifyPKsAndBNs(aboutMeInstance));
-  }
-
-  async function deleteAboutMe(){
-    console.log('deleteAboutMe')
-
-    const receiverKey: PublicKey = receiverPubkey ? new PublicKey(receiverPubkey) : wallet.publicKey;
-
-    const deleteAboutMeInstance = await forumClient.deleteAboutMe(
-      wallet.publicKey,
-      receiverKey,
-      anchorWallet,
-      connection,
-  );
-    console.log(stringifyPKsAndBNs(deleteAboutMeInstance));
-  }
-
-  async function fetchAboutMeForProfile(){
-    console.log('fetchAboutMeForProfile')
-
-    const userProfileKey: PublicKey = new PublicKey(userProfilePubkey);
-
-    console.log('Fetching about me PDA for user profile with pubkey: ', userProfileKey.toBase58());
-    const aboutMePDAs = await forumClient.fetchAboutMeForProfile(userProfileKey);
-
-    // Loop over all PDAs and display account info
-    for (let num = 1; num <= aboutMePDAs.length; num++) {
-        console.log('About me account', num, ':');
-        console.dir(stringifyPKsAndBNs(aboutMePDAs[num - 1]), {depth: null});
-    }
-  }
-
-  async function fetchAllQuestions(){
-    console.log('fetchAllQuestions')
-
-    const userProfileKey: PublicKey = new PublicKey(userProfilePubkey);
-    console.log('Fetching all question PDAs for user profile with pubkey: ', userProfileKey.toBase58());
-
-    const questionPDAs = await forumClient.fetchAllQuestionPDAs(userProfileKey);
-
-    // Loop over all PDAs and display account info
-    for (let num = 1; num <= questionPDAs.length; num++) {
-        console.log('Question account', num, ':');
-        console.dir(stringifyPKsAndBNs(questionPDAs[num - 1]), {depth: null});
-    }
   }
 
   return (
@@ -347,67 +177,70 @@ const AdminConsole: React.FC<Props> = (props) => {
           <Input onChange={e => setReceiverPubkey(e.target.value)}></Input>
         </Block>
 
-        <Block overrides={{Block: {style: {...blockStyles}}}}>
+        {/* <Block overrides={{Block: {style: {...blockStyles}}}}>
           <HeadingSmall>Set User Profile Pub Key</HeadingSmall>
           <Input onChange={e => setUserProfilePubKey(e.target.value)}></Input>
         </Block>
 
         <Block overrides={{Block: {style: {...blockStyles}}}}>
           <HeadingSmall>Initialize a forum account</HeadingSmall>
-          <Button onClick={initForum}>init-forum</Button>
+          <Button onClick={() => forumWalletClient.initForum()}>init-forum</Button>
         </Block>
-
 
         <Block overrides={{Block: {style: {...blockStyles}}}}>
           <HeadingSmall>Update forum parameters</HeadingSmall>
-          <Button onClick={updateForumParams}>update-forum-params</Button>
+          <Button onClick={() => forumWalletClient.updateForumParams()}>update-forum-params</Button>
         </Block>
 
         <Block overrides={{Block: {style: {...blockStyles}}}}>
           <HeadingSmall>Payout from treasury</HeadingSmall>
-          <Button onClick={payoutFromTreasury}>payout-from-treasury</Button>
-        </Block>
+          <Button onClick={() => forumWalletClient.payoutFromTreasury('a')}>payout-from-treasury</Button>
+        </Block> */}
 
-        <Block overrides={{Block: {style: {...blockStyles}}}}>
+        {/* <Block overrides={{Block: {style: {...blockStyles}}}}>
           <HeadingSmall>Close a forum account</HeadingSmall>
-          <Button onClick={closeForum}>close-forum</Button>
-        </Block>
+          <Button onClick={() => forumWalletClient.closeForum('a')}>close-forum</Button>
+        </Block> */}
         
         <Block overrides={{Block: {style: {...blockStyles}}}}>
           <HeadingSmall>Create User Profile</HeadingSmall>
-          <Button onClick={createUserProfile}>create-user-profile</Button>
+          <Button onClick={() => forumWalletClient.createUserProfile()}>create-user-profile</Button>
         </Block>
 
         <Block overrides={{Block: {style: {...blockStyles}}}}>
           <HeadingSmall>Edit Profile</HeadingSmall>
-          <Button onClick={editProfile}>edit-profile</Button>
+          <Button onClick={() => forumWalletClient.editProfile()}>edit-profile</Button>
         </Block>
 
         <Block overrides={{Block: {style: {...blockStyles}}}}>
           <HeadingSmall>Delete Profile</HeadingSmall>
-          <Button onClick={deleteProfile}>delete-profile</Button>
+          <Button onClick={() => forumWalletClient.deleteProfile()}>delete-profile</Button>
         </Block>
 
         <Block overrides={{Block: {style: {...blockStyles}}}}>
           <HeadingSmall>Create About Me</HeadingSmall>
-          <Button onClick={createAboutMe}>create-about-me</Button>
+          <Button onClick={() => forumWalletClient.createAboutMe('a')}>create-about-me</Button>
         </Block>
 
         <Block overrides={{Block: {style: {...blockStyles}}}}>
           <HeadingSmall>Delete About Me</HeadingSmall>
-          <Button onClick={deleteAboutMe}>delete-about-me</Button>
+          <Button onClick={() => forumWalletClient.deleteAboutMe()}>delete-about-me</Button>
+        </Block>
+
+        <Block overrides={{Block: {style: {...blockStyles}}}}>
+          <HeadingSmall>Edit About Me</HeadingSmall>
+          <Button onClick={async () => await forumWalletClient.editAboutMe('editing about me')}>edit-about-me</Button>
         </Block>
 
         <Block overrides={{Block: {style: {...blockStyles}}}}>
           <HeadingSmall>Fetch user about me PDA account info by pubkey</HeadingSmall>
-          <Button onClick={fetchAboutMeForProfile}>fetch-about-me-by-profile</Button>
+          <Button onClick={() => forumWalletClient.fetchAboutMeForProfile('a')}>fetch-about-me-by-profile</Button>
         </Block>
 
         <Block overrides={{Block: {style: {...blockStyles}}}}>
           <HeadingSmall>Fetch All Questions</HeadingSmall>
-          <Button onClick={fetchAllQuestions}>fetch-all-questions</Button>
+          <Button onClick={() => forumWalletClient.fetchAllQuestions('a')}>fetch-all-questions</Button>
         </Block>
-
       </Cell>
     </Main>
   )
