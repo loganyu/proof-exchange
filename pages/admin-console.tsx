@@ -203,6 +203,7 @@ const AdminConsole: React.FC<Props> = (props) => {
           <ParagraphMedium>Wallet Public Key: {wallet.publicKey?.toBase58()}</ParagraphMedium>
           <ParagraphMedium>Forum Pub Key: {forumPubkey ? forumPubkey.toBase58() : '------------------'}</ParagraphMedium>
           <Block>
+            {/* @ts-ignore */}
             <form onSubmit={async (e) => {e.preventDefault(); setForumPubKey(new PublicKey(e.target.input.value))}}>
               <Input placeholder='forumPubKey' name="input"></Input>
               <Button size={SIZE.mini} type="submit">set-forum-pub-key</Button>
@@ -242,6 +243,7 @@ const AdminConsole: React.FC<Props> = (props) => {
 
         <Block overrides={{Block: {style: {...blockStyles}}}}>
           <LabelSmall>Edit Profile</LabelSmall>
+            {/* @ts-ignore */}
           <form onSubmit={async (e) => {e.preventDefault(); setOutput(await forumWalletClient.editProfile(e.target.input.value)); setIsOpen(true)}}>
             <Input placeholder='tokenMint' name="input"></Input>
             <Button size={SIZE.mini} type="submit">edit-profile</Button>
@@ -249,6 +251,7 @@ const AdminConsole: React.FC<Props> = (props) => {
         </Block>
 
         <Block overrides={{Block: {style: {...blockStyles}}}}>
+            {/* @ts-ignore */}
           <form onSubmit={async (e) => {e.preventDefault(); setOutput(await forumWalletClient.deleteProfile(e.target.input.value)); setIsOpen(true)}}>
             <Input placeholder='receiverKey (optional)' name="input"></Input>
             <Button size={SIZE.mini} type="submit">delete-profile</Button>
@@ -257,6 +260,7 @@ const AdminConsole: React.FC<Props> = (props) => {
 
         <Block overrides={{Block: {style: {...blockStyles}}}}>
           <LabelSmall>Create About Me</LabelSmall>
+            {/* @ts-ignore */}
           <form onSubmit={async (e) => {e.preventDefault(); setOutput(await forumWalletClient.createAboutMe(e.target.input.value)); setIsOpen(true)}}>
             <Input placeholder='content' name="input"></Input>
             <Button size={SIZE.mini} type="submit">create-about-me</Button>
@@ -265,6 +269,7 @@ const AdminConsole: React.FC<Props> = (props) => {
 
         <Block overrides={{Block: {style: {...blockStyles}}}}>
           <LabelSmall>Delete About Me</LabelSmall>
+            {/* @ts-ignore */}
           <form onSubmit={async (e) => {e.preventDefault(); setOutput(await forumWalletClient.deleteAboutMe(e.target.input.value)); setIsOpen(true)}}>
             <Input placeholder='receiverKey (optional)' name="input"></Input>
             <Button size={SIZE.mini} type="submit">delete-about-me</Button>
@@ -273,6 +278,7 @@ const AdminConsole: React.FC<Props> = (props) => {
 
         <Block overrides={{Block: {style: {...blockStyles}}}}>
           <LabelSmall>Edit About Me</LabelSmall>
+            {/* @ts-ignore */}
           <form onSubmit={async (e) => {e.preventDefault(); setOutput(await forumWalletClient.editAboutMe(e.target.input.value)); setIsOpen(true)}}>
             <Input placeholder='content' name="input"></Input>
             <Button size={SIZE.mini} type="submit">edit-about-me</Button>
@@ -281,6 +287,7 @@ const AdminConsole: React.FC<Props> = (props) => {
 
         <Block overrides={{Block: {style: {...blockStyles}}}}>
           <LabelSmall>Fetch user about me PDA account info by pubkey</LabelSmall>
+            {/* @ts-ignore */}
           <form onSubmit={async (e) => {e.preventDefault(); setOutput(await forumWalletClient.fetchAboutMeForProfile(e.target.input.value)); setIsOpen(true)}}>
             <Input placeholder='userProfilePubkey' name="input"></Input>
             <Button size={SIZE.mini} type="submit">fetch-about-me-by-profile</Button>
@@ -289,6 +296,7 @@ const AdminConsole: React.FC<Props> = (props) => {
 
         <Block overrides={{Block: {style: {...blockStyles}}}}>
           <LabelSmall>Fetch All Questions</LabelSmall>
+            {/* @ts-ignore */}
           <form onSubmit={async (e) => {e.preventDefault(); setOutput(await forumWalletClient.fetchAllQuestions(e.target.input.value)); setIsOpen(true)}}>
             <Input placeholder='userProfilePubkey' name="input"></Input>
             <Button size={SIZE.mini} type="submit">fetch-all-questions</Button>
