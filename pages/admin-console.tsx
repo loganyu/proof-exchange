@@ -21,6 +21,7 @@ import { forumConfig } from "../forum/src/cli/config_devnet/forumConfig-devnet";
 import { stringifyPKsAndBNs } from '../forum/src/prog-common';
 import {ParagraphMedium, LabelSmall} from 'baseui/typography'
 import * as anchor from '@coral-xyz/anchor';
+import {Select, Value} from 'baseui/select';
 import {
   findForumAuthorityPDA,
   findForumTreasuryPDA,
@@ -120,9 +121,11 @@ const AdminConsole: React.FC<Props> = (props) => {
   const [forumWalletClient, setForumWalletClient] = React.useState<ForumWalletClient>(null)
   const [output, setOutput] = React.useState<string>('')
   const [forumPubkey, setForumPubKey] = React.useState(new PublicKey('BbtyjiTGn2p3pKBrs6PuYQEfLk5sMyq1WreFZw9oJezY'))
+  // const [forumPubkey, setForumPubKey] = React.useState(new PublicKey('5FN8oZPWyaqV79cSTRVVFkQGiq6WBjGgvhePaHw1pfMp'))
   const [receiverPubkey, setReceiverPubkey] = React.useState(null)
   const [userProfilePubkey, setUserProfilePubKey] = React.useState(null)
   const [isOpen, setIsOpen] = React.useState(false);
+  const [tags, setTags] = React.useState<Value>([])
 
   function close() {
     setIsOpen(false);
@@ -192,7 +195,7 @@ const AdminConsole: React.FC<Props> = (props) => {
       }}>
         <ModalHeader>Output</ModalHeader>
         <ModalBody style={{flex: '1 1 0'}}>
-            {output}
+            {JSON.stringify(output)}
         </ModalBody>
         <ModalFooter>
           <ModalButton onClick={close}>Okay</ModalButton>
@@ -235,10 +238,12 @@ const AdminConsole: React.FC<Props> = (props) => {
           <HeadingSmall>Close a forum account</HeadingSmall>
           <Button onClick={() => forumWalletClient.closeForum('a')}>close-forum</Button>
         </Block> */}
+
+        {/* // ---------------------------------------------- user profile instructions ------------------------------------------ */}
         
         <Block overrides={{Block: {style: {...blockStyles}}}}>
           <LabelSmall>Create User Profile</LabelSmall>
-          <Button size={SIZE.mini} onClick={async (e) => {e.preventDefault(); setOutput(await forumWalletClient.createUserProfile()); setIsOpen(true)}}>create-user-profile</Button>
+          <Button size={SIZE.mini} onClick={async (e) => {e.preventDefault(); setOutput(await forumWalletClient.createProfile()); setIsOpen(true)}}>create-user-profile</Button>
         </Block>
 
         <Block overrides={{Block: {style: {...blockStyles}}}}>
@@ -268,15 +273,6 @@ const AdminConsole: React.FC<Props> = (props) => {
         </Block>
 
         <Block overrides={{Block: {style: {...blockStyles}}}}>
-          <LabelSmall>Delete About Me</LabelSmall>
-            {/* @ts-ignore */}
-          <form onSubmit={async (e) => {e.preventDefault(); setOutput(await forumWalletClient.deleteAboutMe(e.target.input.value)); setIsOpen(true)}}>
-            <Input placeholder='receiverKey (optional)' name="input"></Input>
-            <Button size={SIZE.mini} type="submit">delete-about-me</Button>
-          </form>
-        </Block>
-
-        <Block overrides={{Block: {style: {...blockStyles}}}}>
           <LabelSmall>Edit About Me</LabelSmall>
             {/* @ts-ignore */}
           <form onSubmit={async (e) => {e.preventDefault(); setOutput(await forumWalletClient.editAboutMe(e.target.input.value)); setIsOpen(true)}}>
@@ -286,10 +282,165 @@ const AdminConsole: React.FC<Props> = (props) => {
         </Block>
 
         <Block overrides={{Block: {style: {...blockStyles}}}}>
-          <LabelSmall>Fetch user about me PDA account info by pubkey</LabelSmall>
+          <LabelSmall>Delete About Me</LabelSmall>
             {/* @ts-ignore */}
-          <form onSubmit={async (e) => {e.preventDefault(); setOutput(await forumWalletClient.fetchAboutMeForProfile(e.target.input.value)); setIsOpen(true)}}>
+          <form onSubmit={async (e) => {e.preventDefault(); setOutput(await forumWalletClient.deleteAboutMe(e.target.input.value)); setIsOpen(true)}}>
+            <Input placeholder='receiverKey (optional)' name="input"></Input>
+            <Button size={SIZE.mini} type="submit">delete-about-me</Button>
+          </form>
+        </Block>
+
+        <Block overrides={{Block: {style: {...blockStyles}}}}>
+          <LabelSmall>Add Moderator</LabelSmall>
+            {/* @ts-ignore */}
+          <form onSubmit={async (e) => {e.preventDefault(); setOutput(await forumWalletClient.addModerator(e.target.input.value)); setIsOpen(true)}}>
             <Input placeholder='userProfilePubkey' name="input"></Input>
+            <Button size={SIZE.mini} type="submit">add-moderator</Button>
+          </form>
+        </Block>
+
+        <Block overrides={{Block: {style: {...blockStyles}}}}>
+          <LabelSmall>Remove Moderator</LabelSmall>
+            {/* @ts-ignore */}
+          <form onSubmit={async (e) => {e.preventDefault(); setOutput(await forumWalletClient.removeModerator(e.target.input.value)); setIsOpen(true)}}>
+            <Input placeholder='userProfilePubkey' name="input"></Input>
+            <Button size={SIZE.mini} type="submit">remove-moderator</Button>
+          </form>
+        </Block>
+
+        {/* // ---------------------------------------------- user profile instructions ------------------------------------------ */}
+
+        <Block overrides={{Block: {style: {...blockStyles}}}}>
+          <LabelSmall>Ask Question</LabelSmall>
+            {/* @ts-ignore */}
+          <form onSubmit={async (e) => {e.preventDefault(); setOutput(await forumWalletClient.askQuestion(e.target.title.value, e.target.content.value, tags[0].value, e.target.bounty.value)); setIsOpen(true)}}>
+            <Input placeholder='title' name="title"></Input>
+            <Input placeholder='content' name="content"></Input>
+            <Select
+              placeholder="tag"
+              options={[
+                {id: 'DAOsAndGovernance', tag: 'daosAndGovernance'},
+                {id: 'DataAndAnalytics', tag: 'dataAndAnalytics'},
+                {id: 'DeFi', tag: 'defi'},
+                {id: 'Development', tag: 'development'},
+                {id: 'Gaming', tag: 'gaming'},
+                {id: 'Mobile', tag: 'mobile'},
+                {id: 'NFTs', tag: 'nfts'},
+                {id: 'Payments', tag: 'payments'},
+                {id: 'Research', tag: 'research'},
+                {id: 'ToolsAndInfrastructure', tag: 'toolsAndInfrastructure'},
+                {id: 'Trading', tag: 'trading'},
+              ]}
+              labelKey="id"
+              valueKey="tag"
+              value={tags}
+              onChange={({value}) => setTags(value)}
+            />
+            <Input placeholder='bounty' name="bounty"></Input>
+            <Button size={SIZE.mini} type="submit">ask-question</Button>
+          </form>
+        </Block>
+
+        <Block overrides={{Block: {style: {...blockStyles}}}}>
+          <LabelSmall>Edit Question</LabelSmall>
+            {/* @ts-ignore */}
+          <form onSubmit={async (e) => {e.preventDefault(); setOutput(await forumWalletClient.editQuestion(e.target.questionPubkey.value, e.target.title.value, e.target.content.value, tags[0].value)); setIsOpen(true)}}>
+            <Input placeholder='questionPubkey' name="questionPubkey"></Input>
+            <Input placeholder='title' name="title"></Input>
+            <Input placeholder='content' name="content"></Input>
+            <Select
+              placeholder="tag"
+              options={[
+                {id: 'DAOsAndGovernance', tag: 'daosAndGovernance'},
+                {id: 'DataAndAnalytics', tag: 'dataAndAnalytics'},
+                {id: 'DeFi', tag: 'defi'},
+                {id: 'Development', tag: 'development'},
+                {id: 'Gaming', tag: 'gaming'},
+                {id: 'Mobile', tag: 'mobile'},
+                {id: 'NFTs', tag: 'nfts'},
+                {id: 'Payments', tag: 'payments'},
+                {id: 'Research', tag: 'research'},
+                {id: 'ToolsAndInfrastructure', tag: 'toolsAndInfrastructure'},
+                {id: 'Trading', tag: 'trading'},
+              ]}
+              labelKey="id"
+              valueKey="tag"
+              value={tags}
+              onChange={({value}) => setTags(value)}
+            />
+            <Button size={SIZE.mini} type="submit">ask-question</Button>
+          </form>
+        </Block>
+
+        <Block overrides={{Block: {style: {...blockStyles}}}}>
+          <LabelSmall>Delete Question</LabelSmall>
+            {/* @ts-ignore */}
+          <form onSubmit={async (e) => {e.preventDefault(); setOutput(await forumWalletClient.deleteQuestion(e.target.userProfileKey.value, e.target.questionPubkey.value, e.target.receiverPubkey.value)); setIsOpen(true)}}>
+            <Input placeholder='userProfileKey' name="userProfileKey"></Input>
+            <Input placeholder='questionPubkey' name="questionPubkey"></Input>
+            <Input placeholder='receiverPubkey' name="receiverPubkey"></Input>
+            <Button size={SIZE.mini} type="submit">ask-question</Button>
+          </form>
+        </Block>
+
+        <Block overrides={{Block: {style: {...blockStyles}}}}>
+          <LabelSmall>Fetch All Forums</LabelSmall>
+            {/* @ts-ignore */}
+          <form onSubmit={async (e) => {e.preventDefault(); setOutput(await forumWalletClient.fetchAllForums(e.target.managerPubkey.value)); setIsOpen(true)}}>
+            <Input placeholder='managerPubkey' name="managerPubkey"></Input>
+            <Button size={SIZE.mini} type="submit">ask-question</Button>
+          </form>
+        </Block>
+
+        <Block overrides={{Block: {style: {...blockStyles}}}}>
+          <LabelSmall>Fetch Forum By Key</LabelSmall>
+            {/* @ts-ignore */}
+          <form onSubmit={async (e) => {e.preventDefault(); setOutput(await forumWalletClient.fetchAllForums(e.target.managerPubkey.value)); setIsOpen(true)}}>
+            <Input placeholder='managerPubkey' name="managerPubkey"></Input>
+            <Button size={SIZE.mini} type="submit">fetch-forum-by-key</Button>
+          </form>
+        </Block>
+
+        <Block overrides={{Block: {style: {...blockStyles}}}}>
+          <LabelSmall>Fetch All Profiles</LabelSmall>
+            {/* @ts-ignore */}
+          <form onSubmit={async (e) => {e.preventDefault(); setOutput(await forumWalletClient.fetchAllProfiles()); setIsOpen(true)}}>
+            <Button size={SIZE.mini} type="submit">fetch-all-profiles</Button>
+          </form>
+        </Block>
+
+        <Block overrides={{Block: {style: {...blockStyles}}}}>
+          <LabelSmall>Fetch Profile By Key</LabelSmall>
+            {/* @ts-ignore */}
+          <form onSubmit={async (e) => {e.preventDefault(); setOutput(await forumWalletClient.fetchUserProfileAccount(e.target.userProfilePubkey.value)); setIsOpen(true)}}>
+            <Input placeholder='userProfilePubkey' name="userProfilePubkey"></Input>
+            <Button size={SIZE.mini} type="submit">fetch-profile-by-key</Button>
+          </form>
+        </Block>
+
+        <Block overrides={{Block: {style: {...blockStyles}}}}>
+          <LabelSmall>Fetch Profile By Owner</LabelSmall>
+            {/* @ts-ignore */}
+          <form onSubmit={async (e) => {e.preventDefault(); setOutput(await forumWalletClient.fetchAllUserProfilePDAs(e.target.userProfileOwnerPubkey.value)); setIsOpen(true)}}>
+            <Input placeholder='userProfileOwnerPubkey' name="userProfileOwnerPubkey"></Input>
+            <Button size={SIZE.mini} type="submit">fetch-profile-by-owner</Button>
+          </form>
+        </Block>
+
+        <Block overrides={{Block: {style: {...blockStyles}}}}>
+          <LabelSmall>Fetch About Me By Key</LabelSmall>
+            {/* @ts-ignore */}
+          <form onSubmit={async (e) => {e.preventDefault(); setOutput(await forumWalletClient.fetchAllUserProfilePDAs(e.target.aboutMePubkey.value)); setIsOpen(true)}}>
+            <Input placeholder='aboutMePubkey' name="aboutMePubkey"></Input>
+            <Button size={SIZE.mini} type="submit">fetch-about-me-by-key</Button>
+          </form>
+        </Block>
+
+        <Block overrides={{Block: {style: {...blockStyles}}}}>
+          <LabelSmall>Fetch About Me By Profile</LabelSmall>
+            {/* @ts-ignore */}
+          <form onSubmit={async (e) => {e.preventDefault(); setOutput(await forumWalletClient.fetchAboutMeForProfile(e.target.userProfileKey.value)); setIsOpen(true)}}>
+            <Input placeholder='userProfileKey' name="userProfileKey"></Input>
             <Button size={SIZE.mini} type="submit">fetch-about-me-by-profile</Button>
           </form>
         </Block>
@@ -297,9 +448,36 @@ const AdminConsole: React.FC<Props> = (props) => {
         <Block overrides={{Block: {style: {...blockStyles}}}}>
           <LabelSmall>Fetch All Questions</LabelSmall>
             {/* @ts-ignore */}
-          <form onSubmit={async (e) => {e.preventDefault(); setOutput(await forumWalletClient.fetchAllQuestions(e.target.input.value)); setIsOpen(true)}}>
-            <Input placeholder='userProfilePubkey' name="input"></Input>
+          <form onSubmit={async (e) => {e.preventDefault(); setOutput(await forumWalletClient.fetchAllQuestions(e.target.userProfilePubkey.value)); setIsOpen(true)}}>
+            <Input placeholder='userProfilePubkey (optional)' name="userProfilePubkey"></Input>
             <Button size={SIZE.mini} type="submit">fetch-all-questions</Button>
+          </form>
+        </Block>
+
+        <Block overrides={{Block: {style: {...blockStyles}}}}>
+          <LabelSmall>Fetch Question By Key</LabelSmall>
+            {/* @ts-ignore */}
+          <form onSubmit={async (e) => {e.preventDefault(); setOutput(await forumWalletClient.fetchAllQuestions(e.target.questionPubkey.value)); setIsOpen(true)}}>
+            <Input placeholder='questionPubkey' name="questionPubkey"></Input>
+            <Button size={SIZE.mini} type="submit">fetch-question-by-key</Button>
+          </form>
+        </Block>
+
+        <Block overrides={{Block: {style: {...blockStyles}}}}>
+          <LabelSmall>Fetch Forum Auth</LabelSmall>
+            {/* @ts-ignore */}
+          <form onSubmit={async (e) => {e.preventDefault(); setOutput(await forumWalletClient.findForumAuthorityPDA(e.target.forumKey.value)); setIsOpen(true)}}>
+            <Input placeholder='forumKey' name="forumKey"></Input>
+            <Button size={SIZE.mini} type="submit">fetch-forum-auth</Button>
+          </form>
+        </Block>
+
+        <Block overrides={{Block: {style: {...blockStyles}}}}>
+          <LabelSmall>Fetch Treasury Balance</LabelSmall>
+            {/* @ts-ignore */}
+          <form onSubmit={async (e) => {e.preventDefault(); setOutput(await forumWalletClient.fetchTreasuryBalance(e.target.forumKey.value)); setIsOpen(true)}}>
+            <Input placeholder='forumKey' name="forumKey"></Input>
+            <Button size={SIZE.mini} type="submit">fetch-treasury-balance</Button>
           </form>
         </Block>
       </Cell>

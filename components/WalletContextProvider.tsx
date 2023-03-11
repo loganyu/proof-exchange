@@ -33,7 +33,6 @@ const WalletContextProvider: FC<{ children: ReactNode }> = ({ children }) => {
              * in the npm package `@solana/wallet-adapter-wallets`.
              */
 			new walletAdapterWallets.PhantomWalletAdapter(),
-            new UnsafeBurnerWalletAdapter(),
         ],
         // eslint-disable-next-line react-hooks/exhaustive-deps
         [network]

@@ -186,7 +186,7 @@ export class ForumClient extends AccountUtils {
             ]
             : [];
         const pdas = await this.forumProgram.account.question.all(filter);
-        console.log('Found a total of', pdas.length, 'question PDAs for user profile with address', userProfile.toBase58());
+        // console.log('Found a total of', pdas.length, 'question PDAs for user profile with address', userProfile.toBase58());
         return pdas;
     }
 
@@ -650,7 +650,7 @@ export class ForumClient extends AccountUtils {
         tx.recentBlockhash = (await this.conn.getLatestBlockhash()).blockhash
         const signedTx = await this.wallet.signTransaction(tx)
         const txSig = await this.conn.sendRawTransaction(signedTx.serialize())
-        await this.conn.confirmTransaction(txSig, "singleGossip")
+        await this.conn.confirmTransaction(txSig, "confirmed")
 
         return {
             userProfile,
