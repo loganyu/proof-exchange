@@ -2,26 +2,30 @@ import prisma from '../../../lib/prisma';
 
 // GET_OR_CREATE /api/post/:id
 export default async function handle(req, res) {
-  const userId = req.query.id;
-  if (req.method === 'GET') {
-    const user = await prisma.user.findUnique({
+  const pubKey = req.params.id;
+  if (req.method === 'POST') {
+    let user = await prisma.user.findUnique({
         where: {
-          id: String(req.params?.id),
+            pubKey: pubKey
         },
-      });
-      return {
-        props: user,
-      }
-    res.json(user);
-  } else if (req.method === 'POST') {
-    const user = await prisma.user.create({
-        data:
-            {},
-        })
-        return {
-        props: user,
+    });
+    if (!user) {
+        user = await prisma.user.create({
+            data:
+                {pubKey: pubKey},
+            })
     }
-  } else {
+    return res.json(user);
+  } else if (req.method === 'GET') {
+    let user = await prisma.user.findUnique({
+        where: {
+            pubKey: pubKey
+        },
+    });
+
+    return res.json(user);
+  } 
+  else {
     throw new Error(
       `The HTTP ${req.method} method is not supported at this route.`,
     );

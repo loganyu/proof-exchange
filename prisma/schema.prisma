@@ -123,6 +123,7 @@ model Session {
 model User {
   id            String     @id @default(cuid())
   pubKey        String     @unique
+  userProfilePubkey        String     @unique
   hasAccount    Boolean    @default(false)
   name          String?
   email         String?    @unique
