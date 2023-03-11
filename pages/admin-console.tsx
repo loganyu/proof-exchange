@@ -40,6 +40,8 @@ import {
   ModalButton,
 } from 'baseui/modal';
 
+import { FORUM_PUB_KEY } from '../constants'
+
 // components
 import Header from "../components/layout/Header"
 
@@ -111,8 +113,9 @@ const blockStyles = {
 
 const AdminConsole: React.FC<Props> = (props) => {
   
-  const { data: session, status } = useSession();
-  const loading = status === "loading";
+  // const { data: session, status } = useSession();
+  const session = useSession();
+  const loading = session.status === "loading";
 
   const { connection } = useConnection();
   const wallet = useWallet();
@@ -120,7 +123,7 @@ const AdminConsole: React.FC<Props> = (props) => {
   const walletModal = useWalletModal();
   const [forumWalletClient, setForumWalletClient] = React.useState<ForumWalletClient>(null)
   const [output, setOutput] = React.useState<string>('')
-  const [forumPubkey, setForumPubKey] = React.useState(new PublicKey('BbtyjiTGn2p3pKBrs6PuYQEfLk5sMyq1WreFZw9oJezY'))
+  const [forumPubkey, setForumPubKey] = React.useState(new PublicKey(FORUM_PUB_KEY))
   // const [forumPubkey, setForumPubKey] = React.useState(new PublicKey('5FN8oZPWyaqV79cSTRVVFkQGiq6WBjGgvhePaHw1pfMp'))
   const [receiverPubkey, setReceiverPubkey] = React.useState(null)
   const [userProfilePubkey, setUserProfilePubKey] = React.useState(null)
@@ -164,10 +167,9 @@ const AdminConsole: React.FC<Props> = (props) => {
   useEffect(() => {
     if (wallet.connected) {
      setForumWalletClient(new ForumWalletClient(connection, wallet, forumPubkey))
-    } else {
-      setForumWalletClient(null)
-    }
-  }, [wallet.connected, status, forumPubkey]);
+    } 
+    console.log(session)
+  }, [wallet.connected, session.status, forumPubkey]);
 
   // if (!wallet.connected || status === 'unauthenticated') {
   if (!wallet.connected) {
@@ -313,7 +315,7 @@ const AdminConsole: React.FC<Props> = (props) => {
         <Block overrides={{Block: {style: {...blockStyles}}}}>
           <LabelSmall>Ask Question</LabelSmall>
             {/* @ts-ignore */}
-          <form onSubmit={async (e) => {e.preventDefault(); setOutput(await forumWalletClient.askQuestion(e.target.title.value, e.target.content.value, tags[0].value, e.target.bounty.value)); setIsOpen(true)}}>
+          <form onSubmit={async (e) => {e.preventDefault(); setOutput(await forumWalletClient.askQuestion(e.target.title.value, e.target.content.value, tags[0].tag, e.target.bounty.value)); setIsOpen(true)}}>
             <Input placeholder='title' name="title"></Input>
             <Input placeholder='content' name="content"></Input>
             <Select

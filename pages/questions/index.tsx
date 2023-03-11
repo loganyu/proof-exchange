@@ -10,19 +10,44 @@ import { Button } from "baseui/button";
 import {Select, TYPE, Value} from 'baseui/select';
 import { useState, useEffect } from "react"
 import { useSession } from "next-auth/react"
+import { Account, getAccount } from "@solana/spl-token"
+import { Connection, SystemProgram, Transaction, Keypair, PublicKey } from "@solana/web3.js";
 
 
 import { useWallet } from "@solana/wallet-adapter-react";
 import { useWalletModal } from "@solana/wallet-adapter-react-ui";
+import { useConnection } from '@solana/wallet-adapter-react';
 
 import { Navigation } from "baseui/side-navigation";
 import Router from 'next/router';
+
+import { FORUM_PUB_KEY } from '../../constants'
+
+
+import {
+    findForumAuthorityPDA,
+    findForumTreasuryPDA,
+    findUserProfilePDA,
+    findQuestionPDA,
+    findBountyPDA,
+    findAboutMePDA,
+} from '../../forum/src/forum/forum.pda'
+import { ForumWalletClient } from '../../forum/ForumWalletClient';
 
 const QuestionIndex: React.FC = (props) => {
     const { data: session } = useSession()
     const [content, setContent] = useState()
     const wallet = useWallet()
     const walletModal = useWalletModal();
+    const { connection } = useConnection();
+    const [forumWalletClient, setForumWalletClient] = React.useState<ForumWalletClient>(null)
+
+    useEffect(() => {
+        if (wallet.connected) {
+            setForumWalletClient(new ForumWalletClient(connection, wallet, new PublicKey(FORUM_PUB_KEY)))
+            
+        } 
+    }, [wallet.connected]);
 
   
     // // Fetch content from protected route
@@ -37,6 +62,7 @@ const QuestionIndex: React.FC = (props) => {
     //   fetchData()
     // }, [session])
 
+
     const [currentPage, setCurrentPage] = React.useState(2);
 
     async function navigate(path: string): Promise<void> {
@@ -47,7 +73,14 @@ const QuestionIndex: React.FC = (props) => {
         if (!wallet.connected) {
             walletModal.setVisible(true);
         } else {
-            Router.push('/questions/ask')
+            try {
+                const profile = await forumWalletClient.createProfile()
+                console.log('profile', profile)
+            } catch (e) {
+                console.log('failed', e)
+
+            }
+            // Router.push('/questions/ask')
         }
     }
 

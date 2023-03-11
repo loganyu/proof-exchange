@@ -197,7 +197,6 @@ export class ForumWalletClient {
 
       async askQuestion(title, content, tag, bountyAmount): Promise<any> {
         // console.log('askQuestion')
-        console.log('tags', tags)
         const forumKey = new PublicKey(this.forumPubkey);
     
         const questionInstance = await this.forumClient.askQuestion(
@@ -206,7 +205,7 @@ export class ForumWalletClient {
           title,
           content,
           {[tag]: {}},
-          bountyAmount
+          new BN(bountyAmount)
         )
         return stringifyPKsAndBNs(questionInstance);
       }

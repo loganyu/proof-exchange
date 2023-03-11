@@ -724,6 +724,7 @@ export class ForumClient extends AccountUtils {
         if (isKp(profileOwner)) signers.push(<Keypair>profileOwner);
 
         console.log('creating question with pubkey: ', question.toBase58());
+        console.log(title, content, tags, bountyAmount)
 
         // Transaction
         const tx = await this.forumProgram.methods
