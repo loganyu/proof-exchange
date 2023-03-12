@@ -20,6 +20,7 @@ import { findForumAuthorityPDA } from '../forum/src/forum/forum.pda';
 import { ForumFees, ReputationMatrix } from '../forum/src/forum/forum.client';
 import { forumConfig } from "../forum/src/cli/config_devnet/forumConfig-devnet";
 import { stringifyPKsAndBNs } from '../forum/src/prog-common';
+import Router from 'next/router';
 
 
 // components
@@ -104,6 +105,10 @@ const Exchange: React.FC<Props> = (props) => {
   };
   
   useEffect(() => {
+    const goToForum = async () => {
+      await Router.push('/forum')
+    }
+    goToForum()
     if (!wallet.connected || status === "unauthenticated") {
       // handleSignIn();
     }
@@ -117,6 +122,12 @@ const Exchange: React.FC<Props> = (props) => {
       </Main>
     )
   }
+
+  return (
+    <Main>
+      
+    </Main>
+  )
 
   return (
     <Main>

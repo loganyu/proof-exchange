@@ -21,6 +21,8 @@ import { useConnection } from '@solana/wallet-adapter-react';
 import { ForumWalletClient } from '../forum/ForumWalletClient';
 import { useWallet } from "@solana/wallet-adapter-react";
 import { Connection, SystemProgram, Transaction, Keypair, PublicKey } from "@solana/web3.js";
+import { Spinner } from "baseui/spinner";
+import { SP } from 'next/dist/shared/lib/utils';
 
 const ROW = {
     foo: 10,
@@ -166,8 +168,11 @@ const Leaderboard: React.FC = () => {
     const walletModal = useWalletModal();
     const { connection } = useConnection();
     const [forumWalletClient, setForumWalletClient] = React.useState<ForumWalletClient>(null)
+    const [loading, setLoading] = React.useState(false)
+
 
     useEffect(() => {
+        setLoading(true)
         const fetchUsers = async () => {
             let profiles = await forumWalletClient.fetchAllProfiles()
             console.log('profiles', profiles)
@@ -179,7 +184,18 @@ const Leaderboard: React.FC = () => {
         if (!forumWalletClient) {
             setForumWalletClient(new ForumWalletClient(connection, wallet, new PublicKey(FORUM_PUB_KEY)))
         }
+        setLoading(false)
     }, [wallet.connected, forumWalletClient])
+
+    if (loading) {
+        return (
+            <Main>
+                <Cell span={9}>
+                    <Spinner></Spinner>
+                </Cell>
+            </Main>
+        )
+    }
 
     return (
         <Main>

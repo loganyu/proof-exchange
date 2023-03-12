@@ -212,6 +212,63 @@ const Nav: React.FC<Props> = () => {
             },
           })}
         >
+          <Link href="/forum" passHref>
+            <Button
+              $as="a"
+              size={SIZE.compact}
+              kind={KIND.tertiary}
+              overrides={{
+                BaseButton: {
+                  style: {
+                    display: 'none',
+                    [mq(1000)]: {
+                      display: 'block',
+                    },
+                  },
+                },
+              }}
+            >
+              Forum
+            </Button>
+            </Link>
+            <Link href="/xAndria" passHref>
+            <Button
+              $as="a"
+              size={SIZE.compact}
+              kind={KIND.tertiary}
+              overrides={{
+                BaseButton: {
+                  style: {
+                    display: 'none',
+                    [mq(1000)]: {
+                      display: 'block',
+                    },
+                  },
+                },
+              }}
+            >
+              xAndria
+            </Button>
+          </Link>
+          <Link href="/leaderboard" passHref>
+            <Button
+              $as="a"
+              size={SIZE.compact}
+              kind={KIND.tertiary}
+              overrides={{
+                BaseButton: {
+                  style: {
+                    display: 'none',
+                    [mq(1000)]: {
+                      display: 'block',
+                    },
+                  },
+                },
+              }}
+            >
+              Leaderboard
+            </Button>
+          </Link>
           {/* Discord */}
           <Button
             $as="a"

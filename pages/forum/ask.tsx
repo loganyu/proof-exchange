@@ -79,7 +79,7 @@ const Ask: React.FC = () => {
             setUser(newUser)
           }
           await forumWalletClient.askQuestion(title, content, tags[0].tag, bounty / 0.000000001)
-          await Router.push('/questions');
+          await Router.push('/forum');
         } catch (e) {
             console.log('failed', e)
         }

@@ -37,6 +37,7 @@ import {Button, SHAPE} from 'baseui/button';
 import {Plus} from 'baseui/icon';
 import { Textarea } from "baseui/textarea";
 import { themedUseStyletron as useStyletron } from '../../pages/_app';
+import {Banner, HIERARCHY, KIND} from 'baseui/banner';
 
 const ITEMS = [
     {label: 'NFTs'},

@@ -24,7 +24,7 @@ const Main: React.FC = ({children}) => {
             >
                 <Grid gridMaxWidth={1600} behavior={BEHAVIOR.fixed}>
                     <Cell span={2}>
-                        <Sidebar></Sidebar>
+                        {/* <Sidebar></Sidebar> */}
                     </Cell>
                     {children}
                 </Grid>

@@ -23,28 +23,32 @@ import {
   } from 'baseui/typography';
 import {Button, SHAPE} from 'baseui/button';
 import {Plus} from 'baseui/icon';
+import {Banner, HIERARCHY, KIND} from 'baseui/banner';
 
-export async function getServerSideProps(context) {
-    const questionId = context.params.id
-    return {
-      props: {
-        questionId
-      }
-    }
-}
+// export async function getServerSideProps(context) {
+//     const questionId = context.params.id
+//     return {
+//       props: {
+//         questionId
+//       }
+//     }
+// }
 
-const BigNotes: React.FC = (props) => {
+const XAndria: React.FC = (props) => {
     const [currentPage, setCurrentPage] = React.useState(2);
 
     return (
         <Main>
             <Cell span={8}>
+                <Banner hierarchy={HIERARCHY.high} kind={KIND.warning}>
+                    Coming soon
+                </Banner>
                 <Block display={'flex'} justifyContent={'space-between'} alignItems={'center'}>
                     <Block display={'flex'} alignItems={'center'}>
                         <Button shape={SHAPE.square} overrides={{BaseButton: {style: {backgroundColor: 'orange', padding: '0 40px', margin: '20px'}}}}>
                             Boost
                         </Button>
-                        <HeadingXLarge>Title (Ex: Backpack)</HeadingXLarge>
+                        <HeadingXLarge>Backpack</HeadingXLarge>
                     </Block>
                     <LabelMedium backgroundColor={"blue"} padding={'10px'} overrides={{Block: {style: {borderRadius: '10px'}}}}>
                         Created by: karsa
@@ -67,4 +71,4 @@ const BigNotes: React.FC = (props) => {
     )
 }
 
-export default BigNotes;
+export default XAndria;

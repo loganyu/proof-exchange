@@ -12,21 +12,17 @@ const Sidebar: React.FC = () => {
     <Navigation
       items={[
         {
-          title: "Home",
-          itemId: "",
-          
+          title: "Forum",
+          itemId: "Forum",
         },
         {
           title: "Leaderboard",
           itemId: "leaderboard",
         },
+
         {
-          title: "Questions",
-          itemId: "questions",
-        },
-        {
-          title: "Big Notes",
-          itemId: "big_notes/1",
+          title: "xAndria",
+          itemId: "xAndria",
         },
       ]}
       onChange={({ event, item }) => {
