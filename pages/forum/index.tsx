@@ -12,6 +12,7 @@ import { useState, useEffect } from "react"
 import { useSession } from "next-auth/react"
 import { Account, getAccount } from "@solana/spl-token"
 import { Connection, SystemProgram, Transaction, Keypair, PublicKey } from "@solana/web3.js";
+import { Spinner } from "baseui/spinner";
 
 
 import { useWallet } from "@solana/wallet-adapter-react";
@@ -35,18 +36,44 @@ import {
 import { ForumWalletClient } from '../../forum/ForumWalletClient';
 
 const QuestionIndex: React.FC = (props) => {
-    const { data: session } = useSession()
     const [content, setContent] = useState()
-    const wallet = useWallet()
+    const [user, setUser] = useState(null)
+    const [questions, setQuestions] = useState([])
+    const [profiles, setProfiles] = useState([])
+    const wallet = useWallet();
     const walletModal = useWalletModal();
     const { connection } = useConnection();
     const [forumWalletClient, setForumWalletClient] = React.useState<ForumWalletClient>(null)
+    const [loading, setLoading] = React.useState(false)
 
     useEffect(() => {
-        if (wallet.connected) {
+        setLoading(true)
+        const fetchQuestions = async () => {
+            let questions = await forumWalletClient.fetchAllQuestions()
+            let profiles = await forumWalletClient.fetchAllProfiles()
+            setProfiles(profiles)
+            setQuestions(questions)
+            console.log('questions', questions)
+            console.log('profiles', profiles)
+        }
+        if (forumWalletClient) {
+            fetchQuestions()
+        }
+        if (!forumWalletClient) {
             setForumWalletClient(new ForumWalletClient(connection, wallet, new PublicKey(FORUM_PUB_KEY)))
-        } 
-    }, [wallet.connected]);
+        }
+        setLoading(false)
+    }, [wallet.connected, forumWalletClient])
+
+    if (loading) {
+        return (
+            <Main>
+                <Cell span={9}>
+                    <Spinner></Spinner>
+                </Cell>
+            </Main>
+        )
+    }
 
   
     // // Fetch content from protected route
@@ -72,33 +99,31 @@ const QuestionIndex: React.FC = (props) => {
         if (!wallet.connected) {
             walletModal.setVisible(true);
         } else {
-            Router.push('/questions/ask')
+            Router.push('/forum/ask')
         }
     }
 
     return (
         <Main>
             <Cell span={8}>
-                <Block display={'flex'} paddingBottom={'10px'} justifyContent='flex-end'>
+                <Block display={'flex'} paddingBottom={'10px'} justifyContent='space-between'>
                     <Button onClick={handleClick}>Ask Question</Button>
+                    <Block display={'flex'} justifyContent='end' padding={'10px 0'}>
+                        <ButtonGroup>
+                            <Button>Hot</Button>
+                            <Button>D</Button>
+                            <Button>W</Button>
+                            <Button>M</Button>
+                            <Button>Bountied</Button>
+                            <Button>Awarded</Button>
+                        </ButtonGroup>
+                    </Block>
                 </Block>
-                <QuestionBanner></QuestionBanner>
-                <Block display={'flex'} justifyContent='end' padding={'10px 0'}>
-                    <ButtonGroup>
-                        <Button>Hot</Button>
-                        <Button>D</Button>
-                        <Button>W</Button>
-                        <Button>M</Button>
-                        <Button>Bountied</Button>
-                        <Button>Awarded</Button>
-                    </ButtonGroup>
-                </Block>
-                <QuestionItem item={{}}></QuestionItem>
-                <QuestionItem item={{}}></QuestionItem>
-                <QuestionItem item={{}}></QuestionItem>
-                <QuestionItem item={{}}></QuestionItem>
-                <QuestionItem item={{}}></QuestionItem>
-                <Block display={"flex"} justifyContent={"center"}>
+                {/* <QuestionBanner></QuestionBanner> */}
+                {questions.map((question) => 
+                    <QuestionItem item={{question, profiles}}></QuestionItem>
+                )}
+                {/* <Block display={"flex"} justifyContent={"center"}>
                     <Pagination
                         numPages={20}
                         currentPage={currentPage}
@@ -108,7 +133,7 @@ const QuestionIndex: React.FC = (props) => {
                             );
                         }}
                     />
-                </Block>
+                </Block> */}
             </Cell>
         </Main>
     )

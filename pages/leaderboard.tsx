@@ -175,7 +175,6 @@ const Leaderboard: React.FC = () => {
         setLoading(true)
         const fetchUsers = async () => {
             let profiles = await forumWalletClient.fetchAllProfiles()
-            console.log('profiles', profiles)
             setProfiles(profiles)
         }
         if (forumWalletClient) {

@@ -32,7 +32,7 @@ const Ask: React.FC = () => {
   const [tags, setTags] = React.useState<Value>([])
   const [title, setTitle] = React.useState(null)
   const [content, setContent] = React.useState(null)
-  const [bounty, setBounty] = React.useState(null)
+  const [bounty, setBounty] = React.useState(0)
   const [loading, setLoading] = React.useState(false)
 
 
@@ -109,10 +109,10 @@ if (!wallet.connected) {
             <form onSubmit={async (e) => {e.preventDefault(); handleClick()}}>
               <Block display={'flex'} flexDirection={'column'} height={"600px"} justifyContent="space-evenly">
               <FormControl label='Question Title'>
-                <Input placeholder='title' name="title" value={title} onChange={e => setTitle(e.target.value)}></Input>
+                <Input placeholder='Title' name="title" value={title} onChange={e => setTitle(e.target.value)}></Input>
               </FormControl>
               <FormControl label='Content'>
-                <Textarea placeholder='content' name="content" value={content} onChange={e => setContent(e.target.value)}></Textarea>
+                <Textarea placeholder='Type your question here' name="content" value={content} onChange={e => setContent(e.target.value)}></Textarea>
               </FormControl>
               <FormControl label='Category'>
                 <Select
@@ -137,7 +137,7 @@ if (!wallet.connected) {
                 />
               </FormControl>
               <FormControl label='Set Bounty for Question'>
-                <Input placeholder='bounty (in SOL)' name="bounty" value={bounty} onChange={e => setBounty(e.target.value)}></Input>
+                <Input type="number" step={0.1} placeholder='bounty (in SOL)' name="bounty" value={bounty} onChange={e => setBounty(e.target.value)}></Input>
               </FormControl>
               <Button type="submit" disabled={!title || !content || !tags || !bounty} isLoading={loading}>Submit</Button>
               </Block>
