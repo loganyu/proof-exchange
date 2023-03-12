@@ -1,5 +1,3 @@
-// @ts-nocheck
-
 import prisma from '../../../lib/prisma';
 
 // CREATE /api/user/
