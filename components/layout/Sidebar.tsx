@@ -17,6 +17,10 @@ const Sidebar: React.FC = () => {
           
         },
         {
+          title: "Leaderboard",
+          itemId: "leaderboard",
+        },
+        {
           title: "Questions",
           itemId: "questions",
         },
@@ -24,10 +28,6 @@ const Sidebar: React.FC = () => {
           title: "Big Notes",
           itemId: "big_notes/1",
         },
-        {
-          title: "Leaderboard",
-          itemId: "leaderboard",
-        }
       ]}
       onChange={({ event, item }) => {
         event.preventDefault();

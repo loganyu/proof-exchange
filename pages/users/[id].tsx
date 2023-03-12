@@ -85,14 +85,15 @@ const User: React.FC<{userId: string}> = (props) => {
       if (json) {
         setUser(json)
       } else {
-        console.log('enqueue')
-        enqueue(
-          {
-            message:
-              'Welcome to your profile! Please add to your About Me section',
-          },
-          DURATION.medium,
-        )
+        if (props.userId === wallet.publicKey.toBase58()) {
+          enqueue(
+            {
+              message:
+                'Welcome to your profile! Please add to your About Me section',
+            },
+            DURATION.medium,
+          )
+        }
       }
     }
 
@@ -188,7 +189,7 @@ const User: React.FC<{userId: string}> = (props) => {
       )
     }
 
-    if (!userProfile && (wallet.publicKey && wallet.publicKey.toBase58() !== props.userId)) {
+    if ((!userProfile && !wallet.publicKey) || (wallet.publicKey.toBase58() !== props.userId)) {
       return (
         <Main>
           <Cell span={5}>
@@ -238,19 +239,19 @@ const User: React.FC<{userId: string}> = (props) => {
                     <FlexGrid flexGridColumnCount={3} margin={"15px 0"}>
                       <FlexGridItem className={css({textAlign: 'center'})}>
                         <MonoDisplayXSmall overrides={{Block:{style: {alignItems: 'center'}}}}>
-                          {userProfile && userProfile.account.reputationScore || '-'}
+                          {userProfile && userProfile.account && userProfile.account.reputationScore || '-'}
                         </MonoDisplayXSmall>
                         <LabelSmall>Reputation</LabelSmall>
                       </FlexGridItem>
                       <FlexGridItem className={css({textAlign: 'center'})}>
                         <MonoDisplayXSmall>
-                          {userProfile && userProfile.account.questionsAsked || '-'}
+                          {userProfile && userProfile.account && userProfile.account.questionsAsked || '-'}
                         </MonoDisplayXSmall>
                         <LabelSmall>Questions</LabelSmall>
                       </FlexGridItem>
                       <FlexGridItem className={css({textAlign: 'center'})}>
                         <MonoDisplayXSmall>
-                          {userProfile && userProfile.account.questionsAnswered || '-'}
+                          {userProfile && userProfile.account && userProfile.account.questionsAnswered || '-'}
                         </MonoDisplayXSmall>
                         <LabelSmall>Answers</LabelSmall>
                       </FlexGridItem>
