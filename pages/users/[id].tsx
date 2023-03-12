@@ -115,8 +115,8 @@ const User: React.FC<{userId: string}> = (props) => {
             }
           }
           setUserProfile(userProfile[0])
-          setLoading(false)
         }
+        setLoading(false)
       }
       return profileUser
     }
