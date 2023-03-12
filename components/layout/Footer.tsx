@@ -52,24 +52,24 @@ function Footer() {
   return (
     <StyledFooter>
       <Block paddingBottom="scale1000">
-        <StyledLink href="https://github.com/uber/baseweb" target="_blank">
+        {/* <StyledLink href="https://github.com/uber/baseweb" target="_blank">
           GitHub
-        </StyledLink>
-        <StyledLink href="https://twitter.com/BaseWebReact" target="_blank">
+        </StyledLink> */}
+        <StyledLink href="https://twitter.com/proof_protocol" target="_blank">
           Twitter
         </StyledLink>
         <StyledLink
-          href="https://join.slack.com/t/baseui/shared_invite/zt-5f1s4d10-1D2uywAECAG50m64PTH9cw"
+          href="https://discord.gg/JUPHS5G8"
           target="_blank"
         >
           Discord Chat room
         </StyledLink>
-        <StyledLink href="https://github.com/uber/baseweb/releases" target="_blank">
+        {/* <StyledLink href="https://github.com/uber/baseweb/releases" target="_blank">
           Changelog
-        </StyledLink>
-        <Link href="/blog">
+        </StyledLink> */}
+        {/* <Link href="/blog">
           <StyledLink href="/blog">Blog</StyledLink>
-        </Link>
+        </Link> */}
       </Block>
       {/* <UberLogo /> */}
     </StyledFooter>
