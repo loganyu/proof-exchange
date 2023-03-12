@@ -37,6 +37,11 @@ import { Connection, SystemProgram, Transaction, Keypair, PublicKey } from "@sol
 import { FORUM_PUB_KEY } from '../../constants'
 import { useWallet } from "@solana/wallet-adapter-react";
 import { Textarea } from "baseui/textarea";
+import {
+  SnackbarProvider,
+  useSnackbar,
+  DURATION,
+} from 'baseui/snackbar';
 
 export async function getServerSideProps(context) {
     const userId = context.params.id
@@ -53,7 +58,6 @@ import {FlexGrid, FlexGridItem} from 'baseui/flex-grid';
 import {BlockProps} from 'baseui/block';
 import {ProgressBar} from 'baseui/progress-bar';
 import {StyledDivider, SIZE as STYLE_SIZE} from 'baseui/divider';
-import { profile } from 'console';
 
 const User: React.FC<{userId: string}> = (props) => {
   const { data: session } = useSession()
@@ -62,6 +66,7 @@ const User: React.FC<{userId: string}> = (props) => {
   const [userProfile, setUserProfile] = useState(null)
   const [profileUser, setProfileUser] = useState(null)
   const [loading, setLoading] = useState(true)
+  const [loadingButton, setLoadingButton] = useState(false)
   const wallet = useWallet()
   const walletModal = useWalletModal();
   const { connection } = useConnection();
@@ -71,6 +76,7 @@ const User: React.FC<{userId: string}> = (props) => {
 
   useEffect(() => {
     const getUser = async () => {
+      const client = new ForumWalletClient(connection, wallet, new PublicKey(FORUM_PUB_KEY))
       const res = await fetch(`/api/user/${wallet.publicKey.toBase58()}`, {
         method: 'GET',
       });
@@ -89,14 +95,15 @@ const User: React.FC<{userId: string}> = (props) => {
         setProfileUser(profileUser)
         if (profileUser) {
           let client = new ForumWalletClient(connection, wallet, new PublicKey(FORUM_PUB_KEY))
-          const userProfile = await client.fetchProfileByKey(profileUser.profilePubkey)
-          const aboutMe = await client.fetchAboutMeByProfile(profileUser.profilePubkey)
-          if (aboutMe.length > 0) {
-            setAboutMe(aboutMe[0])
-            setAboutMeText(aboutMe[0].account.content)
+          const userProfile = await client.fetchProfileByOwner(profileUser.pubKey)
+          if (userProfile) {
+            let aboutMe = await client.fetchAboutMeByProfile(profileUser.profilePubkey)
+            if (aboutMe.length > 0) {
+              setAboutMe(aboutMe[0])
+              setAboutMeText(aboutMe[0].account.content)
+            }
           }
-          setUserProfile(userProfile)
-          setLoading(false)
+          setUserProfile(userProfile[0])
         }
       }
       return profileUser
@@ -113,20 +120,34 @@ const User: React.FC<{userId: string}> = (props) => {
     } else {
       setUser(null)
     }
+    setLoading(false)
   }, [session, wallet.connected])
 
   async function handleClickAboutMe() {
+    setLoadingButton(true)
     if (!aboutMeText) {
       await forumWalletClient.deleteAboutMe(aboutMeText);
       setAboutMe(null)
-    } else if (aboutMe.length > 0) {
+    } else if (aboutMe) {
       let aboutMe = await forumWalletClient.editAboutMe(aboutMeText);
       setAboutMe({...aboutMe, account: {...aboutMe.account, content: aboutMeText}})
     } else {
+      if (!userProfile) {
+        const profileInstance = await forumWalletClient.createProfile()
+        setUserProfile(profileInstance)
+        const body = { uid: wallet.publicKey.toBase58(), pid: profileInstance.userProfile};
+        const res = await fetch('/api/user', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(body),
+        });
+        const newUser = await res.json()
+        setUser(newUser)
+      }
       let aboutMe = await forumWalletClient.createAboutMe(aboutMeText);
       setAboutMe({...aboutMe, account: {...aboutMe.account, content: aboutMeText}})
     }
-    console.log('aboutmeafter', aboutMe)
+    setLoadingButton(false)
   }
 
     const blockStyles = {
@@ -157,7 +178,7 @@ const User: React.FC<{userId: string}> = (props) => {
       )
     }
 
-    if (!userProfile) {
+    if (!userProfile && (wallet.connected && wallet.publicKey.toBase58() !== props.userId)) {
       return (
         <Main>
           <Cell span={5}>
@@ -172,7 +193,7 @@ const User: React.FC<{userId: string}> = (props) => {
           <Cell span={5}>
           <HeadingLevel>
             <Heading styleLevel={4} className={css({margin: '0', padding: '0'})}>
-              {props.userId.slice(0,6)}...{props.userId.slice(-6)} {user && user.pubKey === profileUser.pubKey && "(your profile)"}
+              {props.userId.slice(0,6)}...{props.userId.slice(-6)} {wallet.connected && wallet.publicKey.toBase58() === props.userId && "(your profile)"}
             </Heading>
             <ParagraphSmall className={css({margin: '0 0 5px 0', padding: '0'})}>
               Profile
@@ -210,19 +231,19 @@ const User: React.FC<{userId: string}> = (props) => {
                     <FlexGrid flexGridColumnCount={3} margin={"15px 0"}>
                       <FlexGridItem className={css({textAlign: 'center'})}>
                         <MonoDisplayXSmall overrides={{Block:{style: {alignItems: 'center'}}}}>
-                          {userProfile.reputationScore}
+                          {userProfile && userProfile.account.reputationScore || '-'}
                         </MonoDisplayXSmall>
                         <LabelSmall>Reputation</LabelSmall>
                       </FlexGridItem>
                       <FlexGridItem className={css({textAlign: 'center'})}>
                         <MonoDisplayXSmall>
-                          {userProfile.questionsAsked}
+                          {userProfile && userProfile.account.questionsAsked || '-'}
                         </MonoDisplayXSmall>
                         <LabelSmall>Questions</LabelSmall>
                       </FlexGridItem>
                       <FlexGridItem className={css({textAlign: 'center'})}>
                         <MonoDisplayXSmall>
-                          {userProfile.questionsAnswered}
+                          {userProfile && userProfile.account.questionsAnswered || '-'}
                         </MonoDisplayXSmall>
                         <LabelSmall>Answers</LabelSmall>
                       </FlexGridItem>
@@ -262,19 +283,19 @@ const User: React.FC<{userId: string}> = (props) => {
               </Cell>
             </Grid>
             <Block>
-              <ParagraphSmall>walletaddress</ParagraphSmall>
+              <ParagraphSmall>{props.userId}</ParagraphSmall>
               <StyledDivider $size={STYLE_SIZE.section} />
               <HeadingMedium>About</HeadingMedium>
               <Textarea
                 value={aboutMeText}
-                placeholder={user && user.pubKey === profileUser.pubKey && 'Tell everyone about yourself.'}
+                placeholder={wallet.connected && wallet.publicKey.toBase58() === props.userId && 'Tell everyone about yourself.'}
                 clearOnEscape
                 onChange={e => setAboutMeText(e.target.value)}
-                readOnly={!user || user.pubKey !== profileUser.pubKey}
+                readOnly={!wallet.publicKey || wallet.publicKey.toBase58() !== props.userId}
               />
               <Block marginTop={'10px'} display={'flex'} justifyContent={'flex-end'}>
-                {aboutMe && aboutMe.account.content !== aboutMeText && 
-                  <Button onClick={handleClickAboutMe}>
+                {((aboutMe && aboutMe.account.content !== aboutMeText) || (!aboutMe && wallet.publicKey && wallet.publicKey.toBase58() === props.userId && aboutMeText)) && 
+                  <Button onClick={handleClickAboutMe} isLoading={loadingButton}>
                     Save
                   </Button>}
               </Block>
@@ -305,7 +326,7 @@ const User: React.FC<{userId: string}> = (props) => {
                 width: '100%'
               }
             )} >
-              <HeadingLarge>BIO</HeadingLarge>
+              <HeadingLarge>BIO (coming soon)</HeadingLarge>
               <ProgressBar
                 value={25}
                 overrides={{

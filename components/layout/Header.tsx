@@ -324,7 +324,7 @@ const Nav: React.FC<Props> = () => {
             <Menu size={24} color={theme.colors.contentPrimary} />
           </Button>
           <WalletMultiButton />
-          {wallet.connected && 
+          {/* {wallet.connected && 
             <Link href="/admin-console/" passHref>
               <Button
                 $as="a"
@@ -344,7 +344,7 @@ const Nav: React.FC<Props> = () => {
                 Admin Console
               </Button>
             </Link>
-        }
+        } */}
           <Button
             $as="a"
             onClick={() => handleClickProfile()}

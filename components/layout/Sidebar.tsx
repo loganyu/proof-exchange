@@ -8,7 +8,6 @@ async function navigate(path: string): Promise<void> {
   }
 
 const Sidebar: React.FC = () => {
-  const [activeItemId, setActiveItemId] = React.useState("");
   return (
     <Navigation
       items={[
@@ -26,14 +25,12 @@ const Sidebar: React.FC = () => {
           itemId: "big_notes/1",
         },
         {
-          title: "Users",
-          itemId: "users",
+          title: "Leaderboard",
+          itemId: "leaderboard",
         }
       ]}
-      activeItemId={activeItemId}
       onChange={({ event, item }) => {
         event.preventDefault();
-        setActiveItemId(item.itemId)
         navigate('/' + item.itemId)
       }}
     />
