@@ -122,7 +122,7 @@ const QuestionItem: React.FC<{ item }> = ({ item }) => {
                     )}>
                       <Block margin="10px 20px">
 
-                  <StyledLink href="/questions/1" style={{textDecoration: 'none'}}>
+                  <StyledLink style={{textDecoration: 'none'}}>
                       <LabelLarge>{account.title}</LabelLarge>
                   </StyledLink>
                       </Block>

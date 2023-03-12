@@ -120,7 +120,7 @@ const QuestionIndex: React.FC = (props) => {
                     </Block>
                 </Block>
                 {/* <QuestionBanner></QuestionBanner> */}
-                {questions.map((question) => 
+                {questions.reverse().map((question) => 
                     <QuestionItem item={{question, profiles}}></QuestionItem>
                 )}
                 {/* <Block display={"flex"} justifyContent={"center"}>

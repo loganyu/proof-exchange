@@ -189,7 +189,7 @@ const User: React.FC<{userId: string}> = (props) => {
       )
     }
 
-    if ((!userProfile && !wallet.publicKey) || (wallet.publicKey.toBase58() !== props.userId)) {
+    if ((!userProfile && !wallet.publicKey) || (wallet.publicKey && wallet.publicKey.toBase58() !== props.userId)) {
       return (
         <Main>
           <Cell span={5}>
@@ -719,7 +719,7 @@ const User: React.FC<{userId: string}> = (props) => {
                     )}>
                       <Block display={'flex'} padding="0 20px" alignItems={'center'} justifyContent="space-between">
                         <ParagraphSmall>how to get the latest datetime when..</ParagraphSmall>
-                        <Tag size={SIZE.large} closeable={false}>large</Tag>
+                        <Tag size={SIZE.large} closeable={false}>core</Tag>
                       </Block>
                     </Block>
                   </FlexGridItem>
