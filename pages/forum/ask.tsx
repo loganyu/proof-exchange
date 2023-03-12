@@ -155,7 +155,7 @@ if (!wallet.connected) {
                 />
               </FormControl>
               <FormControl label='Set Bounty for Question'>
-                <Input type="number" step={0.1} placeholder='bounty (in SOL)' name="bounty" value={bounty} onChange={e => setBounty(e.target.value)}></Input>
+                <Input type="number" step={0.1} placeholder='Bounty (in SOL)' name="bounty" value={bounty} onChange={e => setBounty(Number(e.target.value))}></Input>
               </FormControl>
               <Button 
                  type="submit" disabled={!title || !content || !tags || !bounty} isLoading={loading}
