@@ -93,13 +93,13 @@ const QuestionItem: React.FC<{ item }> = ({ item }) => {
                         borderTopColor: `grey`,
                         borderRightColor: `grey`,
                         borderBottomColor: `grey`,
-                        height: '50px',
-                        padding: '5px',
-                        borderRadius: '15px',
+                        height: '47px',
+                        padding: '30px 15px',
+                        borderRadius: '40px',
                         backgroundColor: 'orange',
                       }
                     )}>
-                      <LabelSmall>
+                      <LabelSmall color='black'>
                         {Object.keys(account.tag)[0]}
                       </LabelSmall>
                       </Block>
@@ -117,13 +117,13 @@ const QuestionItem: React.FC<{ item }> = ({ item }) => {
                         padding: '0px',
                         width: '100%',
                         borderRadius: '15px',
-                        backgroundColor: 'orange',
+                        backgroundColor: '#BDE3FF',
                       }
                     )}>
                       <Block margin="10px 20px">
 
                   <StyledLink style={{textDecoration: 'none'}}>
-                      <LabelLarge>{account.title}</LabelLarge>
+                      <LabelLarge color="black">{account.title}</LabelLarge>
                   </StyledLink>
                       </Block>
                 <Block 
@@ -136,10 +136,10 @@ const QuestionItem: React.FC<{ item }> = ({ item }) => {
                         borderBottomWidth: '2px',
                         margin: '0 20px',
                         borderRadius: '15px',
-                        backgroundColor: 'gray',
+                        backgroundColor: '#B3B3B3',
                       }
                     )}>
-                  <ParagraphSmall overrides={{Block:{style: {margin: '20px'}}}}>
+                  <ParagraphSmall overrides={{Block:{style: {margin: '20px', color: 'black'}}}}>
                     {account.content}
                   </ParagraphSmall>
                   </Block>
@@ -155,17 +155,17 @@ const QuestionItem: React.FC<{ item }> = ({ item }) => {
                     </Tag>
                 </> */}
                 <Block display={'flex'} justifyContent="space-around">
-                  <ParagraphSmall overrides={{Block:{style: {textAlign: 'right', backgroundColor: awardedColor, padding: '5px 10px', borderRadius: '15px'}}}}>
+                  <ParagraphSmall overrides={{Block:{style: {textAlign: 'right', color: 'white', backgroundColor: awardedColor, padding: '5px 10px', borderRadius: '15px'}}}}>
                     {account.bountyAwarded ? "Awarded" : "Available"}
                   </ParagraphSmall>
-                  <ParagraphSmall overrides={{Block:{style: {textAlign: 'right', backgroundColor: 'blue', padding: '5px 10px', borderRadius: '15px'}}}}>
+                  <ParagraphSmall overrides={{Block:{style: {textAlign: 'right', color: 'black', backgroundColor: '#FCD19C', padding: '5px 10px', borderRadius: '15px'}}}}>
                     Bounty: {account.bountyAmount / 10**9}
                   </ParagraphSmall>
-                  <ParagraphSmall overrides={{Block:{style: {textAlign: 'right', backgroundColor: 'blue', padding: '5px 10px', borderRadius: '15px'}}}}>
+                  <ParagraphSmall overrides={{Block:{style: {textAlign: 'right', color: 'black', backgroundColor: '#FCD19C', padding: '5px 10px', borderRadius: '15px'}}}}>
                     {timeString}
                   </ParagraphSmall>
                   <a href={`/users/${ownerKey}`}>
-                    <ParagraphSmall overrides={{Block:{style: {textAlign: 'right', backgroundColor: 'blue', padding: '5px 10px', borderRadius: '15px'}}}}>
+                    <ParagraphSmall overrides={{Block:{style: {textAlign: 'right', color: 'black', backgroundColor: '#FCD19C', padding: '5px 10px', borderRadius: '15px'}}}}>
                       User Profile Link
                     </ParagraphSmall>
                   </a>

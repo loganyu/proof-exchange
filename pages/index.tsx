@@ -47,20 +47,20 @@ import {
 import { Tag } from "baseui/tag";
 import AccessDenied from '../components/access-denied';
 
-export const getStaticProps: GetStaticProps = async () => {
-  const feed = await prisma.post.findMany({
-    where: { published: true },
-    include: {
-      author: {
-        select: { name: true },
-      },
-    },
-  });
-  return { 
-    props: { feed }, 
-    revalidate: 10 
-  }
-}
+// export const getStaticProps: GetStaticProps = async () => {
+//   const feed = await prisma.post.findMany({
+//     where: { published: true },
+//     include: {
+//       author: {
+//         select: { name: true },
+//       },
+//     },
+//   });
+//   return { 
+//     props: { feed }, 
+//     revalidate: 10 
+//   }
+// }
 
 type Props = {
   feed: PostProps[]

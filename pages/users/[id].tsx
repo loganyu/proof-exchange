@@ -115,6 +115,7 @@ const User: React.FC<{userId: string}> = (props) => {
             }
           }
           setUserProfile(userProfile[0])
+          setLoading(false)
         }
       }
       return profileUser
@@ -128,10 +129,10 @@ const User: React.FC<{userId: string}> = (props) => {
       if (!user) {
         getUser()
       }
+      setLoading(false)
     } else {
       setUser(null)
     }
-    setLoading(false)
   }, [session, wallet.connected])
 
   async function handleClickAboutMe() {
@@ -175,7 +176,7 @@ const User: React.FC<{userId: string}> = (props) => {
       borderRightColor: `grey`,
       borderBottomColor: `grey`,
       padding: '0px',
-      width: '100%'
+      width: '100%',
     }
     const [css] = useStyletron();
 
@@ -202,11 +203,15 @@ const User: React.FC<{userId: string}> = (props) => {
     return (
       <Main>
           <Cell span={5}>
-          <HeadingLevel>
-            <Heading styleLevel={4} className={css({margin: '0', padding: '0'})}>
-              {props.userId.slice(0,6)}...{props.userId.slice(-6)} {wallet.publicKey && wallet.publicKey.toBase58() === props.userId && "(your profile)"}
-            </Heading>
-          </HeadingLevel>
+          <Block marginTop="20px" padding="10px" backgroundColor={'#E4CCFF'}
+                    overrides={{Block:{style: {borderRadius: '15px'}}}}
+                >
+            <HeadingLevel>
+              <Heading styleLevel={4} className={css({margin: '0', padding: '0', color: 'black'})}>
+                {props.userId.slice(0,6)}...{props.userId.slice(-6)} {wallet.publicKey && wallet.publicKey.toBase58() === props.userId && "(your profile)"}
+              </Heading>
+            </HeadingLevel>
+          
             <Grid gridMargins={0}>
               <Cell span={5}>
                 <AspectRatioBox>
@@ -225,7 +230,8 @@ const User: React.FC<{userId: string}> = (props) => {
                     }}
                   >
                   </AspectRatioBoxBody>
-              </AspectRatioBox>
+                </AspectRatioBox>
+              
               </Cell>
               <Cell span={7}>
                 <AspectRatioBox aspectRatio={16 / 11}>
@@ -238,50 +244,50 @@ const User: React.FC<{userId: string}> = (props) => {
                   >
                     <FlexGrid flexGridColumnCount={3} margin={"15px 0"}>
                       <FlexGridItem className={css({textAlign: 'center'})}>
-                        <MonoDisplayXSmall overrides={{Block:{style: {alignItems: 'center'}}}}>
+                        <MonoDisplayXSmall overrides={{Block:{style: {alignItems: 'center', color: 'black'}}}}>
                           {userProfile && userProfile.account && userProfile.account.reputationScore || '-'}
                         </MonoDisplayXSmall>
-                        <LabelSmall>Reputation</LabelSmall>
+                        <LabelSmall overrides={{Block:{style: {color: 'black'}}}}>Reputation</LabelSmall>
                       </FlexGridItem>
                       <FlexGridItem className={css({textAlign: 'center'})}>
-                        <MonoDisplayXSmall>
+                        <MonoDisplayXSmall overrides={{Block:{style: {color: 'black'}}}}>
                           {userProfile && userProfile.account && userProfile.account.questionsAsked || '-'}
                         </MonoDisplayXSmall>
-                        <LabelSmall>Questions</LabelSmall>
+                        <LabelSmall overrides={{Block:{style: {color: 'black'}}}}>Questions</LabelSmall>
                       </FlexGridItem>
                       <FlexGridItem className={css({textAlign: 'center'})}>
-                        <MonoDisplayXSmall>
+                        <MonoDisplayXSmall overrides={{Block:{style: {color: 'black'}}}}>
                           {userProfile && userProfile.account && userProfile.account.questionsAnswered || '-'}
                         </MonoDisplayXSmall>
-                        <LabelSmall>Answers</LabelSmall>
+                        <LabelSmall overrides={{Block:{style: {color: 'black'}}}}>Answers</LabelSmall>
                       </FlexGridItem>
                     </FlexGrid>
                     <FlexGrid flexGridColumnCount={3} marginBottom={"15px"}>
                       <FlexGridItem className={css({textAlign: 'center'})}>
-                        <MonoDisplayXSmall>
+                        <MonoDisplayXSmall overrides={{Block:{style: {color: 'black'}}}}>
                           -
                         </MonoDisplayXSmall>
-                        <LabelSmall>Upvotes</LabelSmall>
+                        <LabelSmall overrides={{Block:{style: {color: 'black'}}}}>Upvotes</LabelSmall>
                       </FlexGridItem>
                       <FlexGridItem className={css({textAlign: 'center'})}>
-                        <MonoDisplayXSmall>
+                        <MonoDisplayXSmall overrides={{Block:{style: {color: 'black'}}}}>
                           -
                         </MonoDisplayXSmall>
-                        <LabelSmall>Downvotes</LabelSmall>
+                        <LabelSmall overrides={{Block:{style: {color: 'black'}}}}>Downvotes</LabelSmall>
                       </FlexGridItem>
                       <FlexGridItem className={css({textAlign: 'center'})}>
-                        <MonoDisplayXSmall>
+                        <MonoDisplayXSmall overrides={{Block:{style: {color: 'black'}}}}>
                           -
                         </MonoDisplayXSmall>
-                        <LabelSmall>Reactions</LabelSmall>
+                        <LabelSmall overrides={{Block:{style: {color: 'black'}}}}>Reactions</LabelSmall>
                       </FlexGridItem>
                     </FlexGrid>
                     <FlexGrid flexGridColumnCount={3} marginBottom={"15px"}>
                       <FlexGridItem className={css({textAlign: 'center'})}>
                       </FlexGridItem>
                       <FlexGridItem className={css({textAlign: 'center'})}>
-                        <MonoDisplayXSmall>--%</MonoDisplayXSmall>
-                        <LabelSmall>Ranking</LabelSmall>
+                        <MonoDisplayXSmall overrides={{Block:{style: {color: 'black'}}}}>--%</MonoDisplayXSmall>
+                        <LabelSmall overrides={{Block:{style: {color: 'black'}}}}>Ranking</LabelSmall>
                       </FlexGridItem>
                       <FlexGridItem className={css({textAlign: 'center'})}>
                       </FlexGridItem>
@@ -290,11 +296,13 @@ const User: React.FC<{userId: string}> = (props) => {
                 </AspectRatioBox>
               </Cell>
             </Grid>
+            
             <Block>
-              <ParagraphSmall>{props.userId}</ParagraphSmall>
+              <ParagraphSmall overrides={{Block:{style: {color: 'black'}}}}>{props.userId}</ParagraphSmall>
               <StyledDivider $size={STYLE_SIZE.section} />
-              <HeadingMedium>About</HeadingMedium>
+              <HeadingMedium overrides={{Block:{style: {color: 'black'}}}}>About</HeadingMedium>
               <Textarea
+                overrides={{Input: {style: {backgroundColor: '#E4CCFF', color: 'black'}}}}
                 value={aboutMeText}
                 placeholder={wallet.publicKey && wallet.publicKey.toBase58() === props.userId && 'Tell everyone about yourself.'}
                 clearOnEscape
@@ -313,28 +321,14 @@ const User: React.FC<{userId: string}> = (props) => {
                 <Button style={{margin: '5px'}}>Linktree</Button>
               </ButtonGroup>
             </Block>
+            </Block>
           </Cell>
 
           <Cell span={5}>
-            <Block className={css(
-              {
-                borderLeftStyle: 'solid',
-                borderRightStyle:'solid',
-                borderTopStyle: 'solid',
-                borderBottomStyle: 'solid',
-                borderLeftWidth: '2px',
-                borderTopWidth: '2px',
-                borderRightWidth: '2px',
-                borderBottomWidth: '2px',
-                borderLeftColor: `grey`,
-                borderTopColor: `grey`,
-                borderRightColor: `grey`,
-                borderBottomColor: `grey`,
-                padding: '20px',
-                width: '100%'
-              }
-            )} >
-              <HeadingLarge>BIO (coming soon)</HeadingLarge>
+          <Block marginTop="20px" padding="10px" backgroundColor={'#E4CCFF'}
+                    overrides={{Block:{style: {borderRadius: '15px'}}}}
+                >
+              <HeadingLarge overrides={{Block:{style: {color: 'black'}}}}>BIO (coming soon)</HeadingLarge>
               <ProgressBar
                 value={25}
                 overrides={{
@@ -362,8 +356,8 @@ const User: React.FC<{userId: string}> = (props) => {
                 }}
               />
               <Block display={'flex'} padding={'0 12px'} justifyContent={'space-between'}>
-                <LabelSmall>Level 1</LabelSmall>
-                <LabelSmall>Level 2</LabelSmall>
+                <LabelSmall overrides={{Block:{style: {color: 'black'}}}}>Level 1</LabelSmall>
+                <LabelSmall overrides={{Block:{style: {color: 'black'}}}}>Level 2</LabelSmall>
               </Block>
 
               <Block className={css(
@@ -382,10 +376,11 @@ const User: React.FC<{userId: string}> = (props) => {
                   borderBottomColor: `grey`,
                   padding: '10px',
                   margin: '30px 0',
-                  borderRadius: '15px'
+                  borderRadius: '15px',
+                  backgroundColor: '#FCD19C',
                 }
               )} >
-                <HeadingSmall overrides={{Block:{style: {padding: '0', margin: '0 0 5px 0'}}}}>Top Tags</HeadingSmall>
+                <HeadingSmall overrides={{Block:{style: {padding: '0', margin: '0 0 5px 0', color: 'black'}}}}>Top Tags</HeadingSmall>
                 <FlexGrid flexGridColumnCount={3}
                   flexGridColumnGap="scale800"
                   flexGridRowGap="scale800"
@@ -408,6 +403,7 @@ const User: React.FC<{userId: string}> = (props) => {
                         borderBottomColor: `grey`,
                         height: '50px',
                         padding: '5px',
+                        backgroundColor: 'green'
                       }
                     )}>
                       <HeadingSmall overrides={{Block:{style: {padding: '0', margin: '8px 0 0 0', height: '100%', textAlign: 'center'}}}}>NFTs</HeadingSmall>
@@ -439,12 +435,13 @@ const User: React.FC<{userId: string}> = (props) => {
                         borderRightColor: `grey`,
                         borderBottomColor: `grey`,
                         height: '50px',
-                        padding: '5px'
+                        padding: '5px',
+                        backgroundColor: 'green'
                       }
                     )}>
-                      <Tag size={SIZE.large} closeable={false}>sugar</Tag>
-                      <Tag size={SIZE.large} closeable={false}>magiceden</Tag>
-                      <Tag size={SIZE.large} closeable={false}>metaplex</Tag>
+                      <Tag size={SIZE.large} closeable={false} overrides={{Root: {style: {'color': 'black'}}}}>sugar</Tag>
+                      <Tag size={SIZE.large} closeable={false} overrides={{Root: {style: {'color': 'black'}}}}>magiceden</Tag>
+                      <Tag size={SIZE.large} closeable={false} overrides={{Root: {style: {'color': 'black'}}}}>metaplex</Tag>
                     </Block>
                   </FlexGridItem>
   
@@ -471,6 +468,7 @@ const User: React.FC<{userId: string}> = (props) => {
                         borderBottomColor: `grey`,
                         height: '50px',
                         padding: '5px',
+                        backgroundColor: '#BDE3FF'
                       }
                     )}>
                       <HeadingSmall overrides={{Block:{style: {padding: '0', margin: '8px 0 0 0', height: '100%', textAlign: 'center'}}}}>Tech</HeadingSmall>
@@ -502,12 +500,13 @@ const User: React.FC<{userId: string}> = (props) => {
                         borderRightColor: `grey`,
                         borderBottomColor: `grey`,
                         height: '50px',
-                        padding: '5px'
+                        padding: '5px',
+                        backgroundColor: '#BDE3FF'
                       }
                     )}>
-                      <Tag size={SIZE.large} closeable={false}>validator</Tag>
-                      <Tag size={SIZE.large} closeable={false}>vote-account</Tag>
-                      <Tag size={SIZE.large} closeable={false}>core</Tag>
+                      <Tag size={SIZE.large} closeable={false} overrides={{Root: {style: {'color': 'black'}}}}>validator</Tag>
+                      <Tag size={SIZE.large} closeable={false} overrides={{Root: {style: {'color': 'black'}}}}>vote-account</Tag>
+                      <Tag size={SIZE.large} closeable={false} overrides={{Root: {style: {'color': 'black'}}}}>core</Tag>
                     </Block>
                   </FlexGridItem>
   
@@ -534,6 +533,7 @@ const User: React.FC<{userId: string}> = (props) => {
                         borderBottomColor: `grey`,
                         height: '50px',
                         padding: '5px',
+                        backgroundColor: '#E4CCFF'
                       }
                     )}>
                       <HeadingSmall overrides={{Block:{style: {padding: '0', margin: '8px 0 0 0', height: '100%', textAlign: 'center'}}}}>Trading</HeadingSmall>
@@ -565,11 +565,12 @@ const User: React.FC<{userId: string}> = (props) => {
                         borderRightColor: `grey`,
                         borderBottomColor: `grey`,
                         height: '50px',
-                        padding: '5px'
+                        padding: '5px',
+                        backgroundColor: '#E4CCFF'
                       }
                     )}>
-                      <Tag size={SIZE.large} closeable={false}>degods</Tag>
-                      <Tag size={SIZE.large} closeable={false}>smb</Tag>
+                      <Tag size={SIZE.large} closeable={false} overrides={{Root: {style: {'color': 'black'}}}}>degods</Tag>
+                      <Tag size={SIZE.large} closeable={false} overrides={{Root: {style: {'color': 'black'}}}}>smb</Tag>
                     </Block>
                   </FlexGridItem>
   
@@ -596,6 +597,7 @@ const User: React.FC<{userId: string}> = (props) => {
                         borderBottomColor: `grey`,
                         height: '50px',
                         padding: '5px',
+                        backgroundColor: 'orange',
                       }
                     )}>
                       <HeadingSmall overrides={{Block:{style: {padding: '0', margin: '8px 0 0 0', height: '100%', textAlign: 'center'}}}}>Defi</HeadingSmall>
@@ -627,12 +629,13 @@ const User: React.FC<{userId: string}> = (props) => {
                         borderRightColor: `grey`,
                         borderBottomColor: `grey`,
                         height: '50px',
-                        padding: '5px'
+                        padding: '5px',
+                        backgroundColor: 'orange'
                       }
                     )}>
-                      <Tag size={SIZE.large} closeable={false}>orca</Tag>
-                      <Tag size={SIZE.large} closeable={false}>tvl</Tag>
-                      <Tag size={SIZE.large} closeable={false}>solend</Tag>
+                      <Tag size={SIZE.large} closeable={false} overrides={{Root: {style: {'color': 'black'}}}}>orca</Tag>
+                      <Tag size={SIZE.large} closeable={false} overrides={{Root: {style: {'color': 'black'}}}}>tvl</Tag>
+                      <Tag size={SIZE.large} closeable={false} overrides={{Root: {style: {'color': 'black'}}}}>solend</Tag>
                     </Block>
                   </FlexGridItem>
   
@@ -657,10 +660,11 @@ const User: React.FC<{userId: string}> = (props) => {
                   borderBottomColor: `grey`,
                   padding: '10px',
                   margin: '30px 0',
-                  borderRadius: '15px'
+                  borderRadius: '15px',
+                  backgroundColor: '#FCD19C'
                 }
               )} >
-                <HeadingSmall overrides={{Block:{style: {padding: '0', margin: '0 0 5px 0'}}}}>Top Posts</HeadingSmall>
+                <HeadingSmall overrides={{Block:{style: {padding: '0', margin: '0 0 5px 0', color: 'black'}}}}>Top Posts</HeadingSmall>
                 <FlexGrid flexGridColumnCount={3}
                   flexGridColumnGap="scale800"
                   flexGridRowGap="scale800"
@@ -683,6 +687,7 @@ const User: React.FC<{userId: string}> = (props) => {
                         borderBottomColor: `grey`,
                         height: '50px',
                         padding: '5px',
+                        backgroundColor: 'green',
                       }
                     )}>
                       <HeadingSmall overrides={{Block:{style: {padding: '0', margin: '8px 0 0 0', height: '100%', textAlign: 'center'}}}}>NFTs</HeadingSmall>
@@ -714,12 +719,13 @@ const User: React.FC<{userId: string}> = (props) => {
                         borderRightColor: `grey`,
                         borderBottomColor: `grey`,
                         height: '50px',
-                        padding: '5px'
+                        padding: '5px',
+                        backgroundColor: 'green',
                       }
                     )}>
                       <Block display={'flex'} padding="0 20px" alignItems={'center'} justifyContent="space-between">
-                        <ParagraphSmall>how to get the latest datetime when..</ParagraphSmall>
-                        <Tag size={SIZE.large} closeable={false}>core</Tag>
+                        <ParagraphSmall color="black">how to get the latest datetime when..</ParagraphSmall>
+                        <Tag size={SIZE.large} closeable={false} overrides={{Root: {style: {'color': 'black'}}}}>core</Tag>
                       </Block>
                     </Block>
                   </FlexGridItem>

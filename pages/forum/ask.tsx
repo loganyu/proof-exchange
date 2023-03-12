@@ -22,7 +22,12 @@ import { useConnection } from '@solana/wallet-adapter-react';
 import { ForumWalletClient } from '../../forum/ForumWalletClient';
 import Router from 'next/router';
 
+import {useStyletron} from 'baseui';
+
 const Ask: React.FC = () => {
+  const [css, theme] = useStyletron();
+
+
   const { data: session } = useSession()
   const [user, setUser] = useState(null)
   const wallet = useWallet();
@@ -103,7 +108,20 @@ if (!wallet.connected) {
   return (
     <Main>
       <Cell span={6}>
-        <Block>
+      <Block 
+                display={'flex'} flexDirection={'column'} justifyContent={'space-evenly'} height={"100%"}
+                className={css(
+                      {
+                        borderLeftWidth: '2px',
+                        borderTopWidth: '2px',
+                        borderRightWidth: '2px',
+                        borderBottomWidth: '2px',
+                        padding: '20px',
+                        width: '100%',
+                        borderRadius: '15px',
+                        backgroundColor: '#FFA629',
+                      }
+                    )}>
             <HeadingLarge>Ask a Question</HeadingLarge>
             {/* @ts-ignore */}
             <form onSubmit={async (e) => {e.preventDefault(); handleClick()}}>
@@ -139,7 +157,11 @@ if (!wallet.connected) {
               <FormControl label='Set Bounty for Question'>
                 <Input type="number" step={0.1} placeholder='bounty (in SOL)' name="bounty" value={bounty} onChange={e => setBounty(e.target.value)}></Input>
               </FormControl>
-              <Button type="submit" disabled={!title || !content || !tags || !bounty} isLoading={loading}>Submit</Button>
+              <Button 
+                 type="submit" disabled={!title || !content || !tags || !bounty} isLoading={loading}
+                overrides={{BaseButton: {style: {backgroundColor: 'purple', color: 'white'}}}}>
+                Submit
+                        </Button>
               </Block>
           </form>
         </Block>

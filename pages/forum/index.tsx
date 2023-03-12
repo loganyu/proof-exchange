@@ -24,6 +24,24 @@ import Router from 'next/router';
 
 import { FORUM_PUB_KEY } from '../../constants'
 
+import {
+    HeadingXXLarge,
+    HeadingXLarge,
+    HeadingLarge,
+    HeadingMedium,
+    HeadingSmall,
+    HeadingXSmall,
+    LabelSmall,
+    MonoDisplayXSmall,
+    ParagraphSmall,
+    LabelMedium,
+    LabelLarge,
+    DisplayLarge,
+    DisplayMedium,
+    DisplaySmall,
+    DisplayXSmall,
+  } from 'baseui/typography';
+
 
 import {
     findForumAuthorityPDA,
@@ -106,34 +124,49 @@ const QuestionIndex: React.FC = (props) => {
     return (
         <Main>
             <Cell span={8}>
-                <Block display={'flex'} paddingBottom={'10px'} justifyContent='space-between'>
-                    <Button onClick={handleClick}>Ask Question</Button>
-                    <Block display={'flex'} justifyContent='end' padding={'10px 0'}>
-                        <ButtonGroup>
-                            <Button>Hot</Button>
-                            <Button>D</Button>
-                            <Button>W</Button>
-                            <Button>M</Button>
-                            <Button>Bountied</Button>
-                            <Button>Awarded</Button>
-                        </ButtonGroup>
+                <Block display={'flex'} justifyContent="space-between" backgroundColor={'#E4CCFF'}
+                    overrides={{Block:{style: {borderRadius: '15px'}}}}
+                >
+                    <DisplayMedium color="black" padding="50px 30px" >Forums</DisplayMedium>
+                    <Block margin={"20px"} display='flex' flexDirection={'column'} justifyContent='center'>
+                        <Button onClick={handleClick} overrides={{BaseButton: {style: {backgroundColor: '#FFA629', color: 'black'}}}}>
+                            Ask Question
+                        </Button>
                     </Block>
                 </Block>
-                {/* <QuestionBanner></QuestionBanner> */}
-                {questions.reverse().map((question) => 
-                    <QuestionItem item={{question, profiles}}></QuestionItem>
-                )}
-                {/* <Block display={"flex"} justifyContent={"center"}>
-                    <Pagination
-                        numPages={20}
-                        currentPage={currentPage}
-                        onPageChange={({ nextPage }) => {
-                            setCurrentPage(
-                            Math.min(Math.max(nextPage, 1), 20)
-                            );
-                        }}
-                    />
-                </Block> */}
+
+                <Block marginTop={"20px"} backgroundColor={'gray'}
+                    overrides={{Block:{style: {borderRadius: '15px'}}}}
+                >
+
+                    <Block display={'flex'} paddingBottom={'10px'} justifyContent='end'>
+                        <Block display={'flex'} justifyContent='end' padding={'10px 0'}>
+                            <ButtonGroup>
+                                <Button>Hot</Button>
+                                <Button>D</Button>
+                                <Button>W</Button>
+                                <Button>M</Button>
+                                <Button>Bountied</Button>
+                                <Button>Awarded</Button>
+                            </ButtonGroup>
+                        </Block>
+                    </Block>
+                    {/* <QuestionBanner></QuestionBanner> */}
+                    {questions.reverse().map((question) => 
+                        <QuestionItem item={{question, profiles}}></QuestionItem>
+                    )}
+                    {/* <Block display={"flex"} justifyContent={"center"}>
+                        <Pagination
+                            numPages={20}
+                            currentPage={currentPage}
+                            onPageChange={({ nextPage }) => {
+                                setCurrentPage(
+                                Math.min(Math.max(nextPage, 1), 20)
+                                );
+                            }}
+                        />
+                    </Block> */}
+                </Block>
             </Cell>
         </Main>
     )

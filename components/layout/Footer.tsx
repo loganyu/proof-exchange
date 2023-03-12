@@ -43,7 +43,7 @@ const StyledLink = themedStyled('a', ({ $theme }) => ({
     outlineOffset: '3px',
   },
   ':hover': {
-    color: $theme.colors.primary,
+    color: '$theme.colors.primary',
     textDecoration: 'none',
   },
 }));

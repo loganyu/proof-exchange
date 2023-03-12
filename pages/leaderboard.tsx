@@ -10,6 +10,7 @@ import {Button, KIND, SIZE} from 'baseui/button';
 import {Tag} from 'baseui/tag';
 import {useStyletron} from 'baseui';
 import {ArrowUp, ArrowDown} from 'baseui/icon';
+import {Block} from 'baseui/block';
 
 import { useState, useEffect } from "react"
 
@@ -23,6 +24,25 @@ import { useWallet } from "@solana/wallet-adapter-react";
 import { Connection, SystemProgram, Transaction, Keypair, PublicKey } from "@solana/web3.js";
 import { Spinner } from "baseui/spinner";
 import { SP } from 'next/dist/shared/lib/utils';
+
+import {
+  HeadingXXLarge,
+  HeadingXLarge,
+  HeadingLarge,
+  HeadingMedium,
+  HeadingSmall,
+  HeadingXSmall,
+  LabelSmall,
+  MonoDisplayXSmall,
+  ParagraphSmall,
+  LabelMedium,
+  LabelLarge,
+  DisplayLarge,
+  DisplayMedium,
+  DisplaySmall,
+  DisplayXSmall,
+} from 'baseui/typography';
+
 
 const ROW = {
     foo: 10,
@@ -60,6 +80,7 @@ function AvatarCell({
           <p
             className={css({
               ...theme.typography.LabelSmall,
+              color: 'black',
               margin: 0,
             })}
           >
@@ -199,32 +220,41 @@ const Leaderboard: React.FC = () => {
     return (
         <Main>
             <Cell span={9}>
-            <TableBuilder
-                overrides={{Root: {style: {height: '100%'}}}}
-                data={profiles}
-            >
-                <TableBuilderColumn<any> header="Name">
-                    {(row) => (
-                    <AvatarCell
-                        src={"/pfp.png"}
-                        title={row.account.profileOwner}
-                        subtitle={row.account.profileOwner}
-                    />
-                    )}
-                </TableBuilderColumn>
-                <TableBuilderColumn<any> header="Reputation Points">
-                    {(row) => <div>{row.account.reputationScore}</div> }
-                </TableBuilderColumn>
-                <TableBuilderColumn<any> header="Reputation Level">
-                    {(row) => <div>The 75</div> }
-                </TableBuilderColumn>
-                <TableBuilderColumn<any> header="Total Engagements">
-                    {(row) => <div>{Number(row.account.questionsAnswered) + Number(row.account.questionsAsked) + Number(row.account.commentsAdded) + Number(row.account.bigNotesPosted)}</div> }
-                </TableBuilderColumn>
-                <TableBuilderColumn<any> header="Bounties">
-                    {(row) => <div>{row.account.totalBountyReceived} USD</div> }
-                </TableBuilderColumn>
-                </TableBuilder>
+            <Block display={'flex'} justifyContent="space-between" backgroundColor={'#E4CCFF'}
+                    overrides={{Block:{style: {borderRadius: '15px'}}}}
+                >
+                    <DisplayMedium color="black" padding="50px 30px" >Forums</DisplayMedium>
+                </Block>
+               <Block marginTop="20px" backgroundColor={'#E4CCFF'}
+                    overrides={{Block:{style: {borderRadius: '15px'}}}}
+                >
+                <TableBuilder
+                    overrides={{Root: {style: {height: '100%', backgroundColor: '#BDE3FF'}}, TableBodyRow: {style: {':hover': {backgroundColor: "#9747FF"}}},TableHeadCell: {style: {color: 'black', backgroundColor: '#E4CCFF'},}}}
+                    data={profiles}
+                >
+                    <TableBuilderColumn<any> header="Name">
+                        {(row) => (
+                        <AvatarCell
+                            src={"/pfp.png"}
+                            title={row.account.profileOwner}
+                            subtitle={row.account.profileOwner}
+                        />
+                        )}
+                    </TableBuilderColumn>
+                    <TableBuilderColumn<any> header="Reputation Points">
+                        {(row) => <div style={{'color': 'black'}}>{row.account.reputationScore}</div> }
+                    </TableBuilderColumn>
+                    <TableBuilderColumn<any> header="Reputation Level">
+                        {(row) => <div style={{'color': 'black'}}>The 75</div> }
+                    </TableBuilderColumn>
+                    <TableBuilderColumn<any> header="Total Engagements">
+                        {(row) => <div style={{'color': 'black'}}>{Number(row.account.questionsAnswered) + Number(row.account.questionsAsked) + Number(row.account.commentsAdded) + Number(row.account.bigNotesPosted)}</div> }
+                    </TableBuilderColumn>
+                    <TableBuilderColumn<any> header="Bounties">
+                        {(row) => <div style={{'color': 'black'}}>{row.account.totalBountyReceived} USD</div> }
+                    </TableBuilderColumn>
+                    </TableBuilder>
+                 </Block>
             </Cell>
         </Main>
     )
