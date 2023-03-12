@@ -3,10 +3,10 @@ import prisma from '../../../lib/prisma';
 // GET /api/user/:id/
 export default async function handle(req, res) {
   if (req.method === 'GET') {
-    const id = req.query.id;
-    let user = await prisma.user.findUnique({
+    const pubKey = req.query.pubKey;
+    let user = await prisma.user.findFirst({
         where: {
-            pubKey: id
+            pubKey
         },
     });
 
