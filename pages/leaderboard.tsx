@@ -196,7 +196,10 @@ const Leaderboard: React.FC = () => {
         setLoading(true)
         const fetchUsers = async () => {
             let profiles = await forumWalletClient.fetchAllProfiles()
-            setProfiles(profiles)
+            profiles = profiles.sort(function(a,b) {
+              return Number(b.account.reputationScore) - Number(a.account.reputationScore)
+            });
+            setProfiles(profiles)         
         }
         if (forumWalletClient) {
             fetchUsers()
@@ -223,7 +226,7 @@ const Leaderboard: React.FC = () => {
             <Block display={'flex'} justifyContent="space-between" backgroundColor={'#E4CCFF'}
                     overrides={{Block:{style: {borderRadius: '15px'}}}}
                 >
-                    <DisplayMedium color="black" padding="50px 30px" >Forums</DisplayMedium>
+                    <DisplayMedium color="black" padding="50px 30px">Dynamic Profile Leaderboard</DisplayMedium>
                 </Block>
                <Block marginTop="20px" backgroundColor={'#E4CCFF'}
                     overrides={{Block:{style: {borderRadius: '15px'}}}}

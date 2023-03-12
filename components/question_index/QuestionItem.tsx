@@ -77,7 +77,7 @@ const QuestionItem: React.FC<{ item }> = ({ item }) => {
             <Cell span={3}>
               <Block display={'flex'} flexDirection={'column'} justifyContent={'space-evenly'} height={"100%"}>
               <Block 
-                display={'flex'} flexDirection={'column'} justifyContent={'space-evenly'} height={"100%"}
+                display={'flex'} flexDirection={'column'} justifyContent={'space-evenly'} 
                 className={css(
                       {
                         textAlign: 'center',
