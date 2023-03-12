@@ -22,13 +22,13 @@ import Router from 'next/router';
 const Ask: React.FC = () => {
   const { data: session } = useSession()
   const [content, setContent] = useState()
+  const [user, setUser] = useState(null)
   const wallet = useWallet();
   const walletModal = useWalletModal();
   const { connection } = useConnection();
   const [forumWalletClient, setForumWalletClient] = React.useState<ForumWalletClient>(null)
 
 
-  // Fetch content from protected route
   useEffect(() => {
     const fetchData = async () => {
       const res = await fetch("/api/examples/protected")
@@ -37,10 +37,19 @@ const Ask: React.FC = () => {
         setContent(json.content)
       }
     }
+    const getUser = async () => {
+      const res = await fetch(`/api/user/${wallet.publicKey.toBase58()}`, {
+        method: 'GET',
+      });
+      const json = await res.json()
+      if (json) {
+        setUser(json)
+      }
+    }
     fetchData()
-    console.log('session', session)
     if (wallet.connected) {
       setForumWalletClient(new ForumWalletClient(connection, wallet, new PublicKey(FORUM_PUB_KEY)))
+      getUser()
     }
   }, [session, wallet.connected])
 
@@ -49,13 +58,21 @@ const Ask: React.FC = () => {
         walletModal.setVisible(true);
     } else {
         try {
-          const profile = await forumWalletClient.createProfile()
-          console.log('profile', profile)
+          if (!user) {
+            // create user
+            const profileInstance = await forumWalletClient.createProfile()
+            const body = { uid: wallet.publicKey.toBase58(), pid: profileInstance.userProfile};
+            const res = await fetch('/api/user', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(body),
+            });
+            const newUser = await res.json()
+            setUser(newUser)
+          }
         } catch (e) {
             console.log('failed', e)
-
         }
-        Router.push('/questions/ask')
     }
 }
 

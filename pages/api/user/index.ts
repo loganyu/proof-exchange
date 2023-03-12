@@ -1,14 +1,14 @@
 import prisma from '../../../lib/prisma';
 
-// CREATE /api/post//:upid
+// CREATE /api/user/
 export default async function handle(req, res) {
-  const uid = req.params.uid;
-  const pid = req.params.pid;
+    const uid = req.body.uid;
+    const pid = req.body.pid;
     let user = await prisma.user.create({
         data:
             {
                 pubKey: uid,
-                userProfilePubkey: pid
+                profilePubkey: pid
             },
         })
     return res.json(user);

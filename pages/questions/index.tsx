@@ -44,7 +44,6 @@ const QuestionIndex: React.FC = (props) => {
 
     useEffect(() => {
         if (wallet.connected) {
-
             setForumWalletClient(new ForumWalletClient(connection, wallet, new PublicKey(FORUM_PUB_KEY)))
         } 
     }, [wallet.connected]);
@@ -73,10 +72,7 @@ const QuestionIndex: React.FC = (props) => {
         if (!wallet.connected) {
             walletModal.setVisible(true);
         } else {
-            const user = await fetch(`/api/user/${wallet.publicKey}`, {
-                method: 'GET',
-            });
-            console.log('user', user)
+            Router.push('/questions/ask')
         }
     }
 

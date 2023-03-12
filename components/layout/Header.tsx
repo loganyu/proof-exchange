@@ -32,6 +32,8 @@ import { useWallet } from "@solana/wallet-adapter-react";
 import { Connection, SystemProgram, Transaction, Keypair, PublicKey } from "@solana/web3.js";
 import { useWalletModal } from "@solana/wallet-adapter-react-ui";
 
+import Router from 'next/router';
+
 // Breakpoint for un-wrapping the search bar from under the links and toggles.
 const WRAP_SEARCH = 715;
 
@@ -59,8 +61,17 @@ type Props = {};
 const Nav: React.FC<Props> = () => {
   const { connection } = useConnection();
   const wallet = useWallet();
+  const walletModal = useWalletModal();
 
   const [css, theme] = useStyletron();
+
+  async function handleClickProfile() {
+    if (!wallet.connected) {
+      walletModal.setVisible(true);
+    } else {
+      Router.push(`/users/${wallet.publicKey}`)
+    }
+  }
   
   return (
     <Block
@@ -334,27 +345,24 @@ const Nav: React.FC<Props> = () => {
               </Button>
             </Link>
         }
-          {wallet.connected && 
-            <Link href="/users/1" passHref>
-              <Button
-                $as="a"
-                size={SIZE.compact}
-                kind={KIND.tertiary}
-                overrides={{
-                  BaseButton: {
-                    style: {
-                      display: 'none',
-                      [mq(1000)]: {
-                        display: 'block',
-                      },
-                    },
+          <Button
+            $as="a"
+            onClick={() => handleClickProfile()}
+            size={SIZE.compact}
+            kind={KIND.tertiary}
+            overrides={{
+              BaseButton: {
+                style: {
+                  display: 'none',
+                  [mq(1000)]: {
+                    display: 'block',
                   },
-                }}
-              >
-                Profile
-              </Button>
-            </Link>
-        }
+                },
+              },
+            }}
+          >
+            Profile
+          </Button>
         </div>
       </header>
     </Block>

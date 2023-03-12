@@ -726,7 +726,7 @@ const parser = yargs(process.argv.slice(2)).options({
                      }
 
                  } else {
-                     console.log('Found a total of n forum PDAs for manager pubkey:', managerKey.toBase58());
+                    //  console.log('Found a total of n forum PDAs for manager pubkey:', managerKey.toBase58());
                  }
              })
 

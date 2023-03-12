@@ -2,7 +2,6 @@ import prisma from '../../../lib/prisma';
 
 // GET /api/user/:id/
 export default async function handle(req, res) {
-    console.log('params', req.query)
   if (req.method === 'GET') {
     const id = req.query.id;
     let user = await prisma.user.findUnique({

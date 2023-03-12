@@ -27,6 +27,16 @@ import {
 } from 'baseui/typography';
 import {ListItem, ListItemLabel} from 'baseui/list';
 import {useStyletron} from 'baseui';
+import { useState, useEffect } from "react"
+import { useSession } from "next-auth/react"
+import { useWalletModal } from "@solana/wallet-adapter-react-ui";
+import { useConnection } from '@solana/wallet-adapter-react';
+import { ForumWalletClient } from '../../forum/ForumWalletClient';
+import AccessDenied from "../../components/access-denied"
+import { Connection, SystemProgram, Transaction, Keypair, PublicKey } from "@solana/web3.js";
+import { FORUM_PUB_KEY } from '../../constants'
+import { useWallet } from "@solana/wallet-adapter-react";
+import { Textarea } from "baseui/textarea";
 
 export async function getServerSideProps(context) {
     const userId = context.params.id
@@ -36,14 +46,89 @@ export async function getServerSideProps(context) {
       }
     }
 }
+
 import {Heading, HeadingLevel} from 'baseui/heading';
 import {ParagraphSmall} from 'baseui/typography';
 import {FlexGrid, FlexGridItem} from 'baseui/flex-grid';
 import {BlockProps} from 'baseui/block';
 import {ProgressBar} from 'baseui/progress-bar';
 import {StyledDivider, SIZE as STYLE_SIZE} from 'baseui/divider';
+import { profile } from 'console';
 
 const User: React.FC<{userId: string}> = (props) => {
+  const { data: session } = useSession()
+  const [user, setUser] = useState(null)
+  const [aboutMe, setAboutMe] = useState(null)
+  const [userProfile, setUserProfile] = useState(null)
+  const [profileUser, setProfileUser] = useState(null)
+  const [loading, setLoading] = useState(true)
+  const wallet = useWallet()
+  const walletModal = useWalletModal();
+  const { connection } = useConnection();
+  const [forumWalletClient, setForumWalletClient] = React.useState<ForumWalletClient>(null)
+  const [aboutMeText, setAboutMeText] = React.useState("");
+  
+
+  useEffect(() => {
+    const getUser = async () => {
+      const res = await fetch(`/api/user/${wallet.publicKey.toBase58()}`, {
+        method: 'GET',
+      });
+      const json = await res.json()
+      if (json) {
+        setUser(json)
+      }
+    }
+
+    const getProfileUser = async () => {
+      const res = await fetch(`/api/user/${props.userId}`, {
+        method: 'GET',
+      });
+      const profileUser = await res.json()
+      if (profileUser) {
+        setProfileUser(profileUser)
+        if (profileUser) {
+          let client = new ForumWalletClient(connection, wallet, new PublicKey(FORUM_PUB_KEY))
+          const userProfile = await client.fetchProfileByKey(profileUser.profilePubkey)
+          const aboutMe = await client.fetchAboutMeByProfile(profileUser.profilePubkey)
+          if (aboutMe.length > 0) {
+            setAboutMe(aboutMe[0])
+            setAboutMeText(aboutMe[0].account.content)
+          }
+          setUserProfile(userProfile)
+          setLoading(false)
+        }
+      }
+      return profileUser
+    }
+    if (!userProfile) {
+      getProfileUser();
+    }
+    if (wallet.connected) {
+      const client = new ForumWalletClient(connection, wallet, new PublicKey(FORUM_PUB_KEY))
+      setForumWalletClient(client)
+      if (!user) {
+        getUser()
+      }
+    } else {
+      setUser(null)
+    }
+  }, [session, wallet.connected])
+
+  async function handleClickAboutMe() {
+    if (!aboutMeText) {
+      await forumWalletClient.deleteAboutMe(aboutMeText);
+      setAboutMe(null)
+    } else if (aboutMe.length > 0) {
+      let aboutMe = await forumWalletClient.editAboutMe(aboutMeText);
+      setAboutMe({...aboutMe, account: {...aboutMe.account, content: aboutMeText}})
+    } else {
+      let aboutMe = await forumWalletClient.createAboutMe(aboutMeText);
+      setAboutMe({...aboutMe, account: {...aboutMe.account, content: aboutMeText}})
+    }
+    console.log('aboutmeafter', aboutMe)
+  }
+
     const blockStyles = {
       borderLeftStyle: 'solid',
       borderRightStyle:'solid',
@@ -61,14 +146,36 @@ const User: React.FC<{userId: string}> = (props) => {
       width: '100%'
     }
     const [css] = useStyletron();
-    console.log(props)
+
+    if (loading) {
+      return (
+        <Main>
+          <Cell span={5}>
+            <HeadingLarge>Loading...</HeadingLarge>
+          </Cell>
+        </Main>
+      )
+    }
+
+    if (!userProfile) {
+      return (
+        <Main>
+          <Cell span={5}>
+            <HeadingLarge>User not found</HeadingLarge>
+          </Cell>
+        </Main>
+      )
+    }
+
     return (
       <Main>
           <Cell span={5}>
           <HeadingLevel>
-            <Heading styleLevel={4} className={css({margin: '0', padding: '0'})}>SolCharms</Heading>
+            <Heading styleLevel={4} className={css({margin: '0', padding: '0'})}>
+              {props.userId.slice(0,6)}...{props.userId.slice(-6)} {user && user.pubKey === profileUser.pubKey && "(your profile)"}
+            </Heading>
             <ParagraphSmall className={css({margin: '0 0 5px 0', padding: '0'})}>
-              Status here.
+              Profile
             </ParagraphSmall>
           </HeadingLevel>
             <Grid gridMargins={0}>
@@ -102,29 +209,41 @@ const User: React.FC<{userId: string}> = (props) => {
                   >
                     <FlexGrid flexGridColumnCount={3} margin={"15px 0"}>
                       <FlexGridItem className={css({textAlign: 'center'})}>
-                        <MonoDisplayXSmall overrides={{Block:{style: {alignItems: 'center'}}}}>200</MonoDisplayXSmall>
+                        <MonoDisplayXSmall overrides={{Block:{style: {alignItems: 'center'}}}}>
+                          {userProfile.reputationScore}
+                        </MonoDisplayXSmall>
                         <LabelSmall>Reputation</LabelSmall>
                       </FlexGridItem>
                       <FlexGridItem className={css({textAlign: 'center'})}>
-                        <MonoDisplayXSmall>15</MonoDisplayXSmall>
+                        <MonoDisplayXSmall>
+                          {userProfile.questionsAsked}
+                        </MonoDisplayXSmall>
                         <LabelSmall>Questions</LabelSmall>
                       </FlexGridItem>
                       <FlexGridItem className={css({textAlign: 'center'})}>
-                        <MonoDisplayXSmall>42</MonoDisplayXSmall>
+                        <MonoDisplayXSmall>
+                          {userProfile.questionsAnswered}
+                        </MonoDisplayXSmall>
                         <LabelSmall>Answers</LabelSmall>
                       </FlexGridItem>
                     </FlexGrid>
                     <FlexGrid flexGridColumnCount={3} marginBottom={"15px"}>
                       <FlexGridItem className={css({textAlign: 'center'})}>
-                        <MonoDisplayXSmall>449</MonoDisplayXSmall>
+                        <MonoDisplayXSmall>
+                          -
+                        </MonoDisplayXSmall>
                         <LabelSmall>Upvotes</LabelSmall>
                       </FlexGridItem>
                       <FlexGridItem className={css({textAlign: 'center'})}>
-                        <MonoDisplayXSmall>2390</MonoDisplayXSmall>
+                        <MonoDisplayXSmall>
+                          -
+                        </MonoDisplayXSmall>
                         <LabelSmall>Downvotes</LabelSmall>
                       </FlexGridItem>
                       <FlexGridItem className={css({textAlign: 'center'})}>
-                        <MonoDisplayXSmall>294</MonoDisplayXSmall>
+                        <MonoDisplayXSmall>
+                          -
+                        </MonoDisplayXSmall>
                         <LabelSmall>Reactions</LabelSmall>
                       </FlexGridItem>
                     </FlexGrid>
@@ -132,7 +251,7 @@ const User: React.FC<{userId: string}> = (props) => {
                       <FlexGridItem className={css({textAlign: 'center'})}>
                       </FlexGridItem>
                       <FlexGridItem className={css({textAlign: 'center'})}>
-                        <MonoDisplayXSmall>76.45%</MonoDisplayXSmall>
+                        <MonoDisplayXSmall>--%</MonoDisplayXSmall>
                         <LabelSmall>Ranking</LabelSmall>
                       </FlexGridItem>
                       <FlexGridItem className={css({textAlign: 'center'})}>
@@ -145,17 +264,24 @@ const User: React.FC<{userId: string}> = (props) => {
             <Block>
               <ParagraphSmall>walletaddress</ParagraphSmall>
               <StyledDivider $size={STYLE_SIZE.section} />
-              <HeadingMedium>About (NAME)</HeadingMedium>
-              <ParagraphSmall>
-                Proin ut dui sed metus pharetra hend rerit vel non
-                mi. Nulla ornare faucibus ex, non facilisis nisl.
-                Proin ut dui sed metus pharetra hend rerit vel non
-                mi. Nulla ornare faucibus ex, non facilisis nisl.
-              </ParagraphSmall>
+              <HeadingMedium>About</HeadingMedium>
+              <Textarea
+                value={aboutMeText}
+                placeholder={user && user.pubKey === profileUser.pubKey && 'Tell everyone about yourself.'}
+                clearOnEscape
+                onChange={e => setAboutMeText(e.target.value)}
+                readOnly={!user || user.pubKey !== profileUser.pubKey}
+              />
+              <Block marginTop={'10px'} display={'flex'} justifyContent={'flex-end'}>
+                {aboutMe && aboutMe.account.content !== aboutMeText && 
+                  <Button onClick={handleClickAboutMe}>
+                    Save
+                  </Button>}
+              </Block>
               <ButtonGroup >
-                <Button style={{margin: '5px'}}>One</Button>
-                <Button style={{margin: '5px'}}>Two</Button>
-                <Button style={{margin: '5px'}}>Three</Button>
+                <Button style={{margin: '5px'}}>Twitter</Button>
+                <Button style={{margin: '5px'}}>Github</Button>
+                <Button style={{margin: '5px'}}>Linktree</Button>
               </ButtonGroup>
             </Block>
           </Cell>

@@ -423,7 +423,7 @@ const AdminConsole: React.FC<Props> = (props) => {
         <Block overrides={{Block: {style: {...blockStyles}}}}>
           <LabelSmall>Fetch Profile By Owner</LabelSmall>
             {/* @ts-ignore */}
-          <form onSubmit={async (e) => {e.preventDefault(); setOutput(await forumWalletClient.fetchAllUserProfilePDAs(e.target.userProfileOwnerPubkey.value)); setIsOpen(true)}}>
+          <form onSubmit={async (e) => {e.preventDefault(); setOutput(await forumWalletClient.fetchProfileByOwner(e.target.userProfileOwnerPubkey.value)); setIsOpen(true)}}>
             <Input placeholder='userProfileOwnerPubkey' name="userProfileOwnerPubkey"></Input>
             <Button size={SIZE.mini} type="submit">fetch-profile-by-owner</Button>
           </form>
@@ -441,7 +441,7 @@ const AdminConsole: React.FC<Props> = (props) => {
         <Block overrides={{Block: {style: {...blockStyles}}}}>
           <LabelSmall>Fetch About Me By Profile</LabelSmall>
             {/* @ts-ignore */}
-          <form onSubmit={async (e) => {e.preventDefault(); setOutput(await forumWalletClient.fetchAboutMeForProfile(e.target.userProfileKey.value)); setIsOpen(true)}}>
+          <form onSubmit={async (e) => {e.preventDefault(); setOutput(await forumWalletClient.fetchAboutMeByProfile(e.target.userProfileKey.value)); setIsOpen(true)}}>
             <Input placeholder='userProfileKey' name="userProfileKey"></Input>
             <Button size={SIZE.mini} type="submit">fetch-about-me-by-profile</Button>
           </form>
