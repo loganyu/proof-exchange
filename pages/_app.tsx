@@ -15,6 +15,11 @@ import { SessionProvider } from "next-auth/react";
 import { WalletModalProvider } from "@solana/wallet-adapter-react-ui";
 import { clusterApiUrl } from "@solana/web3.js";
 import type { AppProps } from "next/app";
+import {
+  SnackbarProvider,
+  useSnackbar,
+  DURATION,
+} from 'baseui/snackbar';
 
 require("@solana/wallet-adapter-react-ui/styles.css");
 
@@ -79,7 +84,9 @@ const App = ({ Component, pageProps }: AppProps<{session: Session;}>) => {
           <SessionProvider session={pageProps.session}>
             <WalletContextProvider>
               <SessionProvider session={pageProps.session} refetchInterval={0}>
-                <Component {...pageProps} />
+                <SnackbarProvider>
+                 <Component {...pageProps} />
+                </SnackbarProvider>
               </SessionProvider>
             </WalletContextProvider>
           </SessionProvider>

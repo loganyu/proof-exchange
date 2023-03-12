@@ -37,7 +37,8 @@ function CustomLabel() {
         {id: 'Azure', color: '#F0FFFF'},
         {id: 'Beige', color: '#F5F5DC'},
       ]}
-      placeholder="Search"
+      disabled
+      placeholder="Search (coming soon)"
       labelKey="id"
       valueKey="color"
       onChange={(options) => setValue(options.value)}

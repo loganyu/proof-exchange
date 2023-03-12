@@ -141,7 +141,7 @@ const Nav: React.FC<Props> = () => {
           </div>
           */}
           {/* Link to blog */}
-          <Link href="/blog" passHref>
+          {/* <Link href="/blog" passHref>
             <Button
               $as="a"
               size={SIZE.compact}
@@ -159,9 +159,9 @@ const Nav: React.FC<Props> = () => {
             >
               Blog
             </Button>
-          </Link>
+          </Link> */}
           {/* Link to component gallery */}
-          <Link href="/components" passHref>
+          {/* <Link href="/components" passHref>
             <Button
               $as="a"
               size={SIZE.compact}
@@ -179,7 +179,7 @@ const Nav: React.FC<Props> = () => {
             >
               Components
             </Button>
-          </Link>
+          </Link> */}
         </div>
 
         {/* Search */}
@@ -215,7 +215,7 @@ const Nav: React.FC<Props> = () => {
           {/* Discord */}
           <Button
             $as="a"
-            href=""
+            href="https://discord.gg/JUPHS5G8"
             target="_blank"
             rel="noopener noreferrer"
             size={SIZE.compact}
@@ -237,7 +237,7 @@ const Nav: React.FC<Props> = () => {
           </Button>
 
           {/* GitHub */}
-          <Button
+          {/* <Button
             $as="a"
             href=""
             target="_blank"
@@ -258,7 +258,7 @@ const Nav: React.FC<Props> = () => {
             }}
           >
             <GithubLogo size={24} color={theme.colors.contentPrimary} />
-          </Button>
+          </Button> */}
 
           {/* Direction Toggle */}
           {/* <Button
@@ -286,7 +286,7 @@ const Nav: React.FC<Props> = () => {
           </Button> */}
 
           {/* Theme Toggle */}
-          <Button
+          {/* <Button
             onClick={null}
             size={SIZE.compact}
             kind={KIND.tertiary}
@@ -301,7 +301,7 @@ const Nav: React.FC<Props> = () => {
             }}
           >
             <Bulb size={24} color={theme.colors.contentPrimary} />
-          </Button>
+          </Button> */}
 
           {/* Nav Toggle */}
           <Button

@@ -60,6 +60,7 @@ import {ProgressBar} from 'baseui/progress-bar';
 import {StyledDivider, SIZE as STYLE_SIZE} from 'baseui/divider';
 
 const User: React.FC<{userId: string}> = (props) => {
+  const {enqueue} = useSnackbar();
   const { data: session } = useSession()
   const [user, setUser] = useState(null)
   const [aboutMe, setAboutMe] = useState(null)
@@ -83,6 +84,15 @@ const User: React.FC<{userId: string}> = (props) => {
       const json = await res.json()
       if (json) {
         setUser(json)
+      } else {
+        console.log('enqueue')
+        enqueue(
+          {
+            message:
+              'Welcome to your profile! Please add to your About Me section',
+          },
+          DURATION.medium,
+        )
       }
     }
 
@@ -178,7 +188,7 @@ const User: React.FC<{userId: string}> = (props) => {
       )
     }
 
-    if (!userProfile && (wallet.connected && wallet.publicKey.toBase58() !== props.userId)) {
+    if (!userProfile && (wallet.publicKey && wallet.publicKey.toBase58() !== props.userId)) {
       return (
         <Main>
           <Cell span={5}>
@@ -193,11 +203,8 @@ const User: React.FC<{userId: string}> = (props) => {
           <Cell span={5}>
           <HeadingLevel>
             <Heading styleLevel={4} className={css({margin: '0', padding: '0'})}>
-              {props.userId.slice(0,6)}...{props.userId.slice(-6)} {wallet.connected && wallet.publicKey.toBase58() === props.userId && "(your profile)"}
+              {props.userId.slice(0,6)}...{props.userId.slice(-6)} {wallet.publicKey && wallet.publicKey.toBase58() === props.userId && "(your profile)"}
             </Heading>
-            <ParagraphSmall className={css({margin: '0 0 5px 0', padding: '0'})}>
-              Profile
-            </ParagraphSmall>
           </HeadingLevel>
             <Grid gridMargins={0}>
               <Cell span={5}>
@@ -288,7 +295,7 @@ const User: React.FC<{userId: string}> = (props) => {
               <HeadingMedium>About</HeadingMedium>
               <Textarea
                 value={aboutMeText}
-                placeholder={wallet.connected && wallet.publicKey.toBase58() === props.userId && 'Tell everyone about yourself.'}
+                placeholder={wallet.publicKey && wallet.publicKey.toBase58() === props.userId && 'Tell everyone about yourself.'}
                 clearOnEscape
                 onChange={e => setAboutMeText(e.target.value)}
                 readOnly={!wallet.publicKey || wallet.publicKey.toBase58() !== props.userId}
