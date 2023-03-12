@@ -442,10 +442,9 @@ const User: React.FC<{userId: string}> = (props) => {
                         padding: '5px'
                       }
                     )}>
-                      <Tag size={SIZE.large} closeable={false}>large</Tag>
-                      <Tag size={SIZE.large} closeable={false}>large</Tag>
-                      <Tag size={SIZE.large} closeable={false}>large</Tag>
-                      <Tag size={SIZE.large} closeable={false}>large</Tag>
+                      <Tag size={SIZE.large} closeable={false}>sugar</Tag>
+                      <Tag size={SIZE.large} closeable={false}>magiceden</Tag>
+                      <Tag size={SIZE.large} closeable={false}>metaplex</Tag>
                     </Block>
                   </FlexGridItem>
   
@@ -506,10 +505,9 @@ const User: React.FC<{userId: string}> = (props) => {
                         padding: '5px'
                       }
                     )}>
-                      <Tag size={SIZE.large} closeable={false}>large</Tag>
-                      <Tag size={SIZE.large} closeable={false}>large</Tag>
-                      <Tag size={SIZE.large} closeable={false}>large</Tag>
-                      <Tag size={SIZE.large} closeable={false}>large</Tag>
+                      <Tag size={SIZE.large} closeable={false}>validator</Tag>
+                      <Tag size={SIZE.large} closeable={false}>vote-account</Tag>
+                      <Tag size={SIZE.large} closeable={false}>core</Tag>
                     </Block>
                   </FlexGridItem>
   
@@ -570,10 +568,8 @@ const User: React.FC<{userId: string}> = (props) => {
                         padding: '5px'
                       }
                     )}>
-                      <Tag size={SIZE.large} closeable={false}>large</Tag>
-                      <Tag size={SIZE.large} closeable={false}>large</Tag>
-                      <Tag size={SIZE.large} closeable={false}>large</Tag>
-                      <Tag size={SIZE.large} closeable={false}>large</Tag>
+                      <Tag size={SIZE.large} closeable={false}>degods</Tag>
+                      <Tag size={SIZE.large} closeable={false}>smb</Tag>
                     </Block>
                   </FlexGridItem>
   
@@ -634,10 +630,9 @@ const User: React.FC<{userId: string}> = (props) => {
                         padding: '5px'
                       }
                     )}>
-                      <Tag size={SIZE.large} closeable={false}>large</Tag>
-                      <Tag size={SIZE.large} closeable={false}>large</Tag>
-                      <Tag size={SIZE.large} closeable={false}>large</Tag>
-                      <Tag size={SIZE.large} closeable={false}>large</Tag>
+                      <Tag size={SIZE.large} closeable={false}>orca</Tag>
+                      <Tag size={SIZE.large} closeable={false}>tvl</Tag>
+                      <Tag size={SIZE.large} closeable={false}>solend</Tag>
                     </Block>
                   </FlexGridItem>
   
@@ -722,8 +717,8 @@ const User: React.FC<{userId: string}> = (props) => {
                         padding: '5px'
                       }
                     )}>
-                      <Block display={'flex'} padding="0 20px" justifyContent="space-between">
-                        <ParagraphSmall>What is the best j jfdkls fjdskla fj sk...</ParagraphSmall>
+                      <Block display={'flex'} padding="0 20px" alignItems={'center'} justifyContent="space-between">
+                        <ParagraphSmall>how to get the latest datetime when..</ParagraphSmall>
                         <Tag size={SIZE.large} closeable={false}>large</Tag>
                       </Block>
                     </Block>

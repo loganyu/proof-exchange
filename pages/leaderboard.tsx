@@ -183,7 +183,7 @@ const Leaderboard: React.FC = () => {
 
     return (
         <Main>
-            <Cell span={10}>
+            <Cell span={9}>
             <TableBuilder
                 overrides={{Root: {style: {height: '100%'}}}}
                 data={profiles}
