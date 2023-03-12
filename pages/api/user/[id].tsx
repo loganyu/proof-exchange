@@ -1,25 +1,13 @@
 import prisma from '../../../lib/prisma';
 
-// GET_OR_CREATE /api/post/:id
+// GET /api/user/:id/
 export default async function handle(req, res) {
-  const pubKey = req.params.id;
-  if (req.method === 'POST') {
+    console.log('params', req.query)
+  if (req.method === 'GET') {
+    const id = req.query.id;
     let user = await prisma.user.findUnique({
         where: {
-            pubKey: pubKey
-        },
-    });
-    if (!user) {
-        user = await prisma.user.create({
-            data:
-                {pubKey: pubKey},
-            })
-    }
-    return res.json(user);
-  } else if (req.method === 'GET') {
-    let user = await prisma.user.findUnique({
-        where: {
-            pubKey: pubKey
+            pubKey: id
         },
     });
 

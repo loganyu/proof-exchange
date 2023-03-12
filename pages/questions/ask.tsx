@@ -1,3 +1,4 @@
+import React from 'react';
 import { useState, useEffect } from "react"
 import { useSession } from "next-auth/react"
 import Main from "../../components/layout/Main";
@@ -8,11 +9,24 @@ import { Textarea } from "baseui/textarea";
 import { Button } from "baseui/button";
 import { Input } from "baseui/input";
 import {Block} from 'baseui/block';
+import { Account, getAccount } from "@solana/spl-token"
+import { Connection, SystemProgram, Transaction, Keypair, PublicKey } from "@solana/web3.js";
+import { FORUM_PUB_KEY } from '../../constants'
+
+
+import { useWalletModal } from "@solana/wallet-adapter-react-ui";
+import { useConnection } from '@solana/wallet-adapter-react';
+import { ForumWalletClient } from '../../forum/ForumWalletClient';
+import Router from 'next/router';
 
 const Ask: React.FC = () => {
   const { data: session } = useSession()
   const [content, setContent] = useState()
   const wallet = useWallet();
+  const walletModal = useWalletModal();
+  const { connection } = useConnection();
+  const [forumWalletClient, setForumWalletClient] = React.useState<ForumWalletClient>(null)
+
 
   // Fetch content from protected route
   useEffect(() => {
@@ -25,8 +39,27 @@ const Ask: React.FC = () => {
     }
     fetchData()
     console.log('session', session)
-  }, [session])
- 
+    if (wallet.connected) {
+      setForumWalletClient(new ForumWalletClient(connection, wallet, new PublicKey(FORUM_PUB_KEY)))
+    }
+  }, [session, wallet.connected])
+
+  async function handleClick() {
+    if (!wallet.connected) {
+        walletModal.setVisible(true);
+    } else {
+        try {
+          const profile = await forumWalletClient.createProfile()
+          console.log('profile', profile)
+        } catch (e) {
+            console.log('failed', e)
+
+        }
+        Router.push('/questions/ask')
+    }
+}
+
+
 
   // If no session exists, display access denied message
 //   if (!session) {
@@ -48,7 +81,7 @@ if (!wallet.connected) {
                 placeholder="Ask question here"
                 clearOnEscape
                 />
-            <Button>Submit</Button>
+            <Button onClick={handleClick}>Submit</Button>
         </Block>
     </Main>
   )
