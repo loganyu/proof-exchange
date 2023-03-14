@@ -1,3 +1,16 @@
-# Fullstack Authentication Example with Next.js and NextAuth.js
+# DeEdIT Web Application
 
-This is the starter project for the fullstack tutorial with Next.js and Prisma. You can find the final version of this project in the [`final`](https://github.com/prisma/blogr-nextjs-prisma/tree/final) branch of this repo.
+### A Decentralized Educational Information and Tooling (hence the name DeEdIT) Protocol codenamed and marketed as "xAndria".
+
+This web application provides the user experience for interacting with the DeEdiT Protocol.
+
+The web application is build with Next.js, Postgresql, and Vercel.
+
+# Live site
+https://proof-exchange.vercel.app/
+
+# DeEdIT SDK
+The repository and details on the protocol are here: https://github.com/SolCharms/DeEdIT_SDK
+
+To interact with the protocol without using the CLI, use the interface on the web application:
+https://proof-exchange.vercel.app/forum-console
