@@ -202,7 +202,7 @@ const ForumConsole: React.FC<Props> = (props) => {
           <ModalButton onClick={close}>Okay</ModalButton>
         </ModalFooter>
       </Modal>
-        <HeadingLarge>Forum Console</HeadingLarge>
+        <HeadingLarge>DeEdIT C◎ns◎le</HeadingLarge>
         <Block overrides={{Block: {style: {...blockStyles}}}}>
           <ParagraphMedium>Wallet Public Key: {wallet.publicKey?.toBase58()}</ParagraphMedium>
           <ParagraphMedium>Forum Pub Key: {forumPubkey ? forumPubkey.toBase58() : '------------------'}</ParagraphMedium>
