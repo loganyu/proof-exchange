@@ -48,7 +48,7 @@ const QuestionShow: React.FC<any> = (props) => {
     const [question, setQuestion] = useState(null)
     const [comments, setComments] = useState(['hi that is great', 'I am not sure about that', 'try to do it again'])
     const [answers, setAnswers] = useState([])
-    const [loading, setLoading] = React.useState(false)
+    const [loading, setLoading] = React.useState(true)
     const [loadingSubmit, setLoadingSubmit] = React.useState(false)
     const [answer, setAnswer] = React.useState('')
     const [forumWalletClient, setForumWalletClient] = React.useState<ForumWalletClient>(null)
@@ -87,6 +87,7 @@ const QuestionShow: React.FC<any> = (props) => {
             setProfiles(profiles)
             setAnswers(answers)
             setQuestion(question)
+            setLoading(false)
             // setComments(comments)
         }
 
@@ -97,7 +98,6 @@ const QuestionShow: React.FC<any> = (props) => {
             }
         }
         fetchQuestion()
-        setLoading(false)
     }, [wallet.connected, forumWalletClient])
 
     async function submitAnswer() {
@@ -158,13 +158,15 @@ const QuestionShow: React.FC<any> = (props) => {
         return (
             <Main>
                 <Cell span={9}>
-                    <Spinner></Spinner>
+                    <Block display={'flex'} justifyContent={'center'}>
+                        <Spinner></Spinner>
+                    </Block>
                 </Cell>
             </Main>
         )
     }
 
-    if (!question) {
+    if (!question && !loading) {
         return (
             <Main>
                 <Cell span={9}>
