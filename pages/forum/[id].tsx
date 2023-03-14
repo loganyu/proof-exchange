@@ -196,7 +196,7 @@ const QuestionShow: React.FC<any> = (props) => {
                         onChange={e => setCommentInput(e.target.value)}
                         clearOnEscape
                     />
-                    <Button overrides={{BaseButton: {style: {backgroundColor: '#9747FF', color: 'white'}}}}
+                    <Button overrides={{BaseButton: {style: {backgroundColor: '#9747FF', color: 'white', marginTop: '10px'}}}}
                         disabled={commentInput.length < 10}
                         onSubmit={submitComment}>
                         Add Comment
