@@ -198,7 +198,7 @@ const User: React.FC<{userId: string}> = (props) => {
       return (
         <Main>
           <Cell span={5}>
-            <HeadingLarge>User not found</HeadingLarge>
+            {/* <HeadingLarge>User not found</HeadingLarge> */}
           </Cell>
         </Main>
       )
