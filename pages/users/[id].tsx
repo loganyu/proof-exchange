@@ -66,7 +66,7 @@ const User: React.FC<{userId: string}> = (props) => {
   const [aboutMe, setAboutMe] = useState(null)
   const [userProfile, setUserProfile] = useState(null)
   const [profileUser, setProfileUser] = useState(null)
-  const [loading, setLoading] = useState(true)
+  const [loading, setLoading] = useState(false)
   const [loadingButton, setLoadingButton] = useState(false)
   const wallet = useWallet()
   const walletModal = useWalletModal();

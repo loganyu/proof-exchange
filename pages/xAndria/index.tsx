@@ -35,7 +35,7 @@ import {Banner, HIERARCHY, KIND} from 'baseui/banner';
 // }
 
 const XAndria: React.FC = (props) => {
-    const [currentPage, setCurrentPage] = React.useState(2);
+    // const [currentPage, setCurrentPage] = React.useState(2);
 
     return (
         <Main>

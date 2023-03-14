@@ -161,7 +161,7 @@ if (!wallet.connected) {
                  type="submit" disabled={!title || !content || !tags || !bounty} isLoading={loading}
                 overrides={{BaseButton: {style: {backgroundColor: 'purple', color: 'white'}}}}>
                 Submit
-                        </Button>
+              </Button>
               </Block>
           </form>
         </Block>

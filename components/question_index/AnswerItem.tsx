@@ -28,20 +28,22 @@ import {
   HeadingMedium,
   HeadingSmall,
   HeadingXSmall,
-  LabelMedium,
   LabelLarge,
   LabelSmall,
+  LabelMedium,
   MonoDisplayXSmall,
   ParagraphSmall
 } from 'baseui/typography';
 import { StyledLink } from "baseui/link";
 import {ListItem, ListItemLabel} from 'baseui/list';
 import {useStyletron} from 'baseui';
+import { useWallet } from "@solana/wallet-adapter-react";
 
-const QuestionItem: React.FC<{ item }> = ({ item }) => {
+const AnswerItem: React.FC<{ item }> = ({ item }) => {
     const [upvotes, setUpvotes] = React.useState(Math.floor(Math.random()*50));
     const [clicked, setClicked] = React.useState(upvotes % 2 === 0);
-    const { question, profiles, publicKey } = item;
+    const wallet = useWallet();
+    const { publicKey, answer, profiles, question, user, forumWalletClient, questionPubkey } = item;
     const blockStyles = {
         borderLeftWidth: '2px',
         borderTopWidth: '2px',
@@ -64,16 +66,20 @@ const QuestionItem: React.FC<{ item }> = ({ item }) => {
     return ""
   }
 
-  const ownerKey = getOwner(question.userProfile)
-  const timeString = new Date(question.questionPostedTs * 1000).toISOString().slice(0, 19).replace('T', ' ');
-  const awardedColor = question.bountyAwarded ? "gray" : "green"
+  async function acceptAnswer() {
+    console.log(questionPubkey, publicKey, ownerKey)
+    forumWalletClient.acceptAnswer(questionPubkey, publicKey, ownerKey)
+  }
+  
+
+  const ownerKey = getOwner(answer.userProfile)
+  const timeString = new Date(answer.answerPostedTs * 1000).toISOString().slice(0, 19).replace('T', ' ');
   let backgroundColor = clicked ? '#9747FF' : '#FCD19C' 
 
   function handleClick() {
     setUpvotes(clicked ? upvotes - 1 : upvotes + 1)
     setClicked(!clicked)
   }
-  
 
   return (
     <Block overrides={{
@@ -85,45 +91,54 @@ const QuestionItem: React.FC<{ item }> = ({ item }) => {
       }} marginBottom={'30px'}>
         <Grid>
             <Cell span={3}>
-              <Block display={'flex'} flexDirection={'column'} justifyContent={'space-evenly'} height={"100%"}>
-                <Block 
-                  display={'flex'} flexDirection={'column'} justifyContent={'space-evenly'} 
-                  className={css(
-                      {
-                        textAlign: 'center',
-                        borderLeftStyle: 'solid',
-                        borderRightStyle:'solid',
-                        borderTopStyle: 'solid',
-                        borderBottomStyle: 'solid',
-                        borderLeftWidth: '2px',
-                        borderTopWidth: '2px',
-                        borderRightWidth: '2px',
-                        borderBottomWidth: '2px',
-                        borderLeftColor: `grey`,
-                        borderTopColor: `grey`,
-                        borderRightColor: `grey`,
-                        borderBottomColor: `grey`,
-                        height: '47px',
-                        padding: '30px 15px',
-                        borderRadius: '40px',
-                        backgroundColor: 'orange',
-                      }
-                    )}>
-                      <LabelSmall color='black'>
-                        {Object.keys(question.tag)[0]}
-                      </LabelSmall>
-                </Block>
                 <Block display={'flex'} flexDirection={'column'} justifyContent={'center'} alignItems="center" height={"100%"}>
-                  <Block display={'flex'} flexDirection={'column'} justifyContent={'center'} alignItems="center" height={"100%"}>
+                    { user && !question.bountyAwarded && user.profilePubkey === question.userProfile &&
+                        <Block margin={"20px"} display='flex' flexDirection={'column'} justifyContent='center'>
+                            <Button onClick={acceptAnswer} overrides={{BaseButton: {style: {backgroundColor: '#FFA629', color: 'black'}}}}>
+                                Accept Answer
+                            </Button>
+                        </Block>
+                    }
+                    {
+                        answer.acceptedAnswer &&
+                            <Block 
+                                display={'flex'} flexDirection={'column'} justifyContent={'space-evenly'} 
+                                className={css(
+                                {
+                                    textAlign: 'center',
+                                    borderLeftStyle: 'solid',
+                                    borderRightStyle:'solid',
+                                    borderTopStyle: 'solid',
+                                    borderBottomStyle: 'solid',
+                                    borderLeftWidth: '2px',
+                                    borderTopWidth: '2px',
+                                    borderRightWidth: '2px',
+                                    borderBottomWidth: '2px',
+                                    borderLeftColor: `grey`,
+                                    borderTopColor: `grey`,
+                                    borderRightColor: `grey`,
+                                    borderBottomColor: `grey`,
+                                    height: '47px',
+                                    padding: '20px 15px',
+                                    marginBottom: '10px',
+                                    borderRadius: '40px',
+                                    backgroundColor: '#BDE3FF',
+                                }
+                                )}>
+                                <LabelSmall color='black'>
+                                    Accepted Answer
+                                </LabelSmall>
+                            </Block>
+
+                    }
+                    
                     <Button overrides={{BaseButton: {style: {backgroundColor: backgroundColor, margin: '0'}}}} onClick={handleClick}>
                       <Block display={'flex'} flexDirection={'column'}>
                         🚀
                         <LabelMedium color={'black'} marginTop={'5px'}>{upvotes}</LabelMedium>
                       </Block>
                     </Button>
-                  </Block>
                 </Block>
-              </Block>
             </Cell>
             <Cell span={9}>
             <Block 
@@ -141,14 +156,10 @@ const QuestionItem: React.FC<{ item }> = ({ item }) => {
                       }
                     )}>
                       <Block margin="10px 20px">
-
-                  <StyledLink href={publicKey && `/forum/${publicKey}`} style={{textDecoration: 'none'}}>
-                      <LabelLarge color="black">{question.title}</LabelLarge>
-                  </StyledLink>
                       </Block>
                 <Block 
-                display={'flex'} flexDirection={'column'} justifyContent={'space-evenly'} height={"100%"}
-                className={css(
+                    display={'flex'} flexDirection={'column'} justifyContent={'space-evenly'} height={"100%"}
+                    className={css(
                       {
                         borderLeftWidth: '2px',
                         borderTopWidth: '2px',
@@ -160,7 +171,7 @@ const QuestionItem: React.FC<{ item }> = ({ item }) => {
                       }
                     )}>
                   <ParagraphSmall overrides={{Block:{style: {margin: '20px', color: 'black'}}}}>
-                    {question.content}
+                    {answer.content}
                   </ParagraphSmall>
                   </Block>
                 {/* <>
@@ -175,12 +186,6 @@ const QuestionItem: React.FC<{ item }> = ({ item }) => {
                     </Tag>
                 </> */}
                 <Block display={'flex'} justifyContent="space-around">
-                  <ParagraphSmall overrides={{Block:{style: {textAlign: 'right', color: 'white', backgroundColor: awardedColor, padding: '5px 10px', borderRadius: '15px'}}}}>
-                    {question.bountyAwarded ? "Awarded" : "Available"}
-                  </ParagraphSmall>
-                  <ParagraphSmall overrides={{Block:{style: {textAlign: 'right', color: 'black', backgroundColor: '#FCD19C', padding: '5px 10px', borderRadius: '15px'}}}}>
-                    Bounty: {question.bountyAmount / 10**9}
-                  </ParagraphSmall>
                   <ParagraphSmall overrides={{Block:{style: {textAlign: 'right', color: 'black', backgroundColor: '#FCD19C', padding: '5px 10px', borderRadius: '15px'}}}}>
                     {timeString}
                   </ParagraphSmall>
@@ -199,4 +204,4 @@ const QuestionItem: React.FC<{ item }> = ({ item }) => {
   );
 };
 
-export default QuestionItem;
+export default AnswerItem;

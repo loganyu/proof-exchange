@@ -274,6 +274,182 @@ export class ForumWalletClient {
         return stringifyPKsAndBNs(deleteQuestionInstance);
       }
 
+      async supplementQuestionBounty(questionPubkey, amount): Promise<any> {
+        const supplementalBountyAmount = new anchor.BN(amount);
+
+        const questionKey = new PublicKey(questionPubkey);
+        const questionAcct = await this.forumClient.fetchQuestionAccount(questionKey);
+        const questionSeed = questionAcct.questionSeed;
+        const forumKey = questionAcct.forum;
+        const userProfileKey = questionAcct.userProfile;
+
+        const userProfileAcct = await this.forumClient.fetchUserProfileAccount(userProfileKey);
+        const profileOwnerKey = userProfileAcct.profileOwner;
+
+        const supplementQuestionBountyInstance = await this.forumClient.supplementQuestionBounty(
+          forumKey,
+          this.forumClient.wallet.publicKey,
+          profileOwnerKey,
+          questionSeed,
+          supplementalBountyAmount,
+        );
+
+        return stringifyPKsAndBNs(supplementQuestionBountyInstance)
+      }
+
+      async acceptAnswer(questionPubkey, answerPubkey, receiverPubkey): Promise<any> {
+        const forumKey = new PublicKey(this.forumPubkey);
+        
+        const questionKey = new PublicKey(questionPubkey);
+        const questionAcct = await this.forumClient.fetchQuestionAccount(questionKey);
+        const questionSeed = questionAcct.questionSeed;
+
+        const answerKey = new PublicKey(answerPubkey);
+        const answerAcct = await this.forumClient.fetchAnswerAccount(answerKey);
+        const answerSeed = answerAcct.answerSeed;
+        const answerProfileOwnerKey = answerAcct.userProfile;
+
+        const receiverKey = new PublicKey(receiverPubkey);
+
+        const acceptAnswerInstance = await this.forumClient.acceptAnswer(
+          forumKey,
+          this.forumClient.wallet.publicKey,
+          answerProfileOwnerKey,
+          questionSeed,
+          answerSeed,
+          receiverKey,
+        );
+      
+        return stringifyPKsAndBNs(acceptAnswerInstance);
+      }
+
+      async answerQuestion(questionPubkey, content): Promise<any> {
+        const questionKey: PublicKey = new PublicKey(questionPubkey);
+
+        const answerInstance = await this.forumClient.answerQuestion(
+          questionKey,
+          this.forumClient.wallet.publicKey,
+          content,
+        );
+      
+        return stringifyPKsAndBNs(answerInstance);
+      }
+
+      async addToAnswer(answerPubkey, additionalAnswerContent): Promise<any> {
+        const answerKey = new PublicKey(answerPubkey);
+        const answerAcct = await this.forumClient.fetchAnswerAccount(answerKey);
+        // const forumKey: PublicKey = answerAcct.forum;
+        const forumKey = new PublicKey(this.forumPubkey);
+        const answerSeed = answerAcct.answerSeed;
+
+        const newContent: string[] = additionalAnswerContent;
+
+        const output = []
+        for (let i=0; i < newContent.length; i++) {
+          const addContentToQuestionInstance = await this.forumClient.addContentToQuestion(
+              forumKey,
+              this.forumClient.wallet.publicKey,
+              answerSeed,
+              newContent[i],
+          );
+          output.push(stringifyPKsAndBNs(addContentToQuestionInstance))
+        }
+
+        return output
+      }
+
+      async editAnswer(answerPubkey, content): Promise<any> {
+        const answerKey: PublicKey = new PublicKey(answerPubkey);
+        const answerAcct = await this.forumClient.fetchAnswerAccount(answerKey);
+        const forumKey = answerAcct.forum;
+        const answerSeed = answerAcct.answerSeed;
+
+        const newContent: string = content;
+
+        const editAnswerInstance = await this.forumClient.editAnswer(
+          forumKey,
+          this.forumClient.wallet.payer,
+          answerSeed,
+          newContent,
+        );
+
+        return stringifyPKsAndBNs(editAnswerInstance);
+      }
+
+      async deleteAnswer(answerPubkey, receiverPubkey): Promise<any> {
+        const receiverKey: PublicKey = receiverPubkey ? new PublicKey(receiverPubkey) : this.forumClient.wallet.publicKey;
+
+        const answerKey = new PublicKey(answerPubkey);
+        const answerAcct = await this.forumClient.fetchAnswerAccount(answerKey);
+        const forumKey = answerAcct.forum;
+        const answerSeed = answerAcct.answerSeed;
+        const userProfileKey = answerAcct.userProfile;
+
+        const userProfileAcct = await this.forumClient.fetchUserProfileAccount(userProfileKey);
+        const profileOwnerKey = userProfileAcct.profileOwner;
+
+        const deleteAnswerInstance = await this.forumClient.deleteAnswer(
+          forumKey,
+          this.forumClient.wallet.publicKey,
+          profileOwnerKey,
+          answerSeed,
+          receiverKey
+        );
+        return stringifyPKsAndBNs(deleteAnswerInstance);
+      }
+
+      async leaveComment(commentedOn, content): Promise<any> {
+        const forumKey = new PublicKey(this.forumPubkey);
+
+        const commentedOnKey: PublicKey = new PublicKey(commentedOn);
+
+        const commentInstance = await this.forumClient.leaveComment(
+          forumKey,
+          this.forumClient.wallet.publicKey,
+          commentedOnKey,
+          content,
+        );
+        console.log(stringifyPKsAndBNs(commentInstance));
+      }
+
+      async editComment(commentPubkey, newContent): Promise<any> {
+        const commentKey: PublicKey = new PublicKey(commentPubkey);
+        const commentAcct = await this.forumClient.fetchCommentAccount(commentKey);
+        const forumKey = commentAcct.forum;
+        const commentSeed = commentAcct.commentSeed;
+
+        const editCommentInstance = await this.forumClient.editComment(
+          forumKey,
+          this.forumClient.wallet.publicKey,
+          commentSeed,
+          newContent,
+        );
+        return stringifyPKsAndBNs(editCommentInstance);
+      }
+
+      async deleteComment(commentPubkey, receiverPubkey): Promise<any> {
+        const receiverKey: PublicKey = receiverPubkey ? new PublicKey(receiverPubkey) : this.forumClient.wallet.publicKey;
+
+        const commentKey = new PublicKey(commentPubkey);
+        const commentAcct = await this.forumClient.fetchCommentAccount(commentKey);
+        const forumKey = commentAcct.forum;
+        const commentSeed = commentAcct.commentSeed;
+        const userProfileKey = commentAcct.userProfile;
+
+        const userProfileAcct = await this.forumClient.fetchUserProfileAccount(userProfileKey);
+        const profileOwnerKey = userProfileAcct.profileOwner;
+
+        const deleteCommentInstance = await this.forumClient.deleteComment(
+          forumKey,
+          this.forumClient.wallet.publicKey,
+          profileOwnerKey,
+          commentSeed,
+          receiverKey
+        );
+
+        return stringifyPKsAndBNs(deleteCommentInstance);
+      }
+
       // -------------------------------------------------- PDA account fetching instructions ------------------------------------------
 
       async fetchAllForums(managerPubkey = ''): Promise<any> {
@@ -384,6 +560,21 @@ export class ForumWalletClient {
 
         console.log('Displaying account info for question with pubkey: ', questionKey.toBase58());
         return stringifyPKsAndBNs(questionPDA);
+      }
+
+      async fetchAllAnswersByQuestion(questionPubkey): Promise<any> {
+        const questionKey: PublicKey = new PublicKey(questionPubkey);
+
+        console.log('Fetching all answer PDAs for question account with pubkey: ', questionKey.toBase58());
+        const answerPDAs = await this.forumClient.fetchAllAnswerPDAsByQuestion(questionKey);
+
+        const output = []
+        // Loop over all PDAs and display account info
+        for (let num = 1; num <= answerPDAs.length; num++) {
+            output.push(stringifyPKsAndBNs(answerPDAs[num - 1]))
+        }
+
+        return output;
       }
 
       async fetchForumAuth(forumPubkey): Promise<any> {

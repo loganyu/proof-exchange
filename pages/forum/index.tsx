@@ -62,7 +62,7 @@ const QuestionIndex: React.FC = (props) => {
     const walletModal = useWalletModal();
     const { connection } = useConnection();
     const [forumWalletClient, setForumWalletClient] = React.useState<ForumWalletClient>(null)
-    const [loading, setLoading] = React.useState(false)
+    const [loading, setLoading] = React.useState(true)
 
     useEffect(() => {
         setLoading(true)
@@ -71,8 +71,6 @@ const QuestionIndex: React.FC = (props) => {
             let profiles = await forumWalletClient.fetchAllProfiles()
             setProfiles(profiles)
             setQuestions(questions)
-            console.log('questions', questions)
-            console.log('profiles', profiles)
         }
         if (forumWalletClient) {
             fetchQuestions()
@@ -107,7 +105,7 @@ const QuestionIndex: React.FC = (props) => {
     // }, [session])
 
 
-    const [currentPage, setCurrentPage] = React.useState(2);
+    // const [currentPage, setCurrentPage] = React.useState(2);
 
     async function navigate(path: string): Promise<void> {
         await Router.push(path);
@@ -153,7 +151,7 @@ const QuestionIndex: React.FC = (props) => {
                     </Block>
                     {/* <QuestionBanner></QuestionBanner> */}
                     {questions.reverse().map((question) => 
-                        <QuestionItem item={{question, profiles}}></QuestionItem>
+                        <QuestionItem item={{question: question.account, profiles, publicKey: question.publicKey}}></QuestionItem>
                     )}
                     {/* <Block display={"flex"} justifyContent={"center"}>
                         <Pagination
