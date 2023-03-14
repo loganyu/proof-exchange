@@ -87,10 +87,12 @@ const QuestionShow: React.FC<any> = (props) => {
         if (wallet.connected) {
             getUser()
             fetchQuestion()
-            setForumWalletClient(new ForumWalletClient(connection, wallet, new PublicKey(FORUM_PUB_KEY)))
+            if (!forumWalletClient){
+                setForumWalletClient(new ForumWalletClient(connection, wallet, new PublicKey(FORUM_PUB_KEY)))
+            }
         }
         setLoading(false)
-    }, [wallet.connected])
+    }, [wallet.connected, forumWalletClient])
 
     async function submitAnswer() {
         setLoadingSubmit(true)
