@@ -369,7 +369,7 @@ const ForumConsole: React.FC<Props> = (props) => {
               value={tags}
               onChange={({value}) => setTags(value)}
             />
-            <Button size={SIZE.mini} type="submit">ask-question</Button>
+            <Button size={SIZE.mini} type="submit">edit-question</Button>
           </form>
         </Block>
 
@@ -380,7 +380,7 @@ const ForumConsole: React.FC<Props> = (props) => {
             <Input placeholder='userProfileKey' name="userProfileKey"></Input>
             <Input placeholder='questionPubkey' name="questionPubkey"></Input>
             <Input placeholder='receiverPubkey' name="receiverPubkey"></Input>
-            <Button size={SIZE.mini} type="submit">ask-question</Button>
+            <Button size={SIZE.mini} type="submit">delete-question</Button>
           </form>
         </Block>
 
@@ -482,7 +482,7 @@ const ForumConsole: React.FC<Props> = (props) => {
             {/* @ts-ignore */}
           <form onSubmit={async (e) => {e.preventDefault(); setOutput(await forumWalletClient.fetchAllForums(e.target.managerPubkey.value)); setIsOpen(true)}}>
             <Input placeholder='managerPubkey' name="managerPubkey"></Input>
-            <Button size={SIZE.mini} type="submit">ask-question</Button>
+            <Button size={SIZE.mini} type="submit">fetch-all-forums</Button>
           </form>
         </Block>
 
