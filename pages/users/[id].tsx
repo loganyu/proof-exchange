@@ -73,6 +73,8 @@ const User: React.FC<{userId: string}> = (props) => {
   const { connection } = useConnection();
   const [forumWalletClient, setForumWalletClient] = React.useState<ForumWalletClient>(null)
   const [aboutMeText, setAboutMeText] = React.useState("");
+
+  const profilePic = `/bear${Number(props.userId.match(/\d+/)[0]) % 3}.png`
   
 
   useEffect(() => {
@@ -98,26 +100,27 @@ const User: React.FC<{userId: string}> = (props) => {
     }
 
     const getProfileUser = async () => {
+      let client = new ForumWalletClient(connection, wallet, new PublicKey(FORUM_PUB_KEY))
       const res = await fetch(`/api/user/${props.userId}`, {
         method: 'GET',
       });
-      const profileUser = await res.json()
+      let profileUser = await res.json()
+
       if (profileUser) {
         setProfileUser(profileUser)
-        if (profileUser) {
-          let client = new ForumWalletClient(connection, wallet, new PublicKey(FORUM_PUB_KEY))
-          const userProfile = await client.fetchProfileByOwner(profileUser.pubKey)
-          if (userProfile) {
-            let aboutMe = await client.fetchAboutMeByProfile(profileUser.profilePubkey)
-            if (aboutMe.length > 0) {
-              setAboutMe(aboutMe[0])
-              setAboutMeText(aboutMe[0].account.content)
-            }
-          }
-          setUserProfile(userProfile[0])
-        }
-        setLoading(false)
       }
+      let userProfile = await client.fetchProfileByOwner(props.userId)
+     
+      if (userProfile[0]) {
+        let aboutMe = await client.fetchAboutMeByProfile(userProfile[0].publicKey)
+        if (aboutMe.length > 0) {
+          setAboutMe(aboutMe[0])
+          setAboutMeText(aboutMe[0].account.content)
+        }
+        setUserProfile(userProfile[0])
+      }
+      setLoading(false)
+
       return profileUser
     }
     if (!userProfile) {
@@ -133,7 +136,7 @@ const User: React.FC<{userId: string}> = (props) => {
     } else {
       setUser(null)
     }
-  }, [session, wallet.connected])
+  }, [session, wallet.connected, userProfile])
 
   async function handleClickAboutMe() {
     setLoadingButton(true)
@@ -190,7 +193,8 @@ const User: React.FC<{userId: string}> = (props) => {
       )
     }
 
-    if ((!userProfile && !wallet.publicKey) || (wallet.publicKey && wallet.publicKey.toBase58() !== props.userId)) {
+    // if ((!userProfile && !wallet.publicKey) || (wallet.publicKey && wallet.publicKey.toBase58() !== props.userId)) {
+    if (!userProfile) {
       return (
         <Main>
           <Cell span={5}>
@@ -217,7 +221,7 @@ const User: React.FC<{userId: string}> = (props) => {
                 <AspectRatioBox>
                   <AspectRatioBoxBody
                     as="img"
-                    src="/pfp.png"
+                    src={profilePic}
                     display="flex"
                     alignItems="center"
                     justifyContent="space-evenly"
@@ -302,7 +306,7 @@ const User: React.FC<{userId: string}> = (props) => {
               <StyledDivider $size={STYLE_SIZE.section} />
               <HeadingMedium overrides={{Block:{style: {color: 'black'}}}}>About</HeadingMedium>
               <Textarea
-                overrides={{Input: {style: {backgroundColor: '#E4CCFF', color: 'black'}}}}
+                overrides={{Input: {style: {backgroundColor: '#E4CCFF', color: 'black', height: '215px'}}}}
                 value={aboutMeText}
                 placeholder={wallet.publicKey && wallet.publicKey.toBase58() === props.userId && 'Tell everyone about yourself.'}
                 clearOnEscape

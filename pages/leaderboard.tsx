@@ -58,6 +58,25 @@ const ROW = {
 
 const DATA = Array.from(new Array(20)).fill(ROW);
 
+function levelByPoints(points) {
+  switch(true) {
+    case (points < 800):
+      return "Noob"
+    case (points < 2000):
+      return "Maxi"
+    case (points < 3600):
+      return "Ape"
+    case (points < 5600):
+        return "Degen"
+    case (points < 8000):
+        return "Chad"
+    case (points < 1000):
+      return "Master"
+    default:
+      return "The 75"
+  }
+}
+
 function AvatarCell({
     src,
     title,
@@ -236,25 +255,27 @@ const Leaderboard: React.FC = () => {
                     data={profiles}
                 >
                     <TableBuilderColumn<any> header="Name">
-                        {(row) => (
-                        <AvatarCell
-                            src={"/pfp.png"}
-                            title={row.account.profileOwner}
-                            subtitle={row.account.profileOwner}
-                        />
-                        )}
+                        {(row) => {
+                          let profilePic = `/bear${Number(row.account.profileOwner.match(/\d+/)[0]) % 3}.png`
+                          return (
+                            <AvatarCell
+                                src={profilePic}
+                                title={row.account.profileOwner}
+                                subtitle={row.account.profileOwner}
+                            />
+                        )}}
                     </TableBuilderColumn>
                     <TableBuilderColumn<any> header="Reputation Points">
                         {(row) => <div style={{'color': 'black'}}>{row.account.reputationScore}</div> }
                     </TableBuilderColumn>
                     <TableBuilderColumn<any> header="Reputation Level">
-                        {(row) => <div style={{'color': 'black'}}>The 75</div> }
+                        {(row) => <div style={{'color': 'black'}}>{levelByPoints(row.account.reputationScore)}</div> }
                     </TableBuilderColumn>
                     <TableBuilderColumn<any> header="Total Engagements">
                         {(row) => <div style={{'color': 'black'}}>{Number(row.account.questionsAnswered) + Number(row.account.questionsAsked) + Number(row.account.commentsAdded) + Number(row.account.bigNotesPosted)}</div> }
                     </TableBuilderColumn>
                     <TableBuilderColumn<any> header="Bounties">
-                        {(row) => <div style={{'color': 'black'}}>{row.account.totalBountyReceived} USD</div> }
+                        {(row) => <div style={{'color': 'black'}}>${row.account.totalBountyReceived.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")}</div> }
                     </TableBuilderColumn>
                     </TableBuilder>
                  </Block>
