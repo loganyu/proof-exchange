@@ -258,11 +258,14 @@ const Leaderboard: React.FC = () => {
                         {(row) => {
                           let profilePic = `/bear${Number(row.account.profileOwner.match(/\d+/)[0]) % 3}.png`
                           return (
-                            <AvatarCell
-                                src={profilePic}
-                                title={row.account.profileOwner}
-                                subtitle={row.account.profileOwner}
-                            />
+
+                            <a href={`/users/${row.account.profileOwner}`}>
+                              <AvatarCell
+                                  src={profilePic}
+                                  title={row.account.profileOwner}
+                                  subtitle={row.account.profileOwner}
+                              />
+                            </a>
                         )}}
                     </TableBuilderColumn>
                     <TableBuilderColumn<any> header="Reputation Points">
