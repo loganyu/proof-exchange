@@ -55,7 +55,7 @@ function Footer() {
         {/* <StyledLink href="https://github.com/uber/baseweb" target="_blank">
           GitHub
         </StyledLink> */}
-        <StyledLink href="https://twitter.com/proof_protocol" target="_blank">
+        <StyledLink href="https://twitter.com/xAndriaOnchain" target="_blank">
           Twitter
         </StyledLink>
         <StyledLink
