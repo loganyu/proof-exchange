@@ -7,10 +7,10 @@ This web application provides the user experience for interacting with the DeEdi
 The web application is build with Next.js, Postgresql, and Vercel.
 
 # Live site
-https://proof-exchange.vercel.app/
+https://xandriaonchain.vercel.app/
 
 # DeEdIT SDK
 The repository and details on the protocol are here: https://github.com/SolCharms/DeEdIT_SDK
 
 To interact with the protocol without using the CLI, use the interface on the web application:
-https://proof-exchange.vercel.app/forum-console
+https://xandriaonchain.vercel.app/forum-console
