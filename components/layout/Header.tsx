@@ -119,7 +119,9 @@ const Nav: React.FC<Props> = () => {
                 },
               })}
             >
-              PR◎◎F
+              <Block padding="12px 20px" backgroundColor={'#E4CCFF'} overrides={{Block: {style: {borderRadius: '15px'}}}}>
+                PR◎◎F
+              </Block>
               {/* <img
                 src={theme.name.startsWith('dark') ? LightLogo : DarkLogo}
                 alt="Base Web"
@@ -431,7 +433,9 @@ const Navigation: React.FC<Props> = () => (
       </StyledNavigationList>
       <StyledNavigationList $align={ALIGN.center}>
         <StyledNavigationItem>
-          PR◎◎F
+          <Block padding="20px" backgroundColor={'#E4CCFF'}>
+            PR◎◎F
+          </Block>
         </StyledNavigationItem>
       </StyledNavigationList>
       <StyledNavigationList $align={ALIGN.right}>
