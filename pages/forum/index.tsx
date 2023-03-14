@@ -65,7 +65,7 @@ const QuestionIndex: React.FC = (props) => {
     const [loading, setLoading] = React.useState(true)
     const [sortField, setSortField] = React.useState('questionPostedTs')
     const [filterField, setFilterField] = React.useState('')
-    const [sortDir, setSortDir] = React.useState(1)
+    const [sortDir, setSortDir] = React.useState(-1)
 
     useEffect(() => {
         setLoading(true)
@@ -83,6 +83,9 @@ const QuestionIndex: React.FC = (props) => {
         }
         setLoading(false)
     }, [wallet.connected, forumWalletClient])
+
+    let sortColor = sortDir != 1 ? '#9747FF' : '#E4CCFF'
+    let filterColor = '#FFA629'
 
     if (loading) {
         return (
@@ -106,17 +109,17 @@ const QuestionIndex: React.FC = (props) => {
                     <Block display={'flex'} paddingBottom={'10px'} justifyContent='end'>
                         <Block display={'flex'} justifyContent='end' padding={'10px 0'}>
                             <ButtonGroup >
-                                <Button overrides={{BaseButton: {style: {backgroundColor: filterField === 'day' ? '#9747FF' : '#333333'}}}}
+                                <Button overrides={{BaseButton: {style: {backgroundColor: filterField === 'day' ? filterColor : '#333333'}}}}
                                     isLoading>D</Button>
-                                <Button overrides={{BaseButton: {style: {backgroundColor: filterField === 'week' ? '#9747FF' : '#333333'}}}}
+                                <Button overrides={{BaseButton: {style: {backgroundColor: filterField === 'week' ? filterColor : '#333333'}}}}
                                     isLoading>W</Button>
-                                <Button overrides={{BaseButton: {style: {backgroundColor: filterField === 'month' ? '#9747FF' : '#333333'}}}}
+                                <Button overrides={{BaseButton: {style: {backgroundColor: filterField === 'month' ? filterColor : '#333333'}}}}
                                     isLoading>M</Button>
-                                <Button overrides={{BaseButton: {style: {backgroundColor: sortField === 'mostRecentEngagementTs' ? '#FFA629' : '#333333'}}}}
+                                <Button overrides={{BaseButton: {style: {backgroundColor: sortField === 'mostRecentEngagementTs' ? sortColor : '#333333'}}}}
                                     isLoading>Hot</Button>
-                                <Button overrides={{BaseButton: {style: {backgroundColor: sortField === 'bountyAmount' ? '#FFA629' : '#333333'}}}}
+                                <Button overrides={{BaseButton: {style: {backgroundColor: sortField === 'bountyAmount' ? sortColor : '#333333'}}}}
                                     isLoading>Bounty</Button>
-                                <Button overrides={{BaseButton: {style: {backgroundColor: sortField === 'bountyAwarded' ? '#FFA629' : '#333333'}}}}
+                                <Button overrides={{BaseButton: {style: {backgroundColor: sortField === 'bountyAwarded' ? sortColor : '#333333'}}}}
                                     isLoading>Awarded</Button>
                             </ButtonGroup>
                         </Block>
@@ -168,9 +171,9 @@ const QuestionIndex: React.FC = (props) => {
         }
 
         if (Number(a.account[sortField]) < Number(b.account[sortField])) {
-            return 1 * sortDir
-        } else if (Number(a.account[sortField]) > Number(b.account[sortField])){
             return -1 * sortDir
+        } else if (Number(a.account[sortField]) > Number(b.account[sortField])){
+            return 1 * sortDir
         } else {
             return 0
         }
@@ -204,11 +207,15 @@ const QuestionIndex: React.FC = (props) => {
         }
     }
 
-    async function handleClickSort(sortField) {
+    async function handleClickSort(field) {
         setLoading(true)
-        setSortDir(sortDir * -1)
+        if (sortField === field) {
+            setSortDir(sortDir * -1)
+        } else {
+            setSortDir(-1)
+        }
         setTimeout(() => {
-            setSortField(sortField)
+            setSortField(field)
             setLoading(false)
         }, 1000)
     }
@@ -246,17 +253,17 @@ const QuestionIndex: React.FC = (props) => {
                     <Block display={'flex'} paddingBottom={'10px'} justifyContent='end'>
                         <Block display={'flex'} justifyContent='end' padding={'10px 0'}>
                             <ButtonGroup>
-                            <Button overrides={{BaseButton: {style: {backgroundColor: filterField === 'day' ? '#9747FF' : '#333333'}}}}
+                            <Button overrides={{BaseButton: {style: {backgroundColor: filterField === 'day' ? filterColor : '#333333'}}}}
                                     onClick={() => handleClickFilter('day')}>D</Button>
-                                <Button overrides={{BaseButton: {style: {backgroundColor: filterField === 'week' ? '#9747FF' : '#333333'}}}}
+                                <Button overrides={{BaseButton: {style: {backgroundColor: filterField === 'week' ? filterColor : '#333333'}}}}
                                     onClick={() => handleClickFilter('week')}>W</Button>
-                                <Button overrides={{BaseButton: {style: {backgroundColor: filterField === 'month' ? '#9747FF' : '#333333'}}}}
+                                <Button overrides={{BaseButton: {style: {backgroundColor: filterField === 'month' ? filterColor : '#333333'}}}}
                                     onClick={() => handleClickFilter('month')}>M</Button>
-                                <Button overrides={{BaseButton: {style: {backgroundColor: sortField === 'mostRecentEngagementTs' ? '#FFA629' : '#333333'}}}}
+                                <Button overrides={{BaseButton: {style: {backgroundColor: sortField === 'mostRecentEngagementTs' ? sortColor : '#333333'}}}}
                                     onClick={() => handleClickSort('mostRecentEngagementTs')}>Hot</Button>
-                                <Button overrides={{BaseButton: {style: {backgroundColor: sortField === 'bountyAmount' ? '#FFA629' : '#333333'}}}}
+                                <Button overrides={{BaseButton: {style: {backgroundColor: sortField === 'bountyAmount' ? sortColor : '#333333'}}}}
                                     onClick={() => handleClickSort('bountyAmount')}>Bounty</Button>
-                                <Button overrides={{BaseButton: {style: {backgroundColor: sortField === 'bountyAwarded' ? '#FFA629' : '#333333'}}}}
+                                <Button overrides={{BaseButton: {style: {backgroundColor: sortField === 'bountyAwarded' ? sortColor : '#333333'}}}}
                                     onClick={() => handleClickSort('bountyAwarded')}>Awarded</Button>
                             </ButtonGroup>
                         </Block>
