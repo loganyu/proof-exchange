@@ -214,6 +214,26 @@ const Nav: React.FC<Props> = () => {
             },
           })}
         >
+          
+          <Link href="/leaderboard" passHref>
+            <Button
+              $as="a"
+              size={SIZE.compact}
+              kind={KIND.tertiary}
+              overrides={{
+                BaseButton: {
+                  style: {
+                    display: 'none',
+                    [mq(1000)]: {
+                      display: 'block',
+                    },
+                  },
+                },
+              }}
+            >
+              Leaderboard
+            </Button>
+          </Link>
           <Link href="/forum" passHref>
             <Button
               $as="a"
@@ -250,25 +270,6 @@ const Nav: React.FC<Props> = () => {
               }}
             >
               xAndria
-            </Button>
-          </Link>
-          <Link href="/leaderboard" passHref>
-            <Button
-              $as="a"
-              size={SIZE.compact}
-              kind={KIND.tertiary}
-              overrides={{
-                BaseButton: {
-                  style: {
-                    display: 'none',
-                    [mq(1000)]: {
-                      display: 'block',
-                    },
-                  },
-                },
-              }}
-            >
-              Leaderboard
             </Button>
           </Link>
           {/* Discord */}
