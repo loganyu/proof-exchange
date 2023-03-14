@@ -46,7 +46,11 @@ const QuestionShow: React.FC<any> = (props) => {
     // const [currentPage, setCurrentPage] = React.useState(2);
     const [profiles, setProfiles] = useState([])
     const [question, setQuestion] = useState(null)
-    const [comments, setComments] = useState(['hi that is great', 'I am not sure about that', 'try to do it again'])
+    const [comments, setComments] = React.useState([
+        'That is interesting. I have not run into this issue before.',
+        'Were you able to find a solution? Can you provide any more information?',
+        'Great question. I am also interested in knowing. Following'
+    ])
     const [answers, setAnswers] = useState([])
     const [loading, setLoading] = React.useState(true)
     const [loadingSubmit, setLoadingSubmit] = React.useState(false)
@@ -128,6 +132,7 @@ const QuestionShow: React.FC<any> = (props) => {
     }
 
     async function submitComment() {
+        setLoadingSubmit(true)
         if (!wallet.connected) {
             walletModal.setVisible(true);
         } else {
@@ -198,7 +203,8 @@ const QuestionShow: React.FC<any> = (props) => {
                     />
                     <Button overrides={{BaseButton: {style: {backgroundColor: '#9747FF', color: 'white', marginTop: '10px'}}}}
                         disabled={commentInput.length < 10}
-                        onSubmit={submitComment}>
+                        isLoading={loadingSubmit}
+                        onClick={submitComment}>
                         Add Comment
                     </Button>
                 </Block>

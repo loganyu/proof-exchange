@@ -1,13 +1,15 @@
 import React from "react";
+import { useState, useEffect } from "react"
 import Router from "next/router";
 import ReactMarkdown from "react-markdown";
 
 import { GetServerSideProps } from 'next';
-import Link from 'next/link'
+import Link from 'next/link';
 
 
 import {Grid, Cell, BEHAVIOR} from 'baseui/layout-grid';
 import {Block} from 'baseui/block';
+import { Textarea } from "baseui/textarea";
 import { ButtonGroup } from "baseui/button-group";
 import { Button } from "baseui/button";
 import {StyledDivider, SIZE} from 'baseui/divider';
@@ -38,15 +40,21 @@ import { StyledLink } from "baseui/link";
 import {ListItem, ListItemLabel} from 'baseui/list';
 import {useStyletron} from 'baseui';
 import { useWallet } from "@solana/wallet-adapter-react";
-import { useEffect } from "react"
+import { useWalletModal } from "@solana/wallet-adapter-react-ui";
 
 const AnswerItem: React.FC<{ item }> = ({ item }) => {
     const [upvotes, setUpvotes] = React.useState(Math.floor(Math.random()*50));
     const [clicked, setClicked] = React.useState(upvotes % 2 === 0);
-    const [comments, setComments] = React.useState(['hi that is great', 'I am not sure about that', 'try to do it again'])
+    const walletModal = useWalletModal();
+    const [comments, setComments] = React.useState([
+        'That is interesting. I have not run into this issue before.',
+        'Were you able to find a solution? Can you provide any more information?',
+        'Great question. I am also interested in knowing. Following'
+    ])
     const [commentInput, setCommentInput] = React.useState("");
     const [showComment, setShowComment] = React.useState(false);
     const wallet = useWallet();
+    const [loadingSubmit, setLoadingSubmit] = React.useState(false)
     const { publicKey, answer, profiles, question, user, forumWalletClient, questionPubkey } = item;
     const blockStyles = {
         borderLeftWidth: '2px',
@@ -81,6 +89,21 @@ const AnswerItem: React.FC<{ item }> = ({ item }) => {
   async function acceptAnswer() {
     forumWalletClient.acceptAnswer(questionPubkey, publicKey, ownerKey)
   }
+
+  async function submitComment() {
+    setLoadingSubmit(true)
+    if (!wallet.connected) {
+        walletModal.setVisible(true);
+    } else {
+        try {
+            await forumWalletClient.leaveComment(publicKey, commentInput)
+        location.reload()
+        } catch (e) {
+            console.log('failed', e)
+        }
+        }
+        setLoadingSubmit(false)
+    }
   
 
   const ownerKey = getOwner(answer.userProfile)
@@ -105,7 +128,7 @@ const AnswerItem: React.FC<{ item }> = ({ item }) => {
                 <Block display={'flex'} flexDirection={'column'} justifyContent={'center'} alignItems="center" height={"100%"}>
                     { user && !question.bountyAwarded && user.profilePubkey === question.userProfile &&
                         <Block margin={"20px"} display='flex' flexDirection={'column'} justifyContent='center'>
-                            <Button onClick={acceptAnswer} overrides={{BaseButton: {style: {backgroundColor: '#FFA629', color: 'black'}}}}>
+                            <Button isLoading={loadingSubmit} onClick={acceptAnswer} overrides={{BaseButton: {style: {backgroundColor: '#FFA629', color: 'black'}}}}>
                                 Accept Answer
                             </Button>
                         </Block>
@@ -142,7 +165,7 @@ const AnswerItem: React.FC<{ item }> = ({ item }) => {
                             </Block>
                     }
                     
-                    <Button overrides={{BaseButton: {style: {backgroundColor: backgroundColor, margin: '0'}}}} onClick={handleClick}>
+                    <Button isLoading={loadingSubmit} overrides={{BaseButton: {style: {backgroundColor: backgroundColor, margin: '0'}}}} onClick={handleClick}>
                       <Block display={'flex'} flexDirection={'column'}>
                         🚀
                         <LabelMedium color={'black'} marginTop={'5px'}>{upvotes}</LabelMedium>
@@ -216,6 +239,22 @@ const AnswerItem: React.FC<{ item }> = ({ item }) => {
                 {comment}
             </>
         )}
+        <StyledDivider $size={SIZE.cell} />
+        <StyledLink hidden={showComment} onClick={() => setShowComment(true)}>
+            Add Comment
+        </StyledLink>
+        <Block hidden={!showComment}>
+            <Textarea
+                value={commentInput}
+                onChange={e => setCommentInput(e.target.value)}
+                clearOnEscape
+            />
+            <Button overrides={{BaseButton: {style: {backgroundColor: '#9747FF', color: 'white', marginTop: '10px'}}}}
+                disabled={commentInput.length < 10}
+                onClick={submitComment}>
+                Add Comment
+            </Button>
+        </Block>
     </Block>
   );
 };
