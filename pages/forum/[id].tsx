@@ -86,11 +86,11 @@ const QuestionShow: React.FC<any> = (props) => {
 
         if (wallet.connected) {
             getUser()
-            fetchQuestion()
             if (!forumWalletClient){
                 setForumWalletClient(new ForumWalletClient(connection, wallet, new PublicKey(FORUM_PUB_KEY)))
             }
         }
+        fetchQuestion()
         setLoading(false)
     }, [wallet.connected, forumWalletClient])
 
@@ -122,7 +122,7 @@ const QuestionShow: React.FC<any> = (props) => {
     }
 
 
-    if (loading || profiles.length === 0) {
+    if (loading) {
         return (
             <Main>
                 <Cell span={9}>
