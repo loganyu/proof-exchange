@@ -39,8 +39,10 @@ import {ListItem, ListItemLabel} from 'baseui/list';
 import {useStyletron} from 'baseui';
 
 const QuestionItem: React.FC<{ item }> = ({ item }) => {
-    const [upvotes, setUpvotes] = React.useState(Math.floor(Math.random()*50));
-    const [clicked, setClicked] = React.useState(upvotes % 2 === 0);
+    // const [upvotes, setUpvotes] = React.useState(Math.floor(Math.random()*50));
+    const [upvotes, setUpvotes] = React.useState(0);
+    // const [clicked, setClicked] = React.useState(upvotes % 2 === 0);
+    const [clicked, setClicked] = React.useState(false);
     const { question, profiles, publicKey } = item;
     const blockStyles = {
         borderLeftWidth: '2px',
