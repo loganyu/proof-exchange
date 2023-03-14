@@ -168,7 +168,6 @@ const ForumConsole: React.FC<Props> = (props) => {
     if (wallet.connected) {
      setForumWalletClient(new ForumWalletClient(connection, wallet, forumPubkey))
     } 
-    console.log(session)
   }, [wallet.connected, session.status, forumPubkey]);
 
   // if (!wallet.connected || status === 'unauthenticated') {
@@ -507,7 +506,7 @@ const ForumConsole: React.FC<Props> = (props) => {
         <Block overrides={{Block: {style: {...blockStyles}}}}>
           <LabelSmall>Fetch Profile By Key</LabelSmall>
             {/* @ts-ignore */}
-          <form onSubmit={async (e) => {e.preventDefault(); setOutput(await forumWalletClient.fetchUserProfileAccount(e.target.userProfilePubkey.value)); setIsOpen(true)}}>
+          <form onSubmit={async (e) => {e.preventDefault(); setOutput(await forumWalletClient.fetchProfileByKey(e.target.userProfilePubkey.value)); setIsOpen(true)}}>
             <Input placeholder='userProfilePubkey' name="userProfilePubkey"></Input>
             <Button size={SIZE.mini} type="submit">fetch-profile-by-key</Button>
           </form>
@@ -564,6 +563,15 @@ const ForumConsole: React.FC<Props> = (props) => {
           <form onSubmit={async (e) => {e.preventDefault(); setOutput(await forumWalletClient.fetchAllAnswersByQuestion(e.target.questionPubkey.value)); setIsOpen(true)}}>
             <Input placeholder='questionPubkey' name="questionPubkey"></Input>
             <Button size={SIZE.mini} type="submit">fetch-all-answers-by-question</Button>
+          </form>
+        </Block>
+
+        <Block overrides={{Block: {style: {...blockStyles}}}}>
+          <LabelSmall>Fetch All Comments By Account</LabelSmall>
+            {/* @ts-ignore */}
+          <form onSubmit={async (e) => {e.preventDefault(); setOutput(await forumWalletClient.fetchAllCommentsByAccount(e.target.accountPubkey.value)); setIsOpen(true)}}>
+            <Input placeholder='accountPubkey' name="accountPubkey"></Input>
+            <Button size={SIZE.mini} type="submit">fetch-all-comments-by-account</Button>
           </form>
         </Block>
 

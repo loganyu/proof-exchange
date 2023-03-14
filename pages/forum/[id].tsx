@@ -13,6 +13,7 @@ import { useState, useEffect } from "react"
 import {StyledDivider, SIZE} from 'baseui/divider';
 import { Connection, SystemProgram, Transaction, Keypair, PublicKey } from "@solana/web3.js";
 import { Textarea } from "baseui/textarea";
+import { StyledLink } from "baseui/link";
 import {
     HeadingXXLarge,
     HeadingXLarge,
@@ -45,6 +46,7 @@ const QuestionShow: React.FC<any> = (props) => {
     // const [currentPage, setCurrentPage] = React.useState(2);
     const [profiles, setProfiles] = useState([])
     const [question, setQuestion] = useState(null)
+    const [comments, setComments] = useState(['hi that is great', 'I am not sure about that', 'try to do it again'])
     const [answers, setAnswers] = useState([])
     const [loading, setLoading] = React.useState(false)
     const [loadingSubmit, setLoadingSubmit] = React.useState(false)
@@ -54,6 +56,8 @@ const QuestionShow: React.FC<any> = (props) => {
     const walletModal = useWalletModal();
     const { connection } = useConnection();
     const [user, setUser] = useState(null)
+    const [commentInput, setCommentInput] = React.useState("");
+    const [showComment, setShowComment] = React.useState(false);
 
     const isBase58 = value => /^[A-HJ-NP-Za-km-z1-9]*$/.test(value);
 
@@ -77,11 +81,13 @@ const QuestionShow: React.FC<any> = (props) => {
         const fetchQuestion = async () => {
             let client = new ForumWalletClient(connection, wallet, new PublicKey(FORUM_PUB_KEY))
             let question = await client.fetchQuestionByKey(props.questionPubkey)
+            let comments = await client.fetchAllCommentsByAccount(props.questionPubkey)
             let answers = await client.fetchAllAnswersByQuestion(props.questionPubkey)
             let profiles = await client.fetchAllProfiles()
             setProfiles(profiles)
             setAnswers(answers)
             setQuestion(question)
+            // setComments(comments)
         }
 
         if (wallet.connected) {
@@ -121,6 +127,32 @@ const QuestionShow: React.FC<any> = (props) => {
         setLoadingSubmit(false)
     }
 
+    async function submitComment() {
+        if (!wallet.connected) {
+            walletModal.setVisible(true);
+        } else {
+            try {
+            if (!user) {
+                // create user
+                const profileInstance = await forumWalletClient.createProfile()
+                const body = { uid: wallet.publicKey.toBase58(), pid: profileInstance.userProfile};
+                const res = await fetch('/api/user', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(body),
+                });
+                const newUser = await res.json()
+                setUser(newUser)
+            }
+            await forumWalletClient.leaveComment(props.questionPubkey, commentInput)
+            location.reload()
+            } catch (e) {
+                console.log('failed', e)
+            }
+        }
+        setLoadingSubmit(false)
+    }
+
 
     if (loading) {
         return (
@@ -146,12 +178,34 @@ const QuestionShow: React.FC<any> = (props) => {
         <Main>
             <Cell span={8}>
                 <QuestionItem item={{question, profiles}}></QuestionItem>
+                {comments.map((comment) => 
+                        <>
+                            <StyledDivider $size={SIZE.cell} />
+                            {comment}
+                        </>
+                )}
+                <StyledDivider $size={SIZE.cell} />
+                <StyledLink hidden={showComment} onClick={() => setShowComment(true)}>
+                    Add Comment
+                </StyledLink>
+                <Block hidden={!showComment}>
+                    <Textarea
+                        value={commentInput}
+                        onChange={e => setCommentInput(e.target.value)}
+                        clearOnEscape
+                    />
+                    <Button overrides={{BaseButton: {style: {backgroundColor: '#9747FF', color: 'white'}}}}
+                        disabled={commentInput.length < 10}
+                        onSubmit={submitComment}>
+                        Add Comment
+                    </Button>
+                </Block>
                 <HeadingSmall>{answers.length} Answers</HeadingSmall>
                 <StyledDivider $size={SIZE.cell} />
-                {answers.map((answer) => 
+                {answers.map((answer) =>
                     <>
-                        <AnswerItem item={{publicKey: answer.publicKey, questionPubkey: props.questionPubkey, answer: answer.account, profiles, question, user, forumWalletClient}}></AnswerItem>
-                        <StyledDivider $size={SIZE.cell} />
+                        <AnswerItem item={{ publicKey: answer.publicKey, questionPubkey: props.questionPubkey, answer: answer.account, profiles, question, user, forumWalletClient }}></AnswerItem>
+                        <StyledDivider $size={SIZE.module} />
                     </>
                 )}
                 <Block marginBottom={'30px'}>
@@ -163,9 +217,10 @@ const QuestionShow: React.FC<any> = (props) => {
                                 onChange={e => setAnswer(e.target.value)}
                                 placeholder=""
                                 clearOnEscape
-                                />
+                            />
                             <Block marginTop={'10px'} display="flex" justifyContent={'end'}>
-                                <Button isLoading={loadingSubmit} disabled={!answer} onClick={submitAnswer}>Post Your Answer</Button>
+                            <Button overrides={{BaseButton: {style: {backgroundColor: '#9747FF', color: 'white'}}}}
+                                isLoading={loadingSubmit} disabled={!answer} onClick={submitAnswer}>Post Your Answer</Button>
                             </Block>
                         </Cell>
                     </Grid>

@@ -45,8 +45,10 @@ const AnswerInput: React.FC<{ item }> = ({ item }) => {
                     placeholder=""
                     clearOnEscape
                     />
-                <Block marginTop={'10px'} display="flex" justifyContent={'end'}>
-                    <Button>Post Your Answer</Button>
+                  <Block marginTop={'10px'} display="flex" justifyContent={'end'}>
+                    <Button overrides={{BaseButton: {style: {backgroundColor: '#9747FF', color: 'white'}}}}>
+                      Post Your Answer
+                  </Button>
                 </Block>
             </Cell>
         </Grid>

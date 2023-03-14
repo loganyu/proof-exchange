@@ -11,12 +11,12 @@ import {Block} from 'baseui/block';
 import { ButtonGroup } from "baseui/button-group";
 import { Button } from "baseui/button";
 import { ArrowUp } from "baseui/icon";
+import {StyledDivider, SIZE } from 'baseui/divider';
 import {
   Card,
   StyledBody,
   StyledAction
 } from "baseui/card";
-import {Tag, SIZE} from 'baseui/tag';
 import {
   AspectRatioBox,
   AspectRatioBoxBody,
@@ -64,8 +64,45 @@ const QuestionItem: React.FC<{ item }> = ({ item }) => {
     return ""
   }
 
+  const units: {unit: Intl.RelativeTimeFormatUnit; ms: number}[] = [
+    {unit: "year", ms: 31536000000},
+    {unit: "month", ms: 2628000000},
+    {unit: "day", ms: 86400000},
+    {unit: "hour", ms: 3600000},
+    {unit: "minute", ms: 60000},
+    {unit: "second", ms: 1000},
+];
+const rtf = new Intl.RelativeTimeFormat("en", {numeric: "auto"});
+
+/**
+ * Get language-sensitive relative time message from Dates.
+ * @param relative  - the relative dateTime, generally is in the past or future
+ * @param pivot     - the dateTime of reference, generally is the current time
+ */
+function relativeTimeFromDates(relative: Date | null, pivot: Date = new Date()): string {
+    if (!relative) return "";
+    const elapsed = relative.getTime() - pivot.getTime();
+    return relativeTimeFromElapsed(elapsed);
+}
+
+/**
+ * Get language-sensitive relative time message from elapsed time.
+ * @param elapsed   - the elapsed time in milliseconds
+ */
+function relativeTimeFromElapsed(elapsed: number): string {
+    for (const {unit, ms} of units) {
+        if (Math.abs(elapsed) >= ms || unit === "second") {
+            return rtf.format(Math.round(elapsed / ms), unit);
+        }
+    }
+    return "";
+}
+
   const ownerKey = getOwner(question.userProfile)
-  const timeString = new Date(question.questionPostedTs * 1000).toISOString().slice(0, 19).replace('T', ' ');
+  // const timeString = new Date(question.questionPostedTs * 1000).toISOString().slice(0, 19).replace('T', ' ');
+  const timeString = relativeTimeFromDates(new Date(question.questionPostedTs * 1000));
+  // const engagementString = new Date(question.mostRecentEngagementTs * 1000).toISOString().slice(0, 19).replace('T', ' ');
+  const engagementString = relativeTimeFromDates(new Date(question.mostRecentEngagementTs * 1000));
   const awardedColor = question.bountyAwarded ? "gray" : "green"
   let backgroundColor = clicked ? '#9747FF' : '#FCD19C' 
 
@@ -140,12 +177,21 @@ const QuestionItem: React.FC<{ item }> = ({ item }) => {
                         backgroundColor: '#BDE3FF',
                       }
                     )}>
-                      <Block margin="10px 20px">
 
-                  <StyledLink href={publicKey && `/forum/${publicKey}`} style={{textDecoration: 'none'}}>
-                      <LabelLarge color="black">{question.title}</LabelLarge>
-                  </StyledLink>
+                      <Block margin="10px 20px" display='flex' justifyContent={'space-between'} alignItems='center'>
+
+                        <StyledLink href={publicKey && `/forum/${publicKey}`} style={{textDecoration: 'none'}}>
+                            <LabelLarge color="black">{question.title}</LabelLarge>
+                        </StyledLink>
+                        <a href={`/users/${ownerKey}`}>
+                          <ParagraphSmall overrides={{Block:{style: {textAlign: 'right', color: 'black', backgroundColor: '#E4CCFF', padding: '5px 10px', borderRadius: '15px'}}}}>
+                            {ownerKey.slice(0, 4)}..{ownerKey.slice(-4)}
+                          </ParagraphSmall>
+                        </a>
+
                       </Block>
+                      
+                      
                 <Block 
                 display={'flex'} flexDirection={'column'} justifyContent={'space-evenly'} height={"100%"}
                 className={css(
@@ -182,13 +228,11 @@ const QuestionItem: React.FC<{ item }> = ({ item }) => {
                     Bounty: {question.bountyAmount / 10**9}
                   </ParagraphSmall>
                   <ParagraphSmall overrides={{Block:{style: {textAlign: 'right', color: 'black', backgroundColor: '#FCD19C', padding: '5px 10px', borderRadius: '15px'}}}}>
-                    {timeString}
+                    created: {timeString}
                   </ParagraphSmall>
-                  <a href={`/users/${ownerKey}`}>
-                    <ParagraphSmall overrides={{Block:{style: {textAlign: 'right', color: 'black', backgroundColor: '#E4CCFF', padding: '5px 10px', borderRadius: '15px'}}}}>
-                      {ownerKey.slice(0, 4)}..{ownerKey.slice(-4)}
-                    </ParagraphSmall>
-                  </a>
+                  <ParagraphSmall overrides={{Block:{style: {textAlign: 'right', color: 'black', backgroundColor: '#FCD19C', padding: '5px 10px', borderRadius: '15px'}}}}>
+                    updated: {engagementString}
+                  </ParagraphSmall>
                 </Block>
                 </Block>
             </Cell>

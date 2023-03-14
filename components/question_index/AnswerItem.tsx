@@ -10,13 +10,13 @@ import {Grid, Cell, BEHAVIOR} from 'baseui/layout-grid';
 import {Block} from 'baseui/block';
 import { ButtonGroup } from "baseui/button-group";
 import { Button } from "baseui/button";
+import {StyledDivider, SIZE} from 'baseui/divider';
 import { ArrowUp } from "baseui/icon";
 import {
   Card,
   StyledBody,
   StyledAction
 } from "baseui/card";
-import {Tag, SIZE} from 'baseui/tag';
 import {
   AspectRatioBox,
   AspectRatioBoxBody,
@@ -38,10 +38,14 @@ import { StyledLink } from "baseui/link";
 import {ListItem, ListItemLabel} from 'baseui/list';
 import {useStyletron} from 'baseui';
 import { useWallet } from "@solana/wallet-adapter-react";
+import { useEffect } from "react"
 
 const AnswerItem: React.FC<{ item }> = ({ item }) => {
     const [upvotes, setUpvotes] = React.useState(Math.floor(Math.random()*50));
     const [clicked, setClicked] = React.useState(upvotes % 2 === 0);
+    const [comments, setComments] = React.useState(['hi that is great', 'I am not sure about that', 'try to do it again'])
+    const [commentInput, setCommentInput] = React.useState("");
+    const [showComment, setShowComment] = React.useState(false);
     const wallet = useWallet();
     const { publicKey, answer, profiles, question, user, forumWalletClient, questionPubkey } = item;
     const blockStyles = {
@@ -54,7 +58,15 @@ const AnswerItem: React.FC<{ item }> = ({ item }) => {
         borderRadius: '15px',
       }
 
-      const [css, theme] = useStyletron();
+    const [css, theme] = useStyletron();
+
+    useEffect(() => {
+        const fetchComments = async () => {
+            let comments = await forumWalletClient.fetchAllCommentsByAccount(publicKey)
+            // setComments(comments)
+        }
+
+    }, [])
   
   function getOwner(profilePublicKey) {
     for (let i = 0; i < profiles.length; i++) {
@@ -67,7 +79,6 @@ const AnswerItem: React.FC<{ item }> = ({ item }) => {
   }
 
   async function acceptAnswer() {
-    console.log(questionPubkey, publicKey, ownerKey)
     forumWalletClient.acceptAnswer(questionPubkey, publicKey, ownerKey)
   }
   
@@ -129,7 +140,6 @@ const AnswerItem: React.FC<{ item }> = ({ item }) => {
                                     Accepted Answer
                                 </LabelSmall>
                             </Block>
-
                     }
                     
                     <Button overrides={{BaseButton: {style: {backgroundColor: backgroundColor, margin: '0'}}}} onClick={handleClick}>
@@ -200,6 +210,12 @@ const AnswerItem: React.FC<{ item }> = ({ item }) => {
 
                 
         </Grid>
+        {comments.map((comment) => 
+            <>
+                <StyledDivider $size={SIZE.cell} />
+                {comment}
+            </>
+        )}
     </Block>
   );
 };

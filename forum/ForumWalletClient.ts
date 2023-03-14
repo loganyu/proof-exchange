@@ -27,7 +27,6 @@ export class ForumWalletClient {
     // --------------------------------------------- forum manager instructions ---------------------------------------------
 
     async initForum(): Promise<string> {
-        // console.log('initForum')
         const forum = Keypair.generate();
         this.forumPubkey = forum.publicKey
         const forumFees: ForumFees = forumConfig.forumFees;
@@ -43,7 +42,6 @@ export class ForumWalletClient {
       }
     
       async updateForumParams(): Promise<string> {
-        // console.log('updateForumParams')
         const forumKey = new PublicKey(this.forumPubkey);
         const forumFees: ForumFees = forumConfig.forumFees;
         const reputationMatrix: ReputationMatrix = forumConfig.reputationMatrix;
@@ -59,7 +57,6 @@ export class ForumWalletClient {
       }
     
       async payoutFromTreasury(receiverPubkey: string): Promise<string>  {
-        // console.log('payoutFromTreasury')
     
         const rentBytes: number = 16;
     
@@ -67,8 +64,6 @@ export class ForumWalletClient {
         const receiverKey: PublicKey = receiverPubkey? new PublicKey(receiverPubkey) : this.forumClient.wallet.publicKey;
         const minimumBalanceForRentExemption: anchor.BN = new anchor.BN(await this.forumClient.conn.getMinimumBalanceForRentExemption(rentBytes));
     
-        // console.log('Minimum balance for rent exemption for a data size of', rentBytes,
-        //             'bytes is: ', stringifyPKsAndBNs(minimumBalanceForRentExemption));
     
         const payoutInstance = await this.forumClient.payoutFromTreasury(
             forumKey,
@@ -80,7 +75,6 @@ export class ForumWalletClient {
       }
     
       async closeForum(receiverPubkey): Promise<string>  {
-        console.log('closeForum')
         const forumKey = new PublicKey(this.forumPubkey);
         const receiverKey: PublicKey = receiverPubkey? new PublicKey(receiverPubkey) : this.forumClient.wallet.publicKey;
     
@@ -95,7 +89,6 @@ export class ForumWalletClient {
       // ---------------------------------------------- user profile instructions ------------------------------------------
     
       async  createProfile(): Promise<any> {
-        // console.log('createUserProfile')
         const forum = new PublicKey(this.forumPubkey);
     
         const profileInstance = await this.forumClient.createUserProfile(
@@ -107,7 +100,6 @@ export class ForumWalletClient {
       }
     
       async  editProfile(tokenMint): Promise<any> {
-        // console.log('editProfile')
         const tokenMintKey = new PublicKey(tokenMint);
     
         const editInstance = await this.forumClient.editUserProfile(
@@ -119,7 +111,6 @@ export class ForumWalletClient {
     
     
       async deleteProfile(receiverPubkey= ''): Promise<any> {
-        console.log('deleteProfile')
         const forumKey: PublicKey = new PublicKey(this.forumPubkey);
         const receiverKey: PublicKey = receiverPubkey ? new PublicKey(receiverPubkey) : this.forumClient.wallet.publicKey;
     
@@ -133,18 +124,15 @@ export class ForumWalletClient {
       }
     
       async createAboutMe(content: string): Promise<any> {
-        // console.log('createAboutMe')
         const aboutMeInstance = await this.forumClient.createAboutMe(
           this.forumPubkey,
           this.forumClient.wallet.publicKey,
           content,
         );
-        console.log(stringifyPKsAndBNs(aboutMeInstance));
         return JSON.stringify(stringifyPKsAndBNs(aboutMeInstance));
       }
 
       async editAboutMe(new_content = ''){
-        // console.log('editAboutMe')
         const editAboutMeInstance = await this.forumClient.editAboutMe(
             this.forumClient.wallet.publicKey,
             new_content
@@ -153,7 +141,6 @@ export class ForumWalletClient {
       }
     
       async deleteAboutMe(receiverPubkey = ''): Promise<any> {
-        // console.log('deleteAboutMe')
         const receiverKey: PublicKey = receiverPubkey ? new PublicKey(receiverPubkey) : this.forumClient.wallet.publicKey;
     
         const deleteAboutMeInstance = await this.forumClient.deleteAboutMe(
@@ -164,7 +151,6 @@ export class ForumWalletClient {
       }
 
       async addModerator(userProfilePubkey: string): Promise<any> {
-        // console.log('addModerator')
         const userProfileKey = new PublicKey(userProfilePubkey);
         const userProfileAcct = await this.forumClient.fetchUserProfileAccount(userProfileKey);
         const profileOwnerKey = userProfileAcct.profileOwner;
@@ -179,7 +165,6 @@ export class ForumWalletClient {
       }
 
       async removeModerator(userProfilePubkey: string): Promise<any> {
-        // console.log('removeModerator')
         const userProfileKey = new PublicKey(userProfilePubkey);
         const userProfileAcct = await this.forumClient.fetchUserProfileAccount(userProfileKey);
         const profileOwnerKey = userProfileAcct.profileOwner;
@@ -196,7 +181,6 @@ export class ForumWalletClient {
       // ---------------------------------------------- user profile instructions ------------------------------------------
 
       async askQuestion(title, content, tag, bountyAmount): Promise<any> {
-        // console.log('askQuestion')
         const forumKey = new PublicKey(this.forumPubkey);
     
         const questionInstance = await this.forumClient.askQuestion(
@@ -211,7 +195,6 @@ export class ForumWalletClient {
       }
 
       async addToQuestion(questionPubkey, newContent): Promise<any> {
-        // console.log('addToQuestion')
         const forumKey = new PublicKey(this.forumPubkey);
 
         const questionKey = new PublicKey(questionPubkey);
@@ -230,7 +213,6 @@ export class ForumWalletClient {
 
 
       async editQuestion(questionPubkey, title, content, tags): Promise<any> {
-        // console.log('editQuestion')
         const forumKey = new PublicKey(this.forumPubkey);
 
         const questionKey = new PublicKey(questionPubkey);
@@ -245,13 +227,11 @@ export class ForumWalletClient {
           content,
           tags,
         );
-        console.log(stringifyPKsAndBNs(editQuestionInstance));
 
         return stringifyPKsAndBNs(editQuestionInstance);
       }
 
       async deleteQuestion(userProfileKey, questionPubkey, receiverPubkey = ''): Promise<any> {
-        // console.log('deleteQuestion')
         const forumKey = new PublicKey(this.forumPubkey);
         
         const receiverKey: PublicKey = receiverPubkey ? new PublicKey(receiverPubkey) : this.forumClient.wallet.publicKey;
@@ -409,7 +389,7 @@ export class ForumWalletClient {
           commentedOnKey,
           content,
         );
-        console.log(stringifyPKsAndBNs(commentInstance));
+        return stringifyPKsAndBNs(commentInstance);
       }
 
       async editComment(commentPubkey, newContent): Promise<any> {
@@ -453,7 +433,6 @@ export class ForumWalletClient {
       // -------------------------------------------------- PDA account fetching instructions ------------------------------------------
 
       async fetchAllForums(managerPubkey = ''): Promise<any> {
-        // console.log('fetchAllForums')
         const managerKey: PublicKey = managerPubkey ? new PublicKey(managerPubkey) : this.forumClient.wallet.publicKey;
 
         const forumPDAs = await this.forumClient.fetchAllForumPDAs(managerKey);
@@ -461,7 +440,6 @@ export class ForumWalletClient {
         const output = []
         // Loop over all PDAs and display account info
         for (let num = 1; num <= forumPDAs.length; num++) {
-            console.log('Forum account', num, ':');
             output.push(stringifyPKsAndBNs(forumPDAs[num - 1]))
         }
 
@@ -469,7 +447,6 @@ export class ForumWalletClient {
       }
 
       async fetchForumByKey(managerPubkey = ''): Promise<any> {
-        // console.log('fetchAllForums')
         const managerKey: PublicKey = managerPubkey ? new PublicKey(managerPubkey) : this.forumClient.wallet.publicKey;
 
         const forumPDA = await this.forumClient.fetchForumAccount(managerKey);
@@ -520,10 +497,8 @@ export class ForumWalletClient {
       }
       
       async fetchAboutMeByProfile(userProfilePubkey): Promise<any> {
-        // console.log('fetchAboutMeForProfile')
         const userProfileKey: PublicKey = new PublicKey(userProfilePubkey);
     
-        // console.log('Fetching about me PDA for user profile with pubkey: ', userProfileKey.toBase58());
         const aboutMePDAs = await this.forumClient.fetchAboutMeForProfile(userProfileKey);
     
         let output = []
@@ -536,8 +511,6 @@ export class ForumWalletClient {
       }
 
       async fetchAllQuestions(userProfilePubkey = ''): Promise<any> {
-        console.log('fetchAllQuestions')
-    
         const userProfileKey: PublicKey = userProfilePubkey ? new PublicKey(userProfilePubkey) : null;
     
         const questionPDAs = await this.forumClient.fetchAllQuestionPDAs(userProfileKey);
@@ -552,20 +525,16 @@ export class ForumWalletClient {
       }
 
       async fetchQuestionByKey(questionPubkey): Promise<any> {
-        console.log('fetchQuestionByKey')
-
         const questionKey: PublicKey = new PublicKey(questionPubkey);
     
         const questionPDA = await this.forumClient.fetchQuestionAccount(questionKey);
 
-        console.log('Displaying account info for question with pubkey: ', questionKey.toBase58());
         return stringifyPKsAndBNs(questionPDA);
       }
 
       async fetchAllAnswersByQuestion(questionPubkey): Promise<any> {
         const questionKey: PublicKey = new PublicKey(questionPubkey);
 
-        console.log('Fetching all answer PDAs for question account with pubkey: ', questionKey.toBase58());
         const answerPDAs = await this.forumClient.fetchAllAnswerPDAsByQuestion(questionKey);
 
         const output = []
@@ -577,9 +546,22 @@ export class ForumWalletClient {
         return output;
       }
 
-      async fetchForumAuth(forumPubkey): Promise<any> {
-        console.log('fetchQuestionByKey')
+      async fetchAllCommentsByAccount(accountPubkey): Promise<any> {
+        const accountKey: PublicKey = new PublicKey(accountPubkey);
 
+        const output = []
+
+        const commentPDAs = await this.forumClient.fetchAllCommentPDAsByAccountCommentedOn(accountKey);
+
+        // Loop over all PDAs and display account info
+        for (let num = 1; num <= commentPDAs.length; num++) {
+            output.push(stringifyPKsAndBNs(commentPDAs[num - 1]))
+        }
+
+        return output;
+      }
+
+      async fetchForumAuth(forumPubkey): Promise<any> {
         const forumKey: PublicKey = new PublicKey(forumPubkey);
 
         const [forumAuthKey, _forumAuthKeyBump] = await findForumAuthorityPDA(forumKey);
