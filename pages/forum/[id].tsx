@@ -173,15 +173,15 @@ const QuestionShow: React.FC<any> = (props) => {
         )
     }
 
-    // if (!question && !loading) {
-    //     return (
-    //         <Main>
-    //             <Cell span={9}>
-    //                 <HeadingLarge>Question Not Found</HeadingLarge>
-    //             </Cell>
-    //         </Main>
-    //     )
-    // }
+    if (!question && !loading) {
+        return (
+            <Main>
+                <Cell span={9}>
+                    {/* <HeadingLarge>Question Not Found</HeadingLarge> */}
+                </Cell>
+            </Main>
+        )
+    }
 
     return (
         <Main>
