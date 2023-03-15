@@ -68,13 +68,13 @@ const AnswerItem: React.FC<{ item }> = ({ item }) => {
 
     const [css, theme] = useStyletron();
 
-    useEffect(() => {
-        const fetchComments = async () => {
-            let comments = await forumWalletClient.fetchAllCommentsByAccount(publicKey)
-            // setComments(comments)
-        }
+    // useEffect(() => {
+    //     const fetchComments = async () => {
+    //         let comments = await forumWalletClient.fetchAllCommentsByAccount(publicKey)
+    //         // setComments(comments)
+    //     }
 
-    }, [])
+    // }, [])
   
   function getOwner(profilePublicKey) {
     for (let i = 0; i < profiles.length; i++) {
