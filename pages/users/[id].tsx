@@ -248,12 +248,6 @@ const User: React.FC<{userId: string}> = (props) => {
                   >
                     <FlexGrid flexGridColumnCount={3} margin={"15px 0"}>
                       <FlexGridItem className={css({textAlign: 'center'})}>
-                        <MonoDisplayXSmall overrides={{Block:{style: {alignItems: 'center', color: 'black'}}}}>
-                          {userProfile && userProfile.account && userProfile.account.reputationScore || '-'}
-                        </MonoDisplayXSmall>
-                        <LabelSmall overrides={{Block:{style: {color: 'black'}}}}>Reputation</LabelSmall>
-                      </FlexGridItem>
-                      <FlexGridItem className={css({textAlign: 'center'})}>
                         <MonoDisplayXSmall overrides={{Block:{style: {color: 'black'}}}}>
                           {userProfile && userProfile.account && userProfile.account.questionsAsked || '-'}
                         </MonoDisplayXSmall>
@@ -264,6 +258,12 @@ const User: React.FC<{userId: string}> = (props) => {
                           {userProfile && userProfile.account && userProfile.account.questionsAnswered || '-'}
                         </MonoDisplayXSmall>
                         <LabelSmall overrides={{Block:{style: {color: 'black'}}}}>Answers</LabelSmall>
+                      </FlexGridItem>
+                      <FlexGridItem className={css({textAlign: 'center'})}>
+                        <MonoDisplayXSmall overrides={{Block:{style: {alignItems: 'center', color: 'black'}}}}>
+                          {userProfile && userProfile.account && userProfile.account.commentsAdded || '-'}
+                        </MonoDisplayXSmall>
+                        <LabelSmall overrides={{Block:{style: {color: 'black'}}}}>Comments</LabelSmall>
                       </FlexGridItem>
                     </FlexGrid>
 
