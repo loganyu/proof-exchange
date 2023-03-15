@@ -91,7 +91,6 @@ const QuestionShow: React.FC<any> = (props) => {
             setProfiles(profiles)
             setAnswers(answers)
             setQuestion(question)
-            setLoading(false)
             // setComments(comments)
         }
 
@@ -101,7 +100,10 @@ const QuestionShow: React.FC<any> = (props) => {
                 setForumWalletClient(new ForumWalletClient(connection, wallet, new PublicKey(FORUM_PUB_KEY)))
             }
         }
-        fetchQuestion()
+        if (!question) {
+            fetchQuestion()
+        }
+        setLoading(false)
     }, [wallet.connected, forumWalletClient])
 
     async function submitAnswer() {
