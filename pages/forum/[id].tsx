@@ -66,7 +66,6 @@ const QuestionShow: React.FC<any> = (props) => {
     const isBase58 = value => /^[A-HJ-NP-Za-km-z1-9]*$/.test(value);
 
     useEffect(() => {
-        // setLoading(true)
         // if (props.questionPubkey.length !== 44) {
         //     setLoading(false)
         //     return
@@ -94,17 +93,13 @@ const QuestionShow: React.FC<any> = (props) => {
             // setComments(comments)
         }
 
-        if (wallet.connected) {
-            // getUser()
             if (!forumWalletClient){
                 setForumWalletClient(new ForumWalletClient(connection, wallet, new PublicKey(FORUM_PUB_KEY)))
             }
-        }
-        if (!question) {
-            fetchQuestion()
-        }
-        setLoading(false)
-    }, [wallet.connected, forumWalletClient])
+            if (!question) {
+                fetchQuestion()
+            }
+    }, [wallet.connected])
 
     async function submitAnswer() {
         setLoadingSubmit(true)
@@ -161,19 +156,19 @@ const QuestionShow: React.FC<any> = (props) => {
     }
 
 
-    if (loading) {
-        return (
-            <Main>
-                <Cell span={9}>
-                    <Block display={'flex'} justifyContent={'center'}>
-                        <Spinner></Spinner>
-                    </Block>
-                </Cell>
-            </Main>
-        )
-    }
+    // if (loading) {
+    //     return (
+    //         <Main>
+    //             <Cell span={9}>
+    //                 <Block display={'flex'} justifyContent={'center'}>
+    //                     <Spinner></Spinner>
+    //                 </Block>
+    //             </Cell>
+    //         </Main>
+    //     )
+    // }
 
-    if (!question && !loading) {
+    if (!question) {
         return (
             <Main>
                 <Cell span={9}>
