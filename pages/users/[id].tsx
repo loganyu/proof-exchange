@@ -407,7 +407,7 @@ const User: React.FC<{userId: string}> = (props) => {
                         borderBottomColor: `grey`,
                         height: '50px',
                         padding: '5px',
-                        backgroundColor: 'green'
+                        backgroundColor: '#2CD997'
                       }
                     )}>
                       <HeadingSmall overrides={{Block:{style: {padding: '0', margin: '8px 0 0 0', height: '100%', textAlign: 'center'}}}}>NFTs</HeadingSmall>
@@ -440,7 +440,7 @@ const User: React.FC<{userId: string}> = (props) => {
                         borderBottomColor: `grey`,
                         height: '50px',
                         padding: '5px',
-                        backgroundColor: 'green'
+                        backgroundColor: '#2CD997'
                       }
                     )}>
                       <Tag size={SIZE.large} closeable={false} overrides={{Root: {style: {'color': 'black'}}}}>sugar</Tag>
@@ -691,7 +691,7 @@ const User: React.FC<{userId: string}> = (props) => {
                         borderBottomColor: `grey`,
                         height: '50px',
                         padding: '5px',
-                        backgroundColor: 'green',
+                        backgroundColor: '#2CD997',
                       }
                     )}>
                       <HeadingSmall overrides={{Block:{style: {padding: '0', margin: '8px 0 0 0', height: '100%', textAlign: 'center'}}}}>NFTs</HeadingSmall>
@@ -724,7 +724,7 @@ const User: React.FC<{userId: string}> = (props) => {
                         borderBottomColor: `grey`,
                         height: '50px',
                         padding: '5px',
-                        backgroundColor: 'green',
+                        backgroundColor: '#2CD997',
                       }
                     )}>
                       <Block display={'flex'} padding="0 20px" alignItems={'center'} justifyContent="space-between">

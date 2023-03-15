@@ -105,7 +105,7 @@ function relativeTimeFromElapsed(elapsed: number): string {
   const timeString = relativeTimeFromDates(new Date(question.questionPostedTs * 1000));
   // const engagementString = new Date(question.mostRecentEngagementTs * 1000).toISOString().slice(0, 19).replace('T', ' ');
   const engagementString = relativeTimeFromDates(new Date(question.mostRecentEngagementTs * 1000));
-  const awardedColor = question.bountyAwarded ? "gray" : "green"
+  const awardedColor = question.bountyAwarded ? "gray" : "#2CD997"
   let backgroundColor = clicked ? '#9747FF' : '#FCD19C' 
 
   function handleClick() {

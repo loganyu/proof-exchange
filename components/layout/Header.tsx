@@ -253,7 +253,7 @@ const Nav: React.FC<Props> = () => {
               Forum
             </Button>
             </Link>
-            <Link href="/xAndria" passHref>
+            {/* <Link href="/xAndria" passHref>
             <Button
               $as="a"
               size={SIZE.compact}
@@ -271,30 +271,7 @@ const Nav: React.FC<Props> = () => {
             >
               xAndria
             </Button>
-          </Link>
-          {/* Discord */}
-          <Button
-            $as="a"
-            href="https://discord.gg/JUPHS5G8"
-            target="_blank"
-            rel="noopener noreferrer"
-            size={SIZE.compact}
-            kind={KIND.tertiary}
-            shape={SHAPE.square}
-            title="Join our Discord server"
-            overrides={{
-              BaseButton: {
-                style: {
-                  display: 'none',
-                  [mq(500)]: {
-                    display: 'flex',
-                  },
-                },
-              },
-            }}
-          >
-            <DiscordLogo size={24} color={theme.colors.contentPrimary} />
-          </Button>
+          </Link> */}
 
           {/* GitHub */}
           {/* <Button

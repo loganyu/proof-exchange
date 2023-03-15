@@ -2,6 +2,9 @@ import React from 'react';
 import { Block } from 'baseui/block';
 import Link from 'next/link';
 import { themedStyled } from '../../pages/_app';
+import { Button, KIND, SIZE, SHAPE } from 'baseui/button';
+import DiscordLogo from './discord-logo';
+import { themedUseStyletron as useStyletron } from '../../pages/_app';
 
 const UberLogo = () => (
   <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 926.906 321.777" width="4em">
@@ -48,22 +51,51 @@ const StyledLink = themedStyled('a', ({ $theme }) => ({
   },
 }));
 
+const mq = (breakpoint: number): string => `@media screen and (min-width: ${breakpoint}px)`;
+
 function Footer() {
+
+  const [css, theme] = useStyletron();
+
   return (
     <StyledFooter>
-      <Block paddingBottom="scale1000">
+      <Block paddingBottom="scale1000" display={'flex'} justifyContent='center' alignItems={'center'}>
         {/* <StyledLink href="https://github.com/uber/baseweb" target="_blank">
           GitHub
         </StyledLink> */}
         <StyledLink href="https://twitter.com/xAndriaOnchain" target="_blank">
           Twitter
         </StyledLink>
-        <StyledLink
+        {/* <StyledLink
           href="https://discord.gg/JUPHS5G8"
           target="_blank"
         >
           Discord Chat room
-        </StyledLink>
+        </StyledLink> */}
+        {/* Discord */}
+        <Button
+            $as="a"
+            href="https://discord.gg/JUPHS5G8"
+            target="_blank"
+            rel="noopener noreferrer"
+            size={SIZE.compact}
+            kind={KIND.tertiary}
+            shape={SHAPE.square}
+            title="Join our Discord server"
+            overrides={{
+              BaseButton: {
+                style: {
+                  padding: '0 10px'
+                  // display: 'none',
+                  // [mq(500)]: {
+                  //   display: 'flex',
+                  // },
+                },
+              },
+            }}
+          >
+            <DiscordLogo size={24} color={theme.colors.contentPrimary} />
+          </Button>
         {/* <StyledLink href="https://github.com/uber/baseweb/releases" target="_blank">
           Changelog
         </StyledLink> */}
