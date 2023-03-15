@@ -1,1 +1,1 @@
-export const FORUM_PUB_KEY = 'BbtyjiTGn2p3pKBrs6PuYQEfLk5sMyq1WreFZw9oJezY'
+export const FORUM_PUB_KEY = 'FxChuctpsKCcc7zabGqo5W2WZWJ2vezWoKjxALm4rguH'
