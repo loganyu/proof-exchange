@@ -17,7 +17,7 @@ export class ForumWalletClient {
     constructor(
         connection: Connection,
         wallet: WalletContextState,
-        forumPubkey: PublicKey = new PublicKey('BbtyjiTGn2p3pKBrs6PuYQEfLk5sMyq1WreFZw9oJezY')
+        forumPubkey: PublicKey = new PublicKey('FxChuctpsKCcc7zabGqo5W2WZWJ2vezWoKjxALm4rguH')
     ) {
         this.forumPubkey = forumPubkey;
         // @ts-ignore
