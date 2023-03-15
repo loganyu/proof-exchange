@@ -215,7 +215,7 @@ const ForumConsole: React.FC<Props> = (props) => {
           </Block>
         </Block>
 
-        {/* <Block overrides={{Block: {style: {...blockStyles}}}}>
+        <Block overrides={{Block: {style: {...blockStyles}}}}>
           <HeadingSmall>Set User Profile Pub Key</HeadingSmall>
           <Input onChange={e => setUserProfilePubKey(e.target.value)}></Input>
         </Block>
@@ -233,7 +233,7 @@ const ForumConsole: React.FC<Props> = (props) => {
         <Block overrides={{Block: {style: {...blockStyles}}}}>
           <HeadingSmall>Payout from treasury</HeadingSmall>
           <Button onClick={() => forumWalletClient.payoutFromTreasury('a')}>payout-from-treasury</Button>
-        </Block> */}
+        </Block>
 
         {/* <Block overrides={{Block: {style: {...blockStyles}}}}>
           <HeadingSmall>Close a forum account</HeadingSmall>
