@@ -194,15 +194,15 @@ const User: React.FC<{userId: string}> = (props) => {
     }
 
     // if ((!userProfile && !wallet.publicKey) || (wallet.publicKey && wallet.publicKey.toBase58() !== props.userId)) {
-    if (!userProfile) {
-      return (
-        <Main>
-          <Cell span={5}>
-            {/* <HeadingLarge>User not found</HeadingLarge> */}
-          </Cell>
-        </Main>
-      )
-    }
+    // if (!userProfile) {
+    //   return (
+    //     <Main>
+    //       <Cell span={5}>
+    //         {/* <HeadingLarge>User not found</HeadingLarge> */}
+    //       </Cell>
+    //     </Main>
+    //   )
+    // }
 
     return (
       <Main>
