@@ -96,7 +96,7 @@ const QuestionShow: React.FC<any> = (props) => {
         }
 
         if (wallet.connected) {
-            getUser()
+            // getUser()
             if (!forumWalletClient){
                 setForumWalletClient(new ForumWalletClient(connection, wallet, new PublicKey(FORUM_PUB_KEY)))
             }
