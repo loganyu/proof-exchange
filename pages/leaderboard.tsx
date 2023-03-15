@@ -278,7 +278,7 @@ const Leaderboard: React.FC = () => {
                         {(row) => <div style={{'color': 'black'}}>{Number(row.account.questionsAnswered) + Number(row.account.questionsAsked) + Number(row.account.commentsAdded) + Number(row.account.bigNotesPosted)}</div> }
                     </TableBuilderColumn>
                     <TableBuilderColumn<any> header="Bounties">
-                        {(row) => <div style={{'color': 'black'}}>{(row.account.totalBountyReceived * 0.000000001).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")} sol</div> }
+                        {(row) => <div style={{'color': 'black'}}>{(row.account.totalBountyReceived * 0.000000001).toFixed(2)} ◎</div> }
                     </TableBuilderColumn>
                     </TableBuilder>
                  </Block>

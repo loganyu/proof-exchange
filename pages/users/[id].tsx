@@ -290,7 +290,7 @@ const User: React.FC<{userId: string}> = (props) => {
                       </FlexGridItem>
                       <FlexGridItem className={css({textAlign: 'center'})}>
                         <MonoDisplayXSmall overrides={{Block:{style: {color: 'black'}}}}>
-                          {userProfile && userProfile.account && userProfile.account.totalBountyReceived || '-'}
+                          {userProfile && userProfile.account && (userProfile.account.totalBountyReceived * 0.000000001).toFixed(2) + '◎' || '-'}
                         </MonoDisplayXSmall>
                         <LabelSmall overrides={{Block:{style: {color: 'black'}}}}>Total Bounty Received</LabelSmall>
                       </FlexGridItem>

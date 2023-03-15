@@ -119,8 +119,11 @@ const Nav: React.FC<Props> = () => {
                 },
               })}
             >
-              <Block padding="12px 20px" backgroundColor={'#E4CCFF'} overrides={{Block: {style: {borderRadius: '15px'}}}}>
-                PR◎◎F
+              <Block padding="12px 20px" backgroundColor={'#E4CCFF'} display={'flex'} alignItems='center' overrides={{Block: {style: {borderRadius: '15px'}}}}>
+                <img height="20px" src='/rounded_proof_logo.png'></img>
+                <Block marginLeft={'5px'}>
+                  xAndria
+                </Block>
               </Block>
               {/* <img
                 src={theme.name.startsWith('dark') ? LightLogo : DarkLogo}

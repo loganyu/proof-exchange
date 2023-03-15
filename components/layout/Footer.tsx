@@ -64,7 +64,7 @@ function Footer() {
           GitHub
         </StyledLink> */}
         <StyledLink href="https://twitter.com/xAndriaOnchain" target="_blank">
-          Twitter
+          <img height="20px" src='/twitter.png'></img>
         </StyledLink>
         {/* <StyledLink
           href="https://discord.gg/JUPHS5G8"
