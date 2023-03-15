@@ -246,6 +246,10 @@ const User: React.FC<{userId: string}> = (props) => {
                       },
                     }}
                   >
+                    <Block display='flex' flexDirection={'column'} justifyContent='center' height="100%">
+
+
+                   
                     <FlexGrid flexGridColumnCount={3} margin={"15px 0"}>
                       <FlexGridItem className={css({textAlign: 'center'})}>
                         <MonoDisplayXSmall overrides={{Block:{style: {alignItems: 'center', color: 'black'}}}}>
@@ -266,7 +270,7 @@ const User: React.FC<{userId: string}> = (props) => {
                         <LabelSmall overrides={{Block:{style: {color: 'black'}}}}>Answers</LabelSmall>
                       </FlexGridItem>
                     </FlexGrid>
-                    <FlexGrid flexGridColumnCount={3} marginBottom={"15px"}>
+                    {/* <FlexGrid flexGridColumnCount={3} marginBottom={"15px"}>
                       <FlexGridItem className={css({textAlign: 'center'})}>
                         <MonoDisplayXSmall overrides={{Block:{style: {color: 'black'}}}}>
                           -
@@ -295,7 +299,12 @@ const User: React.FC<{userId: string}> = (props) => {
                       </FlexGridItem>
                       <FlexGridItem className={css({textAlign: 'center'})}>
                       </FlexGridItem>
-                    </FlexGrid>
+                    </FlexGrid> */}
+
+
+                  </Block>
+
+
                   </AspectRatioBoxBody>
                 </AspectRatioBox>
               </Cell>
