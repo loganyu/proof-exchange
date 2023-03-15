@@ -227,7 +227,7 @@ function relativeTimeFromElapsed(elapsed: number): string {
                     {question.bountyAwarded ? "Awarded" : "Available"}
                   </ParagraphSmall>
                   <ParagraphSmall overrides={{Block:{style: {textAlign: 'right', color: 'black', backgroundColor: '#FCD19C', padding: '5px 10px', borderRadius: '15px'}}}}>
-                    Bounty: {question.bountyAmount / 10**9}
+                    Bounty: {(question.bountyAmount / 10**9).toFixed(2)}
                   </ParagraphSmall>
                   <ParagraphSmall overrides={{Block:{style: {textAlign: 'right', color: 'black', backgroundColor: '#FCD19C', padding: '5px 10px', borderRadius: '15px'}}}}>
                     created: {timeString}
