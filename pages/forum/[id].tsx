@@ -81,24 +81,23 @@ const QuestionShow: React.FC<any> = (props) => {
             }
         }
 
-        const fetchQuestion = async () => {
-            let client = new ForumWalletClient(connection, wallet, new PublicKey(FORUM_PUB_KEY))
-            let question = await client.fetchQuestionByKey(props.questionPubkey)
-            let comments = await client.fetchAllCommentsByAccount(props.questionPubkey)
-            let answers = await client.fetchAllAnswersByQuestion(props.questionPubkey)
-            let profiles = await client.fetchAllProfiles()
+        const fetchQuestion = async (forumWalletClient) => {
+            let question = await forumWalletClient.fetchQuestionByKey(props.questionPubkey)
+            let comments = await forumWalletClient.fetchAllCommentsByAccount(props.questionPubkey)
+            let answers = await forumWalletClient.fetchAllAnswersByQuestion(props.questionPubkey)
+            let profiles = await forumWalletClient.fetchAllProfiles()
             setProfiles(profiles)
             setAnswers(answers)
             setQuestion(question)
             // setComments(comments)
         }
 
-            if (!forumWalletClient){
-                setForumWalletClient(new ForumWalletClient(connection, wallet, new PublicKey(FORUM_PUB_KEY)))
-            }
-            if (!question) {
-                fetchQuestion()
-            }
+        if (!forumWalletClient){
+            setForumWalletClient(new ForumWalletClient(connection, wallet, new PublicKey(FORUM_PUB_KEY)))
+        }
+        if (!question && forumWalletClient) {
+            fetchQuestion(forumWalletClient)
+        }
     }, [wallet.connected])
 
     async function submitAnswer() {

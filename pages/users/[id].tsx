@@ -79,7 +79,6 @@ const User: React.FC<{userId: string}> = (props) => {
 
   useEffect(() => {
     const getUser = async () => {
-      const client = new ForumWalletClient(connection, wallet, new PublicKey(FORUM_PUB_KEY))
       const res = await fetch(`/api/user/${wallet.publicKey.toBase58()}`, {
         method: 'GET',
       });
@@ -100,7 +99,6 @@ const User: React.FC<{userId: string}> = (props) => {
     }
 
     const getProfileUser = async () => {
-      let client = new ForumWalletClient(connection, wallet, new PublicKey(FORUM_PUB_KEY))
       const res = await fetch(`/api/user/${props.userId}`, {
         method: 'GET',
       });
@@ -109,10 +107,10 @@ const User: React.FC<{userId: string}> = (props) => {
       if (profileUser) {
         setProfileUser(profileUser)
       }
-      let userProfile = await client.fetchProfileByOwner(props.userId)
+      let userProfile = await forumWalletClient.fetchProfileByOwner(props.userId)
      
       if (userProfile[0]) {
-        let aboutMe = await client.fetchAboutMeByProfile(userProfile[0].publicKey)
+        let aboutMe = await forumWalletClient.fetchAboutMeByProfile(userProfile[0].publicKey)
         if (aboutMe.length > 0) {
           setAboutMe(aboutMe[0])
           setAboutMeText(aboutMe[0].account.content)
@@ -123,12 +121,14 @@ const User: React.FC<{userId: string}> = (props) => {
 
       return profileUser
     }
-    if (!userProfile) {
+    if (!userProfile && forumWalletClient) {
       getProfileUser();
     }
     if (wallet.connected) {
-      const client = new ForumWalletClient(connection, wallet, new PublicKey(FORUM_PUB_KEY))
-      setForumWalletClient(client)
+      if (!forumWalletClient) {
+        const client = new ForumWalletClient(connection, wallet, new PublicKey(FORUM_PUB_KEY))
+        setForumWalletClient(client)
+      }
       if (!user) {
         getUser()
       }
@@ -136,7 +136,7 @@ const User: React.FC<{userId: string}> = (props) => {
     } else {
       setUser(null)
     }
-  }, [session, wallet.connected, userProfile])
+  }, [wallet.connected])
 
   async function handleClickAboutMe() {
     setLoadingButton(true)

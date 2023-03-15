@@ -13,4 +13,4 @@ https://xandriaonchain.vercel.app/
 The repository and details on the protocol are here: https://github.com/SolCharms/DeEdIT_SDK
 
 To interact with the protocol without using the CLI, use the interface on the web application:
-https://xandriaonchain.vercel.app/forum-console
+https://xandriaonchain.vercel.app/DeEdIT-console
