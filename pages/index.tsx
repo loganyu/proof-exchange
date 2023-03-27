@@ -108,7 +108,7 @@ const Exchange: React.FC<Props> = (props) => {
     const goToForum = async () => {
       await Router.push('/forum')
     }
-    goToForum()
+    // goToForum()
     if (!wallet.connected || status === "unauthenticated") {
       // handleSignIn();
     }
@@ -125,6 +125,7 @@ const Exchange: React.FC<Props> = (props) => {
 
   return (
     <Main>
+      Marketing page
 
     </Main>
   )
