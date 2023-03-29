@@ -23,7 +23,7 @@ import { stringifyPKsAndBNs } from '../forum/src/prog-common';
 import Router from 'next/router';
 import { Block } from 'baseui/block';
 import {Grid, Cell, BEHAVIOR} from 'baseui/layout-grid';
-
+import { themedUseStyletron as useStyletron } from '../pages/_app';
 
 // components
 import Header from "../components/layout/Header"
