@@ -21,15 +21,14 @@ import { ForumFees, ReputationMatrix } from '../forum/src/forum/forum.client';
 import { forumConfig } from "../forum/src/cli/config_devnet/forumConfig-devnet";
 import { stringifyPKsAndBNs } from '../forum/src/prog-common';
 import Router from 'next/router';
+import { Block } from 'baseui/block';
+import {Grid, Cell, BEHAVIOR} from 'baseui/layout-grid';
 
 
 // components
 import Header from "../components/layout/Header"
+import Footer from '../components/layout/Footer';
 
-// baseweb
-import { Table } from "baseui/table";
-import {useStyletron} from 'baseui';
-import {Grid, Cell, BEHAVIOR} from 'baseui/layout-grid';
 import {
   HeaderNavigation,
   ALIGN,
@@ -46,6 +45,7 @@ import {
 } from "baseui/card";
 import { Tag } from "baseui/tag";
 import AccessDenied from '../components/access-denied';
+import { HeadingLarge } from 'baseui/typography';
 
 // export const getStaticProps: GetStaticProps = async () => {
 //   const feed = await prisma.post.findMany({
@@ -124,10 +124,28 @@ const Exchange: React.FC<Props> = (props) => {
   // }
 
   return (
-    <Main>
-      Marketing page
-
-    </Main>
+    <React.Fragment>
+        <Header></Header>
+        <Block
+            justifyContent="center"
+            backgroundColor="backgroundPrimary"
+            color="contentPrimary"
+            className="parallax"
+        >
+            <Grid gridMaxWidth={1600} behavior={BEHAVIOR.fixed} >
+              <Cell span={2}></Cell>
+              <Cell span={8}>
+                <Block height={'900px'} display='flex' flexDirection={'column'} justifyContent='center'>
+                  <HeadingLarge style={{textAlign: 'center'}}>
+                    Allow us to introduce Solana's Library of Knowledge
+                  </HeadingLarge>
+                </Block>
+              </Cell>
+              <Cell span={2}></Cell>
+            </Grid>
+        </Block>
+        <Footer />
+    </React.Fragment>
   )
 
   return (
